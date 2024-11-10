@@ -14,11 +14,7 @@ const Door = ({ setStep }: { setStep: (step: number) => void }) => {
 
   return (
     <div className="flex h-full flex-col items-center justify-center p-5">
-      <div className="h-[20rem] w-[10rem] rounded-sm bg-amber-800">
-        <div className="mx-auto mt-10 w-[5rem] bg-amber-100 text-center">
-          <button onClick={handleSetNickname}>{nickname || '?'}</button>
-        </div>
-      </div>
+      <img src="/images/door.png" alt="문" className="h-[20rem] w-[10rem]" />
       {nickname && (
         <div className="mt-10 text-center">
           <p>해당 닉네임으로 진행하시겠습니까?</p>
