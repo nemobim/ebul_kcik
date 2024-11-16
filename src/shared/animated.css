@@ -85,3 +85,21 @@
 .glow-animation {
   animation: glow 1.5s infinite;
 }
+
+/* 깜박이는 커서 효과 */
+.typing-cursor::after {
+  content: '|';
+  margin-left: 5px;
+  display: inline-block;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}

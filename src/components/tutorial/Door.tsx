@@ -1,15 +1,14 @@
 import { useState } from 'react'
+import doorImg from '../../assets/door.png'
 import { useModal } from '../../hook/useModal'
 
-const Door = ({ setStep }: { setStep: (step: number) => void }) => {
+const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
   const { Modal, showModal, hideModal } = useModal()
 
   const [nickname, setNickname] = useState({
     value: '',
     fixedNickname: localStorage.getItem('nickname') || '',
   })
-
-  console.log('nickname', localStorage.getItem('nickname'))
 
   /**닉네임 받아오기 */
   const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,8 +17,12 @@ const Door = ({ setStep }: { setStep: (step: number) => void }) => {
 
   /**닉네임 설정 */
   const handleSetNickname = () => {
-    setNickname(prev => ({ ...prev, fixedNickname: prev.value })) //닉네임 고정
-    localStorage.setItem('nickname', nickname.value) // 로컬스토리지에 저장
+    setNickname(prev => {
+      const newNickname = prev.value
+      localStorage.setItem('nickname', newNickname) // 상태 업데이트 이전에 저장
+      return { ...prev, fixedNickname: newNickname }
+    })
+
     hideModal()
   }
 
@@ -43,18 +46,9 @@ const Door = ({ setStep }: { setStep: (step: number) => void }) => {
     })
   }
 
-  /**다음 스텝으로 전환 */
-  const handleNextStep = () => {
-    // 닉네임을 설정한 후에만 다음 스텝으로 전환
-    if (!nickname.fixedNickname) return
-    setStep(2)
-  }
-
-  console.log('nickname', nickname)
-
   return (
     <div className="relative flex h-screen items-center justify-center bg-black">
-      <img src="/images/door.png" alt="문" className="h-[20rem] w-[10rem] opacity-80" onClick={handleNextStep} />
+      <img src={doorImg} alt="문" className="h-[20rem] w-[10rem] opacity-80" onClick={handleNextStep} />
       <div className="absolute top-[42%]">
         {nickname.fixedNickname ? (
           <p className="text-white">{nickname.fixedNickname}</p>
