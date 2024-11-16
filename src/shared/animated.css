@@ -1,0 +1,87 @@
+@keyframes glow {
+  0% {
+    opacity: 0.4;
+    transform: scale(1);
+    color: #ffd700; /* 황금색 */
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.1);
+    color: #fffacd; /* 밝은 노란색 */
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1);
+    color: #ffd700;
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.1);
+    color: #fffacd;
+  }
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+    color: #ffd700;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(20%);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.slide_in {
+  @apply animate-[slideIn_0.5s_forwards];
+}
+
+.slide_out {
+  @apply animate-[slideOut_0.5s_forwards];
+}
+
+.fade_in {
+  @apply animate-[fadeIn_0.5s_forwards];
+}
+
+.fade_out {
+  @apply animate-[fadeOut_0.5s_forwards];
+}
+
+.glow-animation {
+  animation: glow 1.5s infinite;
+}
