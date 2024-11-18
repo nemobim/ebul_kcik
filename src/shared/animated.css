@@ -103,3 +103,37 @@
     opacity: 0;
   }
 }
+
+/* 숫자 크기 변화 애니메이션 */
+@keyframes pulse-scale {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.8;
+  }
+}
+
+/* 애니메이션 클래스 */
+.timer-animation {
+  animation: pulse-scale 1s ease-in-out infinite;
+}
+
+@keyframes punch {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-punch {
+  animation: punch 0.3s ease-out;
+}
