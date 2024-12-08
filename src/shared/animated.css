@@ -137,3 +137,83 @@
 .animate-punch {
   animation: punch 0.3s ease-out;
 }
+
+/* 배경 단계별 스타일 */
+.background-stage-1 {
+  background: linear-gradient(to bottom, #758cff, #61a5ff);
+}
+.background-stage-2 {
+  background: linear-gradient(to bottom, #61a5ff, #6ef0ff);
+}
+.background-stage-3 {
+  background: linear-gradient(to bottom, #6ef0ff, #ffeab3);
+}
+.background-stage-4 {
+  background: linear-gradient(to bottom, #ffeab3, #ff7eb3);
+}
+
+/* 배경 애니메이션 */
+.background-animation {
+  animation:
+    moveBackground 4s linear infinite,
+    changeBackground 16s linear infinite;
+}
+
+@keyframes moveBackground {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes changeBackground {
+  0% {
+    background: linear-gradient(to bottom, #758cff, #61a5ff);
+  }
+  25% {
+    background: linear-gradient(to bottom, #61a5ff, #6ef0ff);
+  }
+  50% {
+    background: linear-gradient(to bottom, #6ef0ff, #ffeab3);
+  }
+  100% {
+    background: linear-gradient(to bottom, #ffeab3, #ff7eb3);
+  }
+}
+
+/* 이불 튕겨나가는 초기 애니메이션 */
+.blanket-launch {
+  animation: blanketLaunch 2s ease-out forwards;
+}
+
+@keyframes blanketLaunch {
+  0% {
+    bottom: 24%;
+    transform: translateX(-50%);
+  }
+  50% {
+    bottom: 50%;
+    transform: translateX(-50%) scale(1.1);
+  }
+  100% {
+    bottom: 100%;
+    transform: translateX(-50%);
+  }
+}
+
+/* 이불 날아가는 애니메이션 */
+.blanket-fly {
+  animation: blanketFly 4s ease-in-out infinite;
+}
+
+@keyframes blanketFly {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  50% {
+    transform: translateX(-50%) translateY(10px);
+  }
+}
