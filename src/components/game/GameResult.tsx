@@ -1,18 +1,27 @@
-import React, { useState, useEffect } from 'react'
-import './SkyAnimation.css'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import blanket from '../../assets/blanket.png' // 이불 이미지
 import house from '../../assets/house.png' // 지붕 이미지
+import './SkyAnimation.css'
 
 const SkyAnimation = () => {
   const [showHouse, setShowHouse] = useState(true) // 지붕 표시 여부
   const [startAnimation, setStartAnimation] = useState(false) // 배경 애니메이션 시작 여부
   const [score, setScore] = useState(0) // 로컬 스토리지에서 가져온 점수
   const [messageVisible, setMessageVisible] = useState(false) // 점수 표시 여부
+  const [scrollPosition, setScrollPosition] = useState(0) // 스크롤 위치 (단계에 따라 조정)
 
   useEffect(() => {
     // 점수 가져오기
     const touchCount = Number(localStorage.getItem('touchCount')) || 0
     setScore(touchCount)
+
+    // 점수에 따른 스크롤 위치 계산
+    const maxScore = 250 // 최대 점수
+    const totalStages = 5 // 배경 단계 수
+    const stageHeight = 1 / totalStages // 각 단계의 높이
+    const calculatedPosition = Math.min((touchCount / maxScore) * totalStages, totalStages - 1)
+    setScrollPosition(calculatedPosition * stageHeight)
 
     // 4초 후 애니메이션 시작
     const timer = setTimeout(() => {
@@ -26,7 +35,7 @@ const SkyAnimation = () => {
   useEffect(() => {
     if (startAnimation) {
       // 배경 애니메이션이 끝난 후 점수 표시
-      const animationDuration = getAnimationDuration(score)
+      const animationDuration = scrollPosition * 5000 // 점수에 따른 애니메이션 시간
       const timer = setTimeout(() => {
         setMessageVisible(true)
         setStartAnimation(false) // 애니메이션 종료
@@ -34,23 +43,16 @@ const SkyAnimation = () => {
 
       return () => clearTimeout(timer)
     }
-  }, [startAnimation, score])
-
-  // 점수에 따른 배경 애니메이션 지속 시간 계산
-  const getAnimationDuration = (score: number) => {
-    if (score <= 50) return 4000 // 4초
-    if (score <= 100) return 8000 // 8초
-    if (score <= 150) return 12000 // 12초
-    return 16000 // 16초
-  }
+  }, [startAnimation, scrollPosition])
 
   return (
     <div className="relative h-screen w-full overflow-hidden">
       {/* 배경 */}
       <div
-        className={`absolute left-0 top-0 h-full w-full ${startAnimation ? 'background-scroll' : ''}`}
+        className="background"
         style={{
-          animationDuration: `${getAnimationDuration(score)}ms`, // 점수에 따른 애니메이션 시간
+          transform: startAnimation ? `translateY(-${scrollPosition * 100}%)` : 'translateY(0)',
+          transition: `transform ${scrollPosition * 5}s linear`,
         }}
       ></div>
 
@@ -63,7 +65,15 @@ const SkyAnimation = () => {
       )}
 
       {/* 점수 메시지 */}
-      {messageVisible && <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-2xl font-bold">{score}m까지 날아갔습니다</div>}
+      {messageVisible && (
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-2xl font-bold text-white">
+          <span>{score}m까지 날아갔습니다</span>
+          <div className="mt-5 flex gap-5">
+            <button className="">재도전</button>
+            <Link to="/rank">순위보기</Link>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
