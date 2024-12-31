@@ -5,6 +5,7 @@ import { NotFound } from '../page/NotFound'
 import Rank from '../page/Rank'
 import Splash from '../page/Splash'
 import Tutorials from '../page/Tutorials'
+import Content from '../page/Content'
 
 const Router = () => {
   return (
@@ -16,6 +17,7 @@ const Router = () => {
         <Route path="/tutorials" element={<Tutorials />} />
         <Route path="/game" element={<Game />} />
         <Route path="/rank" element={<Rank />} />
+        <Route path="/content" element={<Content />} />
       </Routes>
     </BrowserRouter>
   )
