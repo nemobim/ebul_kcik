@@ -1,4 +1,4 @@
-import RankLayout from '../elements/RankLayout'
+import RankLayout from '../elements/layout/RankLayout'
 
 const Rank = () => {
   return (

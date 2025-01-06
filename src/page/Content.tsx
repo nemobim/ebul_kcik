@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import RankLayout from '../elements/RankLayout'
+import RankLayout from '../elements/layout/RankLayout'
 
 const Content = () => {
   const [isModalOpen, setModalOpen] = useState(false)
