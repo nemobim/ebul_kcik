@@ -10,12 +10,12 @@ const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="*" element={<NotFound />} />
-        <Route path="/" element={<Splash />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/tutorials" element={<Tutorials />} />
-        <Route path="/game" element={<Game />} />
-        <Route path="/rank" element={<Rank />} />
+        <Route path="*" element={<NotFound />} /> {/*404페이지 */}
+        <Route path="/" element={<Splash />} /> {/*스플래시 애니메이션 */}
+        <Route path="/history" element={<History />} /> {/*기존 접속 이력 확인 */}
+        <Route path="/tutorials" element={<Tutorials />} /> {/*튜토리얼 */}
+        <Route path="/game" element={<Game />} /> {/*게임 진행 */}
+        <Route path="/rank" element={<Rank />} /> {/*랭킹 */}
       </Routes>
     </BrowserRouter>
   )
