@@ -38,3 +38,7 @@ h5 {
 .btn.main2 {
   @apply bg-main2 rounded-md px-4 py-2 text-white hover:bg-[#7474f6] active:bg-[#7474f6];
 }
+
+.btn.main3 {
+  @apply bg-main3 rounded-md px-4 py-2 text-white hover:bg-[#fd7d7d] active:bg-[#fd7d7d];
+}

@@ -1,3 +1,18 @@
+/**물음표 애니메이션 */
+@keyframes scaleUpDown {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.167);
+  }
+}
+
+.animate-scale {
+  animation: scaleUpDown 1.5s ease-in-out infinite;
+}
+
 @keyframes glow {
   0% {
     opacity: 0.4;
