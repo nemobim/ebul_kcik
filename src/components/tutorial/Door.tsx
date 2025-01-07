@@ -2,6 +2,7 @@ import { useState } from 'react'
 import bottomBlock from '../../assets/tutorial/block.png'
 import closeDoorImg from '../../assets/tutorial/doorclose.png'
 import bottomLight from '../../assets/tutorial/light.png'
+import questionMark from '../../assets/tutorial/question_mark.png'
 import { useModal } from '../../hook/useModal'
 
 const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
@@ -53,6 +54,9 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
       {/* 문과 빛 */}
       <div className="relative z-10 mt-[14rem] flex flex-col items-center">
         <img src={closeDoorImg} alt="닫힌_문" className="w-[90%] max-w-[20rem]" />
+        <button onClick={handleNextStep}>
+          <img src={questionMark} alt="물음표" className="animate-scale absolute top-[9rem] h-auto w-[3rem]" />
+        </button>
         <img src={bottomLight} alt="바닥_빛" className="w-[110%] max-w-[26rem]" />
       </div>
 
@@ -66,7 +70,7 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
           backgroundRepeat: 'repeat',
           backgroundSize: 'contain',
         }}
-      ></div>
+      />
     </div>
 
     // <div className="relative flex h-screen items-center justify-center bg-black">
