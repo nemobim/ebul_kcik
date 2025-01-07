@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import blanket from '../../assets/blanket.png' // 이불 이미지
 import house from '../../assets/house.png' // 지붕 이미지
-import './SkyAnimation.css'
+import '../../styles/animated.css'
 
 const SkyAnimation = () => {
   const [showHouse, setShowHouse] = useState(true) // 지붕 표시 여부

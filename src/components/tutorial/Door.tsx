@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import doorImg from '../../assets/door.png'
+import bottomBlock from '../../assets/tutorial/block.png'
+import closeDoorImg from '../../assets/tutorial/doorclose.png'
+import bottomLight from '../../assets/tutorial/light.png'
 import { useModal } from '../../hook/useModal'
 
 const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
@@ -47,23 +49,43 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
   }
 
   return (
-    <div className="relative flex h-screen items-center justify-center bg-black">
-      <img src={doorImg} alt="문" className="h-[20rem] w-[10rem] opacity-80" onClick={handleNextStep} />
-      <div className="absolute top-[42%]">
-        {nickname.fixedNickname ? (
-          <p className="text-white">{nickname.fixedNickname}</p>
-        ) : (
-          <button
-            onClick={handleShowNicknameModal}
-            className="glow-animation bg-transparent text-3xl font-bold transition-transform duration-300 hover:scale-150 hover:animate-none hover:text-yellow-300"
-          >
-            ?
-          </button>
-        )}
+    <div className="relative flex h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-[#32193e] to-[#79707f]">
+      {/* 문과 빛 */}
+      <div className="relative z-10 mt-[14rem] flex flex-col items-center">
+        <img src={closeDoorImg} alt="닫힌_문" className="w-[90%] max-w-[20rem]" />
+        <img src={bottomLight} alt="바닥_빛" className="w-[110%] max-w-[26rem]" />
       </div>
-      {nickname.fixedNickname && <i className="ri-cursor-fill glow-animation absolute bottom-[26rem] right-[9.5rem] text-3xl"></i>}
-      {Modal}
+
+      {/* 벽돌 바닥 */}
+      <div
+        className="absolute left-0 right-0 z-0"
+        style={{
+          top: 'calc(50% + 13rem)', // 문과 빛 아래부터 시작 (문과 빛의 높이를 포함)
+          bottom: 0, // 화면의 하단까지 채우기
+          backgroundImage: `url(${bottomBlock})`,
+          backgroundRepeat: 'repeat',
+          backgroundSize: 'contain',
+        }}
+      ></div>
     </div>
+
+    // <div className="relative flex h-screen items-center justify-center bg-black">
+    //   <img src={doorImg} alt="문" className="h-[20rem] w-[10rem] opacity-80" onClick={handleNextStep} />
+    //   <div className="absolute top-[42%]">
+    //     {nickname.fixedNickname ? (
+    //       <p className="text-white">{nickname.fixedNickname}</p>
+    //     ) : (
+    //       <button
+    //         onClick={handleShowNicknameModal}
+    //         className="glow-animation bg-transparent text-3xl font-bold transition-transform duration-300 hover:scale-150 hover:animate-none hover:text-yellow-300"
+    //       >
+    //         ?
+    //       </button>
+    //     )}
+    //   </div>
+    //   {nickname.fixedNickname && <i className="ri-cursor-fill glow-animation absolute bottom-[26rem] right-[9.5rem] text-3xl"></i>}
+    //   {Modal}
+    // </div>
   )
 }
 

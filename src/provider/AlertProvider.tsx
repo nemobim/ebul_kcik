@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react'
 import ReactDOM from 'react-dom'
-import '../shared/modal.css'
+import '../styles/modal.css'
 
 /**Notice 종류 */
 type NotificationType = 'success' | 'danger' | 'info' | 'warning'
