@@ -41,9 +41,13 @@ h5 {
 }
 
 .btn.main2 {
-  @apply rounded-md bg-main2 px-4 py-2 text-white hover:bg-[#7474f6] active:bg-[#7474f6];
+  @apply bg-main2 text-white hover:bg-[#7474f6] active:bg-[#7474f6] disabled:bg-gray2 disabled:text-gray3;
 }
 
 .btn.main3 {
-  @apply rounded-md bg-main3 px-4 py-2 text-white hover:bg-[#fd7d7d] active:bg-[#fd7d7d];
+  @apply bg-main3 text-white hover:bg-[#fd7d7d] active:bg-[#fd7d7d] disabled:bg-gray2 disabled:text-gray3;
+}
+
+.bg-tutorial {
+  @apply bg-gradient-to-b from-[#32193e] to-[#79707f];
 }

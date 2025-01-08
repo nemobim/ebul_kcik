@@ -36,7 +36,7 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
   }
 
   return (
-    <div className="relative flex h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-[#32193e] to-[#79707f]">
+    <div className="bg-tutorial relative flex h-screen flex-col items-center justify-center overflow-hidden">
       {/* 문과 빛 */}
       <div className={twMerge('relative z-10 flex w-full flex-col items-center', !isDoorOpen && 'mt-[14rem]')}>
         <img
@@ -48,7 +48,7 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
         {!isDoorOpen && (
           <>
             {roomName ? (
-              <h2 className="absolute top-[7.3rem] font-semibold">{roomName}</h2>
+              <h2 className="absolute top-[7.6rem] font-semibold">{roomName}</h2>
             ) : (
               <button onClick={showNicknameModal}>
                 <img src={questionMark} alt="물음표" className="animate-scale absolute top-[9rem] h-auto w-[3rem]" />

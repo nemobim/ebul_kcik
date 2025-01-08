@@ -41,11 +41,7 @@ const RoomNameModal = ({ hideModal, setRoomName }: { hideModal: () => void; setR
         <button type="button" className="w-[4rem] text-gray1" onClick={hideModal}>
           취소
         </button>
-        <button
-          type="submit"
-          disabled={!watchNickname || watchNickname.trim() === ''}
-          className="rounded-md border-[3px] border-black bg-main2 px-[18px] py-1 text-white disabled:bg-gray2 disabled:text-gray3"
-        >
+        <button type="submit" disabled={!watchNickname || watchNickname.trim() === ''} className="btn main2 rounded-md border-[3px] border-black px-[18px] py-1">
           작성완료
         </button>
       </div>
