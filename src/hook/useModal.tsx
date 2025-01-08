@@ -2,18 +2,13 @@ import { useState } from 'react'
 import ReactDOM from 'react-dom'
 import { twMerge } from 'tailwind-merge'
 
-type TModal = {
-  title: string
-  children: React.ReactNode
-}
-
 export const useModal = () => {
-  const [modalContent, setModalContent] = useState<TModal | null>(null)
+  const [modalContent, setModalContent] = useState<React.ReactNode | null>(null)
   const [isClosing, setIsClosing] = useState(false) // 모달 닫힘 상태를 관리
 
   /** 모달 표시 */
-  const showModal = ({ title, children }: TModal) => {
-    setModalContent({ title, children })
+  const showModal = (children: React.ReactNode) => {
+    setModalContent(children)
     setIsClosing(false) // 모달이 열릴 때 닫힘 상태 초기화
   }
 
@@ -27,15 +22,15 @@ export const useModal = () => {
     modalContent &&
     ReactDOM.createPortal(
       <div
-        className={twMerge(`fixed inset-0 z-50 flex items-center justify-center bg-black/50`, isClosing ? 'fade_out' : 'fade_in')}
+        className={twMerge(`fixed inset-0 z-50 mx-auto flex max-w-md items-center justify-center bg-black/50`, isClosing ? 'fade_out' : 'fade_in')}
         onAnimationEnd={() => {
           if (isClosing) {
             setModalContent(null) // 애니메이션이 끝난 후 모달 제거
           }
         }}
       >
-        <div id="alert-box" className={twMerge(`min-w-[25rem] max-w-[1200px] rounded bg-white shadow-lg`, isClosing ? 'slide_out' : 'slide_in')}>
-          <div className="p-5">{modalContent.children}</div>
+        <div id="alert-box" className={twMerge(`w-[85%]`, isClosing ? 'slide_out' : 'slide_in')}>
+          {modalContent}
         </div>
       </div>,
       document.body,

@@ -27,7 +27,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="mx-auto h-screen max-w-md bg-white">
+      <div id="modal-root" className="mx-auto h-screen max-w-md bg-white">
         <AlertProvider>
           <Router />
         </AlertProvider>
