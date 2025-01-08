@@ -6,7 +6,9 @@ const Room = ({ handleNextStep }: { handleNextStep: () => void }) => {
     <div className="flex h-screen w-full flex-col items-center justify-center">
       <div className="relative w-[90%]">
         <img src={roomImg} alt="방" className="w-full" />
-        <img onClick={handleNextStep} src={marker} alt="마커" className="animate-jump absolute right-[20%] top-[40%] w-[20%] max-w-[80px]" />
+        <button onClick={handleNextStep}>
+          <img src={marker} alt="마커" className="animate-jump absolute right-[20%] top-[40%] w-[20%] max-w-[80px]" />
+        </button>
       </div>
     </div>
   )
