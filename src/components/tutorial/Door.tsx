@@ -38,26 +38,26 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
   return (
     <div className="relative flex h-screen flex-col items-center justify-center overflow-hidden">
       {/* 문과 빛 */}
-      <div className={twMerge('relative z-10 flex w-full flex-col items-center', !isDoorOpen && 'mt-[14rem]')}>
+      <div className={twMerge('relative z-[1] flex w-full flex-col items-center', isDoorOpen ? 'xxs:mt-[4rem] xs:mt-0' : 'mt-[14rem]')}>
         <img
           src={isDoorOpen ? openDoorImg : closeDoorImg}
           alt="닫힌_문"
-          className={twMerge('h-auto w-[90%] max-w-[20rem]', roomName && 'cursor-pointer', isDoorOpen && 'z-[1]')}
+          className={twMerge('h-auto w-[80%] max-w-[20rem]', roomName && 'cursor-pointer', isDoorOpen && 'z-[1]')}
           onClick={handleNext}
         />
         {!isDoorOpen && (
           <>
             {roomName ? (
-              <h2 className="absolute top-[7.6rem] font-semibold">{roomName}</h2>
+              <h2 className="absolute top-[17%] font-semibold">{roomName}</h2>
             ) : (
               <button onClick={showNicknameModal}>
-                <img src={questionMark} alt="물음표" className="animate-scale absolute top-[9rem] h-auto w-[3rem]" />
+                <img src={questionMark} alt="물음표" className="animate-scale absolute top-[21%] h-auto w-[12%] max-w-[5rem]" />
               </button>
             )}
-            {roomName && <img src={cursor} alt="커서" className="animate-jump absolute left-[8.5rem] top-[18rem] h-auto w-[4rem]" />}
+            {roomName && <img src={cursor} alt="커서" className="animate-jump absolute left-[30%] top-[41%] h-auto w-[15%] max-w-[4rem]" />}
           </>
         )}
-        <img src={bottomLight} alt="바닥_빛" className={twMerge('w-[90%] max-w-[26rem]', isDoorOpen && 'absolute -bottom-[14rem]')} />
+        <img src={bottomLight} alt="바닥_빛" className={twMerge('w-[90%] max-w-[26rem]', isDoorOpen && 'absolute -bottom-[40%]')} />
       </div>
 
       {/* 벽돌 바닥 */}

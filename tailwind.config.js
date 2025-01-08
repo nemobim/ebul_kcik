@@ -18,6 +18,10 @@ export default {
         gray3: '#DBE1ED',
         font: '#1F102A',
       },
+      screens: {
+        xxs: '310px',
+        xs: '380px',
+      },
     },
   },
   plugins: [],
