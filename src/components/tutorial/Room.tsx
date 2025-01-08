@@ -1,10 +1,13 @@
-import roomImg from '../../assets/room.png'
+import marker from '../../assets/tutorial/room/mark.png'
+import roomImg from '../../assets/tutorial/room/my_room.png'
 
 const Room = ({ handleNextStep }: { handleNextStep: () => void }) => {
   return (
-    <div className="relative flex h-screen items-center justify-center bg-black">
-      <img src={roomImg} alt="문" className="relative opacity-25" />
-      <i onClick={handleNextStep} className="ri-cursor-fill glow-animation absolute bottom-[22rem] right-[10rem] text-3xl"></i>
+    <div className="flex h-screen w-full flex-col items-center justify-center">
+      <div className="relative w-[90%]">
+        <img src={roomImg} alt="방" className="w-full" />
+        <img onClick={handleNextStep} src={marker} alt="마커" className="animate-jump absolute right-[20%] top-[40%] w-[20%] max-w-[80px]" />
+      </div>
     </div>
   )
 }

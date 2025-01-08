@@ -18,7 +18,7 @@ const Tutorials = () => {
    */
   const tutorialSteps = [<Door handleNextStep={handleNextStep} />, <Room handleNextStep={handleNextStep} />, <Bed />]
 
-  return <div className="h-full w-full">{tutorialSteps[step]}</div>
+  return <div className="bg-tutorial h-full w-full">{tutorialSteps[step]}</div>
 }
 
 export default Tutorials

@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import bottomBlock from '../../assets/tutorial/block.png'
-import cursor from '../../assets/tutorial/cursor.png'
-import closeDoorImg from '../../assets/tutorial/doorclose.png'
-import openDoorImg from '../../assets/tutorial/dooropen.png'
-import bottomLight from '../../assets/tutorial/light.png'
-import questionMark from '../../assets/tutorial/question_mark.png'
+import bottomBlock from '../../assets/tutorial/door/block.png'
+import cursor from '../../assets/tutorial/door/cursor.png'
+import closeDoorImg from '../../assets/tutorial/door/doorclose.png'
+import openDoorImg from '../../assets/tutorial/door/dooropen.png'
+import bottomLight from '../../assets/tutorial/door/light.png'
+import questionMark from '../../assets/tutorial/door/question_mark.png'
 import { useModal } from '../../hook/useModal'
 import RoomNameModal from '../game/Modal/RoomNameModal'
 
@@ -36,7 +36,7 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
   }
 
   return (
-    <div className="bg-tutorial relative flex h-screen flex-col items-center justify-center overflow-hidden">
+    <div className="relative flex h-screen flex-col items-center justify-center overflow-hidden">
       {/* 문과 빛 */}
       <div className={twMerge('relative z-10 flex w-full flex-col items-center', !isDoorOpen && 'mt-[14rem]')}>
         <img
