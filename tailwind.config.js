@@ -6,6 +6,9 @@ export default {
       fontFamily: {
         sans: ['Galmuri', 'sans-serif'],
       },
+      animation: {
+        slowPing: 'ping 2s linear infinite', // 2초로 변경
+      },
       colors: {
         main1: '#FCEF8D',
         main2: '#5B5BEC',

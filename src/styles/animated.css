@@ -13,6 +13,23 @@
   animation: scaleUpDown 1.5s ease-in-out infinite;
 }
 
+/* 점프 애니메이션
+- 문짝 커서
+ */
+@keyframes jump {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-jump {
+  animation: jump 1s ease-in-out infinite;
+}
+
 @keyframes glow {
   0% {
     opacity: 0.4;
