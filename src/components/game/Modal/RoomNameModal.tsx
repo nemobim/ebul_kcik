@@ -32,6 +32,7 @@ const RoomNameModal = ({ hideModal, setRoomName }: { hideModal: () => void; setR
               return koreanRegex.test(value) || '닉네임은 한글만 입력해주세요.'
             },
           })}
+          maxLength={8}
           placeholder="닉네임을 적어주세요."
           className="w-full rounded-lg px-4 py-[14px]"
         />

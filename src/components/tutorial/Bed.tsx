@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import sleepUserImg from '../../assets/sleep_user.png'
 
 const Bed = () => {
   const navigate = useNavigate()
@@ -42,25 +41,26 @@ const Bed = () => {
   }
 
   return (
-    <div className="relative flex h-screen flex-col items-center justify-center gap-5 bg-black">
-      {/* 배경 이미지 */}
-      <img src={sleepUserImg} alt="잠자는 사용자" className="relative opacity-25" />
+    <div className="flex h-screen w-full flex-col items-center justify-center">sss</div>
+    // <div className="relative flex h-screen flex-col items-center justify-center gap-5 bg-black">
+    //   {/* 배경 이미지 */}
+    //   <img src={sleepUserImg} alt="잠자는 사용자" className="relative opacity-25" />
 
-      {/* 대사 박스 */}
-      <div className="relative flex items-center justify-center">
-        <div className="relative w-[300px] rounded-md bg-white p-5 text-lg">
-          {/* 대사 출력 */}
-          {displayedText}
-          {typing && <span className="typing-cursor">|</span>}
-          {/* 다음 버튼 - 삼각형 모양 */}
-          {!typing && (
-            <div className="absolute bottom-0 right-0 m-2 cursor-pointer" onClick={handleNextScript}>
-              <i className="ri-arrow-down-s-fill text-3xl text-blue-500 transition-colors duration-200 hover:text-blue-600" title="다음" />
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+    //   {/* 대사 박스 */}
+    //   <div className="relative flex items-center justify-center">
+    //     <div className="relative w-[300px] rounded-md bg-white p-5 text-lg">
+    //       {/* 대사 출력 */}
+    //       {displayedText}
+    //       {typing && <span className="typing-cursor">|</span>}
+    //       {/* 다음 버튼 - 삼각형 모양 */}
+    //       {!typing && (
+    //         <div className="absolute bottom-0 right-0 m-2 cursor-pointer" onClick={handleNextScript}>
+    //           <i className="ri-arrow-down-s-fill text-3xl text-blue-500 transition-colors duration-200 hover:text-blue-600" title="다음" />
+    //         </div>
+    //       )}
+    //     </div>
+    //   </div>
+    // </div>
   )
 }
 

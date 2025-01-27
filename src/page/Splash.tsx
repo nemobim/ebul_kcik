@@ -4,10 +4,11 @@ import splash from '../assets/lottie/splash.json'
 
 const Splash = () => {
   const navigate = useNavigate()
+  //onComplete={() => navigate('/tutorials')}
 
   return (
     <div className="flex h-full items-center justify-center">
-      <Lottie animationData={splash} loop={false} onComplete={() => navigate('/tutorials')} />
+      <Lottie animationData={splash} loop={false} />
     </div>
   )
 }

@@ -10,8 +10,8 @@ const App = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      // 310px 이하의 화면은 게임 불가
-      setIsSmallScreen(window.innerWidth <= 310)
+      //넓이 310px * 680px  이하의 화면은 게임 불가
+      setIsSmallScreen(window.innerWidth <= 310 || window.innerHeight <= 660)
     }
 
     // 초기 화면 크기 확인
@@ -27,10 +27,12 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div id="modal-root" className="mx-auto h-screen max-w-md bg-white">
-        <AlertProvider>
-          <Router />
-        </AlertProvider>
+      <div className="mx-auto flex h-screen max-w-md items-center justify-center bg-white">
+        <div className="h-full max-h-[900px] w-full overflow-hidden">
+          <AlertProvider>
+            <Router />
+          </AlertProvider>
+        </div>
       </div>
     </div>
   )
