@@ -3,7 +3,7 @@ import roomImg from '../../assets/tutorial/room/my_room.png'
 
 const Room = ({ handleNextStep }: { handleNextStep: () => void }) => {
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center">
+    <div className="flex h-full flex-col items-center justify-center">
       <div className="relative w-[90%]">
         <img src={roomImg} alt="방" className="w-full" />
         <button onClick={handleNextStep}>
