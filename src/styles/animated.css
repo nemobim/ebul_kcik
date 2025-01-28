@@ -66,3 +66,61 @@
 .animate-glow {
   animation: glow 2s infinite;
 }
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(20%);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/**팝업 애니메이션 */
+
+.slide_in {
+  @apply animate-[slideIn_0.5s_forwards];
+}
+
+.slide_out {
+  @apply animate-[slideOut_0.5s_forwards];
+}
+
+.fade_in {
+  @apply animate-[fadeIn_0.5s_forwards];
+}
+
+.fade_out {
+  @apply animate-[fadeOut_0.5s_forwards];
+}

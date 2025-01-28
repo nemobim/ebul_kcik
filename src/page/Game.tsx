@@ -14,9 +14,9 @@ const Game = () => {
   /**튜토리얼 스텝
    * 0: 고민 적기
    * 1: 게임 시작
-   * 2: 이불 날리기
+   * 2: 이불 날리기(결과)
    */
-  const gameSteps = [<WorryDump handleNextStep={handleNextStep} />, <KickEbul handleNextStep={handleNextStep} />, <GameResult />]
+  const gameSteps = [<WorryDump />, <KickEbul />, <GameResult />]
 
   return <div className="h-full w-full">{gameSteps[step]}</div>
 }

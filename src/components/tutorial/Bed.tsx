@@ -54,7 +54,7 @@ const Bed = () => {
         </p>
         {/* 다음 버튼 (타이핑이 끝나면 활성화) */}
         {!typing && (
-          <button onClick={handleNextScript} className="animate-glow w-[8%]">
+          <button onClick={handleNextScript} className="animate-glow">
             <img src={nextBtn} alt="다음 버튼" className="h-auto w-[90%] max-w-[100px]" />
           </button>
         )}

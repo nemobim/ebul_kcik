@@ -1,21 +1,21 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { twMerge } from 'tailwind-merge'
 
-export const useModal = () => {
+export const useModal = (isFullScreen?: boolean) => {
   const [modalContent, setModalContent] = useState<React.ReactNode | null>(null)
   const [isClosing, setIsClosing] = useState(false) // 모달 닫힘 상태를 관리
 
   /** 모달 표시 */
-  const showModal = (children: React.ReactNode) => {
+  const showModal = useCallback((children: React.ReactNode) => {
     setModalContent(children)
     setIsClosing(false) // 모달이 열릴 때 닫힘 상태 초기화
-  }
+  }, [])
 
   /** 모달 닫기 */
-  const hideModal = () => {
+  const hideModal = useCallback(() => {
     setIsClosing(true) // 닫힘 애니메이션 트리거
-  }
+  }, [])
 
   /** 모달 컴포넌트 */
   const Modal =
@@ -29,7 +29,7 @@ export const useModal = () => {
           }
         }}
       >
-        <div id="alert-box" className={twMerge(`w-[85%]`, isClosing ? 'slide_out' : 'slide_in')}>
+        <div id="alert-box" className={twMerge(`w-[85%]`, isClosing ? 'slide_out' : 'slide_in', isFullScreen && 'h-[90%]')}>
           {modalContent}
         </div>
       </div>,
