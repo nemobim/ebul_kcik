@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Game from '../page/Game'
 import History from '../page/History'
 import { NotFound } from '../page/NotFound'
 import Splash from '../page/Splash'
@@ -12,8 +13,7 @@ const Router = () => {
         <Route path="/" element={<Splash />} /> {/*스플래시 애니메이션 */}
         <Route path="/history" element={<History />} /> {/*기존 접속 이력 확인 */}
         <Route path="/tutorials" element={<Tutorials />} /> {/*튜토리얼 */}
-        {/* <Route path="/game" element={<Game />} /> */}
-        {/*게임 진행 */}
+        <Route path="/game" element={<Game />} /> {/*게임 진행 */}
         {/* <Route path="/rank" element={<Rank />} /> */}
         {/*랭킹 */}
         {/* <Route path="/content" element={<Content />} /> */}

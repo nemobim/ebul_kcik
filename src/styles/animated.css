@@ -30,222 +30,39 @@
   animation: jump 1s ease-in-out infinite;
 }
 
-@keyframes glow {
-  0% {
-    opacity: 0.4;
-    transform: scale(1);
-    color: #ffd700; /* 황금색 */
-  }
-  25% {
-    opacity: 1;
-    transform: scale(1.1);
-    color: #fffacd; /* 밝은 노란색 */
-  }
+/* 깜박임 효과*/
+@keyframes blink {
+  0%,
   50% {
-    opacity: 0.8;
-    transform: scale(1);
-    color: #ffd700;
-  }
-  75% {
     opacity: 1;
-    transform: scale(1.1);
-    color: #fffacd;
   }
+  51%,
   100% {
-    opacity: 0.4;
-    transform: scale(1);
-    color: #ffd700;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(20%);
     opacity: 0;
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideOut {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(20%);
-    opacity: 0;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-.slide_in {
-  @apply animate-[slideIn_0.5s_forwards];
-}
-
-.slide_out {
-  @apply animate-[slideOut_0.5s_forwards];
-}
-
-.fade_in {
-  @apply animate-[fadeIn_0.5s_forwards];
-}
-
-.fade_out {
-  @apply animate-[fadeOut_0.5s_forwards];
-}
-
-.glow-animation {
-  animation: glow 1.5s infinite;
 }
 
 /* 깜박이는 커서 효과 */
-.typing-cursor::after {
+.animate-typing-cursor::after {
   content: '|';
   margin-left: 5px;
   display: inline-block;
-  animation: blink 1s steps(2, start) infinite;
+  animation: blink 1s infinite;
 }
 
-@keyframes blink {
+/**버튼 깜박임 효과 */
+@keyframes glow {
   0%,
   100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
     opacity: 1;
-  }
-  50% {
-    opacity: 0;
+    transform: scale(1.1);
   }
 }
 
-/* 숫자 크기 변화 애니메이션 */
-@keyframes pulse-scale {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.8;
-  }
-}
-
-/* 애니메이션 클래스 */
-.timer-animation {
-  animation: pulse-scale 1s ease-in-out infinite;
-}
-
-@keyframes punch {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.5);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.animate-punch {
-  animation: punch 0.3s ease-out;
-}
-
-/* 배경 단계별 스타일 */
-.background-stage-1 {
-  background: linear-gradient(to bottom, #758cff, #61a5ff);
-}
-.background-stage-2 {
-  background: linear-gradient(to bottom, #61a5ff, #6ef0ff);
-}
-.background-stage-3 {
-  background: linear-gradient(to bottom, #6ef0ff, #ffeab3);
-}
-.background-stage-4 {
-  background: linear-gradient(to bottom, #ffeab3, #ff7eb3);
-}
-
-/* 배경 애니메이션 */
-.background-animation {
-  animation:
-    moveBackground 4s linear infinite,
-    changeBackground 16s linear infinite;
-}
-
-@keyframes moveBackground {
-  from {
-    transform: translateY(0%);
-  }
-  to {
-    transform: translateY(-50%);
-  }
-}
-
-@keyframes changeBackground {
-  0% {
-    background: linear-gradient(to bottom, #758cff, #61a5ff);
-  }
-  25% {
-    background: linear-gradient(to bottom, #61a5ff, #6ef0ff);
-  }
-  50% {
-    background: linear-gradient(to bottom, #6ef0ff, #ffeab3);
-  }
-  100% {
-    background: linear-gradient(to bottom, #ffeab3, #ff7eb3);
-  }
-}
-
-/* 이불 튕겨나가는 초기 애니메이션 */
-.blanket-launch {
-  animation: blanketLaunch 2s ease-out forwards;
-}
-
-@keyframes blanketLaunch {
-  0% {
-    bottom: 24%;
-    transform: translateX(-50%);
-  }
-  50% {
-    bottom: 50%;
-    transform: translateX(-50%) scale(1.1);
-  }
-  100% {
-    bottom: 100%;
-    transform: translateX(-50%);
-  }
-}
-
-/* 이불 날아가는 애니메이션 */
-.blanket-fly {
-  animation: blanketFly 4s ease-in-out infinite;
-}
-
-@keyframes blanketFly {
-  0%,
-  100% {
-    transform: translateX(-50%) translateY(-10px);
-  }
-  50% {
-    transform: translateX(-50%) translateY(10px);
-  }
+.animate-glow {
+  animation: glow 2s infinite;
 }
