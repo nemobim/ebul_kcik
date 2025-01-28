@@ -1,12 +1,13 @@
+import { Dispatch, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form'
 
-const RoomNameModal = ({ hideModal, setRoomName }: { hideModal: () => void; setRoomName: (nickname: string) => void }) => {
+const RoomNameModal = ({ hideModal, setRoomName, roomName }: { hideModal: () => void; setRoomName: Dispatch<SetStateAction<string>>; roomName: string }) => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<{ nickname: string }>()
+  } = useForm<{ nickname: string }>({ defaultValues: { nickname: roomName } })
 
   /**닉네임 추적 */
   const watchNickname = watch('nickname')
@@ -42,7 +43,7 @@ const RoomNameModal = ({ hideModal, setRoomName }: { hideModal: () => void; setR
         <button type="button" className="w-[4rem] text-gray1" onClick={hideModal}>
           취소
         </button>
-        <button type="submit" disabled={!watchNickname || watchNickname.trim() === ''} className="btn main2 rounded-md border-[3px] border-black px-[18px] py-1">
+        <button type="submit" disabled={!watchNickname || watchNickname.trim() === ''} className="btn main2">
           작성완료
         </button>
       </div>

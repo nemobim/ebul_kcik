@@ -40,6 +40,10 @@ h5 {
   @apply text-[1.25rem];
 }
 
+.btn {
+  @apply rounded-md border-[3px] border-black px-[18px] py-1;
+}
+
 .btn.main2 {
   @apply bg-main2 text-white hover:bg-[#7474f6] active:bg-[#7474f6] disabled:bg-gray2 disabled:text-gray3;
 }

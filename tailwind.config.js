@@ -13,9 +13,9 @@ export default {
         main1: '#FCEF8D',
         main2: '#5B5BEC',
         main3: '#EA6262',
-        gray1: '#6B7588',
-        gray2: '#B2BACB',
-        gray3: '#DBE1ED',
+        gray1: '#5E5565',
+        gray2: '#AEA7B3',
+        gray3: '#D6CFDA',
         font: '#1F102A',
       },
       screens: {

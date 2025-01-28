@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 import 'remixicon/fonts/remixicon.css'
 import Error from './components/error/Error'
+import ErrorFallBack from './page/ErrorFallBack'
 import { AlertProvider } from './provider/AlertProvider'
 import Router from './shared/Router'
 import './styles/animated.css'
@@ -29,9 +31,11 @@ const App = () => {
     <div className="min-h-screen bg-gray-100">
       <div className="mx-auto flex h-screen max-w-md items-center justify-center bg-white">
         <div className="h-full max-h-[900px] w-full overflow-hidden">
-          <AlertProvider>
-            <Router />
-          </AlertProvider>
+          <ErrorBoundary FallbackComponent={ErrorFallBack}>
+            <AlertProvider>
+              <Router />
+            </AlertProvider>
+          </ErrorBoundary>
         </div>
       </div>
     </div>
