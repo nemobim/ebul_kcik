@@ -1,3 +1,5 @@
+'use client'
+
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import ebulUser from '../../assets/game/game.png'
 import { TGameState } from '../../page/Game'
@@ -11,18 +13,17 @@ export type TEffect = {
 }
 
 const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void; setGameState: Dispatch<SetStateAction<TGameState>> }) => {
-  const [isGameRunning, setIsGameRunning] = useState(false) //게임 실행 여부
-  const [isCounting, setIsCounting] = useState(false) //카운팅 시작 여부
-  const [isGameOver, setIsGameOver] = useState(false) //게임 종료 여부
+  const [isGameRunning, setIsGameRunning] = useState(false) // 게임 실행 여부
+  const [isCounting, setIsCounting] = useState(false) // 카운팅 시작 여부
+  const [isGameOver, setIsGameOver] = useState(false) // 게임 종료 여부
 
-  const [count, setCount] = useState(3) //3초 카운트
-  const [timeLeft, setTimeLeft] = useState(20) //본게임 20초 카운트
-  const [hitCount, setHitCount] = useState(0) //타격횟수
-  const [effects, setEffects] = useState<TEffect[]>([]) //타격효과
+  const [count, setCount] = useState(3) // 3초 카운트
+  const [timeLeft, setTimeLeft] = useState(20) // 본게임 20초 카운트
+  const [hitCount, setHitCount] = useState(0) // 타격 횟수
+  const [effects, setEffects] = useState<TEffect[]>([]) // 타격 효과
 
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const gameTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
-  const effectTimeoutsRef = useRef<number[]>([]) // 효과 타이머 관리
 
   /** 20초 게임 타이머 시작 */
   const startGameTimer = useCallback(() => {
@@ -40,7 +41,7 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
         if (prev <= 1) {
           clearInterval(gameTimerRef.current!)
           setIsGameRunning(false)
-          setIsGameOver(true)
+          setIsGameOver(true) //게임 종료
           return 0
         }
         return prev - 1
@@ -53,7 +54,6 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
     setIsCounting(true)
     setCount(3)
 
-    // 이전 타이머 정리
     if (countdownRef.current) {
       clearInterval(countdownRef.current)
     }
@@ -75,24 +75,22 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
   /** 타격 횟수 측정 */
   const handleHit = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!isGameRunning || timeLeft <= 0) return //게임 실행 중이고 시간이 남아있어야 타격 가능
+      if (!isGameRunning || timeLeft <= 0) return //게임이 진행 중이고 시간이 남을때만 가능
 
-      const newCount = hitCount + 1
-      setHitCount(newCount)
+      setHitCount(prev => prev + 1) // 최신 상태 반영
 
-      // 클릭 위치에 효과 추가
       const rect = e.currentTarget.getBoundingClientRect()
       const newEffect: TEffect = {
         id: Date.now(),
-        x: e.clientX - rect.left, // 상대 좌표로 변환
+        x: e.clientX - rect.left,
         y: e.clientY - rect.top,
-        combo: newCount, // 새로운 hitCount 사용
+        combo: hitCount + 1,
       }
 
-      setEffects(prev => [...prev, newEffect])
+      setEffects(prev => prev.concat(newEffect))
 
       // 효과 제거 타이머 설정
-      const timeoutId = window.setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setEffects(prev => prev.filter(effect => effect.id !== newEffect.id))
       }, 1000)
 
@@ -113,11 +111,12 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
     return () => {
       if (countdownRef.current) clearInterval(countdownRef.current)
       if (gameTimerRef.current) clearInterval(gameTimerRef.current)
-      effectTimeoutsRef.current.forEach(id => clearTimeout(id))
+      effectTimeoutsRef.current.forEach(clearTimeout)
       effectTimeoutsRef.current = []
     }
   }, [])
 
+  /** 게임 종료 후 상태 업데이트 */
   useEffect(() => {
     if (isGameOver) {
       setGameState(prev => ({ ...prev, hitCount }))
