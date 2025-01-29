@@ -47,7 +47,7 @@ const Bed = () => {
         <img src={bedScripts[currentScript].img} alt="잠자는 사용자" className="w-full" />
       </div>
       {/**대사 박스 */}
-      <div className="mt-5 flex w-[90%] justify-between rounded-xl border-[3px] border-black bg-main1 px-3 py-5">
+      <div className="text-dialog mt-5 flex justify-between px-3 py-5">
         <p>
           {displayedText}
           {typing && <span className="animate-typing-cursor" />}

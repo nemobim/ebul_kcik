@@ -1,43 +1,69 @@
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 import close from '../../../assets/game/write/close.png'
 import { worryList } from '../../../utils/worry'
+import { TWorryContent } from '../WorryDump'
 
-const WorryContentModal = ({ hideModal }: { hideModal: () => void }) => {
+const WorryContentModal = ({
+  hideModal,
+  setWorryContent,
+  worryContent,
+}: {
+  hideModal: () => void
+  setWorryContent: Dispatch<SetStateAction<TWorryContent | undefined>>
+  worryContent?: TWorryContent
+}) => {
   const [selectedWorry, setSelectedWorry] = useState<{
     label: string
     text: string
     bgImg: string
   }>({
-    label: '',
-    text: '',
-    bgImg: '',
+    label: worryContent?.label || '',
+    text: worryContent?.text || '',
+    bgImg: worryContent?.bgImg || '',
   })
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ content: string }>()
+  } = useForm<{ content: string }>({
+    defaultValues: {
+      content: worryContent?.content,
+    },
+  })
 
+  /**고민 조각 선택 */
+  const handleWorrySelect = (worry: { label: string; text: string; bgImg: string }) => {
+    setSelectedWorry(worry)
+  }
+
+  /**고민 적기 제출 */
   const onSubmit = ({ content }: { content: string }) => {
-    console.log(content)
+    setWorryContent({
+      content,
+      label: selectedWorry.label,
+      text: selectedWorry.text,
+      bgImg: selectedWorry.bgImg,
+    })
     hideModal()
   }
 
   return (
     <div className="bg-worry-modal h-full max-h-[50rem] overflow-y-scroll rounded-xl border-[3px] border-black p-5">
       <div className="flex justify-end">
-        <button className="" onClick={hideModal}>
-          <img src={close} alt="닫기" />
-        </button>
+        {worryContent?.content && (
+          <button className="" onClick={hideModal}>
+            <img src={close} alt="닫기" />
+          </button>
+        )}
       </div>
       <form className="flex flex-col items-center" onSubmit={handleSubmit(onSubmit)}>
         <h4>고민 조각</h4>
         <div className="my-4 grid grid-cols-3 gap-6 xs:gap-8">
           {worryList.map(worry => (
-            <button key={worry.label} type="button" onClick={() => setSelectedWorry(worry)} className={twMerge(selectedWorry.label === worry.label && 'font-semibold text-main3')}>
+            <button key={worry.label} type="button" onClick={() => handleWorrySelect(worry)} className={twMerge(selectedWorry?.label === worry.label && 'font-semibold text-main3')}>
               <img src={worry.img} alt={worry.label} className="h-auto w-full" />
               <p className="text-sm">{worry.label}</p>
             </button>

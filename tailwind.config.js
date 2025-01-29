@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Galmuri', 'sans-serif'],
+        galmuri11: ['Galmuri11', 'sans-serif'],
+        galmuri9: ['Galmuri9', 'sans-serif'],
       },
       animation: {
         slowPing: 'ping 2s linear infinite', // 2초로 변경

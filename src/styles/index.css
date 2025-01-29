@@ -7,6 +7,7 @@
 body {
   font-family: 'Galmuri11', sans-serif;
   font-size: 1rem;
+  color: #1f102a;
 
   -webkit-touch-callout: none;
   user-select: none;
@@ -31,27 +32,27 @@ body {
 }
 
 h1 {
-  @apply text-[3rem];
+  @apply font-galmuri9 text-[3rem];
 }
 
 h2 {
-  @apply text-[2rem];
+  @apply font-galmuri9 text-[2rem];
 }
 
 h3 {
-  @apply text-[1.75rem];
+  @apply font-galmuri9 text-[1.75rem];
 }
 
 h4 {
-  @apply text-[1.5rem];
+  @apply font-galmuri9 text-[1.5rem];
 }
 
 h5 {
-  @apply text-[1.25rem];
+  @apply font-galmuri9 text-[1.25rem];
 }
 
 .btn {
-  @apply rounded-md border-[3px] border-black px-5 py-2;
+  @apply font-galmuri9 rounded-md border-[3px] border-black px-5 py-2;
 }
 
 .btn.main2 {
@@ -59,7 +60,7 @@ h5 {
 }
 
 .btn.main3 {
-  @apply bg-main3 text-white hover:bg-[#fd7d7d] active:bg-[#fd7d7d] disabled:bg-gray2 disabled:text-gray3;
+  @apply bg-main3 hover:bg-[#fd7d7d] active:bg-[#fd7d7d] disabled:bg-gray2 disabled:text-gray3;
 }
 
 /* 튜토리얼 배경 */
@@ -70,4 +71,9 @@ h5 {
 /* 고민 모달 배경 */
 .bg-worry-modal {
   @apply bg-gradient-to-b from-[#FFFFFF] to-[#FCEF8D];
+}
+
+/**대화창 배경 */
+.text-dialog {
+  @apply w-[90%] rounded-xl border-[3px] border-black bg-main1;
 }
