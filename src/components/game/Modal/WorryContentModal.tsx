@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 import close from '../../../assets/game/write/close.png'
+import { TGameState } from '../../../page/Game'
 import { worryList } from '../../../utils/worry'
 import { TWorryContent } from '../WorryDump'
 
@@ -9,10 +10,12 @@ const WorryContentModal = ({
   hideModal,
   setWorryContent,
   worryContent,
+  setGameState,
 }: {
   hideModal: () => void
   setWorryContent: Dispatch<SetStateAction<TWorryContent | undefined>>
   worryContent?: TWorryContent
+  setGameState: Dispatch<SetStateAction<TGameState>>
 }) => {
   const [selectedWorry, setSelectedWorry] = useState<{
     label: string
@@ -47,6 +50,7 @@ const WorryContentModal = ({
       text: selectedWorry.text,
       bgImg: selectedWorry.bgImg,
     })
+    setGameState(prev => ({ ...prev, worryLabel: selectedWorry.label }))
     hideModal()
   }
 

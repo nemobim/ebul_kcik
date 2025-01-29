@@ -3,8 +3,19 @@ import GameResult from '../components/game/GameResult'
 import KickEbul from '../components/game/KickEbul'
 import WorryDump from '../components/game/WorryDump'
 
+export type TGameState = {
+  worryLabel: string
+  hitCount: number
+}
+
 const Game = () => {
   const [step, setStep] = useState(0)
+
+  //게임 상태 관리
+  const [gameState, setGameState] = useState<TGameState>({
+    worryLabel: '',
+    hitCount: 0,
+  })
 
   /**다음 단계로 넘기기 */
   const handleNextStep = () => {
@@ -16,9 +27,9 @@ const Game = () => {
    * 1: 게임 시작
    * 2: 이불 날리기(결과)
    */
-  const gameSteps = [<WorryDump handleNextStep={handleNextStep} />, <KickEbul />, <GameResult />]
+  const gameSteps = [<WorryDump handleNextStep={handleNextStep} setGameState={setGameState} />, <KickEbul setGameState={setGameState} />, <GameResult />]
 
-  return <div className="h-full w-full">{gameSteps[step]}</div>
+  return <div className="h-full w-full">{gameSteps[1]}</div>
 }
 
 export default Game

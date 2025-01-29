@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import wakeUser from '../../assets/tutorial/bed/wake.png'
 import { useModal } from '../../hook/useModal'
+import { TGameState } from '../../page/Game'
 import WorryContentModal from './Modal/WorryContentModal'
 
 export type TWorryContent = {
@@ -10,21 +11,21 @@ export type TWorryContent = {
   text: string
 }
 
-const WorryDump = ({ handleNextStep }: { handleNextStep: () => void }) => {
+const WorryDump = ({ handleNextStep, setGameState }: { handleNextStep: () => void; setGameState: Dispatch<SetStateAction<TGameState>> }) => {
   const { Modal, hideModal, showModal } = useModal(true)
   /**고민적기 */
   const [worryContent, setWorryContent] = useState<TWorryContent>()
 
   /**고민 수정 */
   const showWorryEditModal = () => {
-    showModal(<WorryContentModal hideModal={hideModal} setWorryContent={setWorryContent} worryContent={worryContent} />)
+    showModal(<WorryContentModal hideModal={hideModal} setWorryContent={setWorryContent} worryContent={worryContent} setGameState={setGameState} />)
   }
 
   useEffect(() => {
     if (!worryContent?.label) {
-      showModal(<WorryContentModal hideModal={hideModal} setWorryContent={setWorryContent} />)
+      showModal(<WorryContentModal hideModal={hideModal} setWorryContent={setWorryContent} setGameState={setGameState} />)
     }
-  }, [showModal, hideModal, worryContent])
+  }, [showModal, hideModal, worryContent, setGameState])
 
   return (
     <div className="bg-tutorial flex h-full flex-col items-center justify-center">
