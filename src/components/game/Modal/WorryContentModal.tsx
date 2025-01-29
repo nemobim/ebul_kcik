@@ -55,7 +55,7 @@ const WorryContentModal = ({
   }
 
   return (
-    <div className="bg-worry-modal h-full max-h-[50rem] overflow-y-scroll rounded-xl border-[3px] border-black p-5">
+    <div className="bg-worry h-full max-h-[50rem] overflow-y-scroll rounded-xl border-[3px] border-black p-5">
       <div className="flex justify-end">
         {worryContent?.content && (
           <button className="" onClick={hideModal}>

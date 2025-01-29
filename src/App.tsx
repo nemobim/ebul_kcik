@@ -24,7 +24,7 @@ const App = () => {
   }, [])
 
   if (isSmallScreen) {
-    return <Error title="화면이 너무 작아요!" text="원활한 게임 플레이를 위해 PC 또는 더 큰 화면의 기기로 접속해주세요." />
+    return <Error title="화면 사이즈를 확인!" text="원활한 게임 플레이를 위해 권장 사이즈(310*680) 이상으로 플레이해주세요." />
   }
 
   return (

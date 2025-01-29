@@ -24,6 +24,7 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
 
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const gameTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const effectTimeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]) // 효과 타이머 관리
 
   /** 20초 게임 타이머 시작 */
   const startGameTimer = useCallback(() => {
@@ -31,7 +32,6 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
     setHitCount(0)
     setEffects([]) // 효과 초기화
 
-    // 이전 타이머 정리
     if (gameTimerRef.current) {
       clearInterval(gameTimerRef.current)
     }

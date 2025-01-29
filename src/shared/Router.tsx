@@ -16,7 +16,7 @@ const Router = () => {
         <Route path="/history" element={<History />} /> {/*기존 접속 이력 확인 */}
         <Route path="/tutorials" element={<Tutorials />} /> {/*튜토리얼 */}
         <Route path="/game" element={<Game />} /> {/*게임 진행 */}
-        <Route path="/rank" element={<Rank />} /> {/*랭킹 */}
+        <Route path="/ranking" element={<Rank />} /> {/*랭킹 */}
         <Route path="/content" element={<Content />} /> {/*모아보기*/}
       </Routes>
     </BrowserRouter>

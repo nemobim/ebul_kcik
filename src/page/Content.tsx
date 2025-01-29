@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import RankLayout from '../elements/layout/RankLayout'
+import RankTab from '../components/rank/RankTab'
 
 const Content = () => {
   const [isModalOpen, setModalOpen] = useState(false)
   return (
     <div>
-      <RankLayout />
+      <RankTab />
 
       {/* 필터 버튼 */}
       <div className="flex items-center justify-between px-4 py-2">

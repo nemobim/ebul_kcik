@@ -69,7 +69,7 @@ h5 {
 }
 
 /* 고민 모달 배경 */
-.bg-worry-modal {
+.bg-worry {
   @apply bg-gradient-to-b from-[#FFFFFF] to-[#FCEF8D];
 }
 

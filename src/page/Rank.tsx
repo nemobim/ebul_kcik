@@ -1,61 +1,63 @@
-import RankLayout from '../elements/layout/RankLayout'
+import RankTab from '../components/rank/RankTab'
+import { rankImg } from '../utils/rank'
 
 const Rank = () => {
+  const RANK = [
+    { score: 487, user: '잠만보' },
+    { score: 452, user: '고민킬러' },
+    { score: 433, user: '불면증' },
+    { score: 421, user: '새벽달' },
+    { score: 398, user: '걱정봇' },
+    { score: 376, user: '잠꾸러기' },
+    { score: 354, user: '고민냠' },
+    { score: 332, user: '불안이' },
+    { score: 321, user: '스트맨' },
+    { score: 309, user: '걱정이' },
+    { score: 287, user: '잠도둑' },
+    { score: 265, user: '고민제로' },
+    { score: 243, user: '불면이' },
+    { score: 221, user: '새벽이' },
+    { score: 198, user: '걱정마' },
+    { score: 176, user: '잠요정' },
+    { score: 154, user: '고민이' },
+    { score: 132, user: '불안맨' },
+    { score: 121, user: '스트짱' },
+    { score: 109, user: '걱정해' },
+  ]
+
+  const MY_RANK = {
+    score: 300,
+    rank: 5,
+    user: '닉네임임당',
+  }
+
   return (
-    <div>
-      <RankLayout />
-      {/* 스크롤 가능 영역 */}
-      <div className="h-[calc(100vh-80px)] overflow-y-auto">
-        {/* 상위 3위 영역 */}
-        <div className="mt-6 flex justify-around">
-          {/* 2nd */}
-          <div className="text-center">
-            <div className="relative mx-auto h-16 w-16 bg-gray-200">
-              <div className="absolute left-1/2 top-2 -translate-x-1/2 transform text-xs text-gray-700">닉네임은</div>
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transform text-xs text-gray-700">8글자로</div>
-            </div>
-            <p className="mt-2 text-sm text-gray-600">2nd</p>
-            <p className="text-sm text-gray-800">000m</p>
+    <div className="bg-worry relative flex h-full flex-col items-center overflow-y-auto py-12">
+      <RankTab />
+      {/**1,2,3 위 순위 */}
+      <div className="my-5 flex w-[90%]">
+        {[1, 0, 2].map(rank => (
+          <div key={rank} className="flex w-1/3 flex-col items-center justify-end gap-3">
+            <span className="font-galmuri9 text-xl">{RANK[rank].user}</span>
+            <p className="text-sm">{RANK[rank].score} mm</p>
+            <img src={rankImg[rank]} className="w-[80%]" alt={`rank_${rank}`} />
+            <p className="text-lg font-semibold text-main3">{rank + 1}등</p>
           </div>
-          {/* 1st */}
-          <div className="text-center">
-            <div className="relative mx-auto h-20 w-20 bg-gray-300">
-              <div className="absolute left-1/2 top-2 -translate-x-1/2 transform text-xs text-gray-700">닉네임은</div>
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transform text-xs text-gray-700">8글자로</div>
-            </div>
-            <p className="mt-2 text-sm text-gray-600">1st</p>
-            <p className="text-sm text-gray-800">000m</p>
-          </div>
-          {/* 3rd */}
-          <div className="text-center">
-            <div className="relative mx-auto h-16 w-16 bg-gray-200">
-              <div className="absolute left-1/2 top-2 -translate-x-1/2 transform text-xs text-gray-700">닉네임은</div>
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transform text-xs text-gray-700">8글자로</div>
-            </div>
-            <p className="mt-2 text-sm text-gray-600">3rd</p>
-            <p className="text-sm text-gray-800">000m</p>
-          </div>
-        </div>
-
-        {/* 4th~9th 영역 */}
-        <div className="mt-6 flex flex-col gap-2">
-          {Array.from({ length: 20 }, (_, i) => (
-            <div key={i} className="flex items-center justify-between border-b border-gray-200 bg-yellow-100 px-4 py-2">
-              <p className="font-bold text-red-500">{`${i + 4}th`}</p>
-              <p className="text-gray-800">닉네임최대여덟자</p>
-              <p className="text-gray-800">000m</p>
-            </div>
-          ))}
-        </div>
+        ))}
       </div>
-
-      {/* 고정된 남색 점수 영역 */}
-      <div className="absolute bottom-0 flex w-full max-w-[28rem] justify-center py-4">
-        <div className="mt-4 flex w-[90%] justify-between bg-blue-900 p-4 text-white">
-          <p>0th</p>
-          <p>침착맨</p>
-          <p>000m</p>
-        </div>
+      <div className="flex w-full flex-col gap-2">
+        {RANK.slice(3).map((rank, index) => (
+          <div key={rank.user} className="flex w-full items-center justify-between border-y-[3px] border-black bg-white px-10 py-4">
+            <span className="text-sm text-main3">{index + 4}등</span>
+            <span className="font-galmuri9">{rank.user}</span>
+            <p className="text-sm">{rank.score} mm</p>
+          </div>
+        ))}
+      </div>
+      <div className="fixed bottom-0 flex h-[4rem] w-[80%] justify-between rounded-t-lg border-x-[3px] border-t-[3px] border-black bg-main2 px-10 pt-2 text-white">
+        <span className="text-sm">{MY_RANK.rank}등</span>
+        <span className="font-galmuri9">{MY_RANK.user}</span>
+        <p className="text-sm">{MY_RANK.score} mm</p>
       </div>
     </div>
   )
