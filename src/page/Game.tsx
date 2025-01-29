@@ -27,9 +27,9 @@ const Game = () => {
    * 1: 게임 시작
    * 2: 이불 날리기(결과)
    */
-  const gameSteps = [<WorryDump handleNextStep={handleNextStep} setGameState={setGameState} />, <KickEbul setGameState={setGameState} />, <GameResult />]
+  const gameSteps = [<WorryDump handleNextStep={handleNextStep} setGameState={setGameState} />, <KickEbul handleNextStep={handleNextStep} setGameState={setGameState} />, <GameResult />]
 
-  return <div className="h-full w-full">{gameSteps[1]}</div>
+  return <div className="h-full w-full">{gameSteps[step]}</div>
 }
 
 export default Game

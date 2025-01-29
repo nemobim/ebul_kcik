@@ -52,7 +52,7 @@ h5 {
 }
 
 .btn {
-  @apply font-galmuri9 rounded-md border-[3px] border-black px-5 py-2;
+  @apply rounded-md border-[3px] border-black px-5 py-2 font-galmuri9;
 }
 
 .btn.main2 {
