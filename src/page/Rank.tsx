@@ -54,7 +54,7 @@ const Rank = () => {
           </div>
         ))}
       </div>
-      <div className="fixed bottom-0 flex h-[4rem] w-[80%] justify-between rounded-t-lg border-x-[3px] border-t-[3px] border-black bg-main2 px-10 pt-2 text-white">
+      <div className="fixed bottom-0 flex h-[4rem] w-[80%] max-w-[26rem] justify-between rounded-t-lg border-x-[3px] border-t-[3px] border-black bg-main2 px-10 pt-2 text-white">
         <span className="text-sm">{MY_RANK.rank}등</span>
         <span className="font-galmuri9">{MY_RANK.user}</span>
         <p className="text-sm">{MY_RANK.score} mm</p>
