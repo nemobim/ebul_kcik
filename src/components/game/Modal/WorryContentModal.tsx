@@ -58,7 +58,7 @@ const WorryContentModal = ({
     <div className="bg-worry h-full max-h-[50rem] overflow-y-scroll rounded-xl border-[3px] border-black p-5">
       <div className="flex justify-end">
         {worryContent?.content && (
-          <button className="" onClick={hideModal}>
+          <button className="w-[2rem]" onClick={hideModal}>
             <img src={close} alt="닫기" />
           </button>
         )}

@@ -32,7 +32,7 @@ const Rank = () => {
   }
 
   return (
-    <div className="bg-worry relative flex h-full flex-col items-center overflow-y-auto py-12">
+    <div className="bg-worry relative flex h-full flex-col items-center overflow-y-auto pt-12">
       <RankTab />
       {/**1,2,3 위 순위 */}
       <div className="my-5 flex w-[90%]">
@@ -45,7 +45,7 @@ const Rank = () => {
           </div>
         ))}
       </div>
-      <div className="flex w-full flex-col gap-2">
+      <div className="mb-2 flex w-full flex-col gap-2">
         {RANK.slice(3).map((rank, index) => (
           <div key={rank.user} className="flex w-full items-center justify-between border-y-[3px] border-black bg-white px-10 py-4">
             <span className="text-sm text-main3">{index + 4}등</span>
@@ -54,7 +54,7 @@ const Rank = () => {
           </div>
         ))}
       </div>
-      <div className="fixed bottom-0 flex h-[4rem] w-[80%] max-w-[26rem] justify-between rounded-t-lg border-x-[3px] border-t-[3px] border-black bg-main2 px-10 pt-2 text-white">
+      <div className="sticky bottom-0 flex min-h-[4rem] w-[80%] max-w-[26rem] justify-between rounded-t-lg border-x-[3px] border-t-[3px] border-black bg-main2 px-10 pt-2 text-white">
         <span className="text-sm">{MY_RANK.rank}등</span>
         <span className="font-galmuri9">{MY_RANK.user}</span>
         <p className="text-sm">{MY_RANK.score} mm</p>
