@@ -3,12 +3,14 @@ import wakeUser from '../../assets/tutorial/bed/wake.png'
 import { useModal } from '../../hook/useModal'
 import { TGameState } from '../../page/Game'
 import WorryContentModal from './Modal/WorryContentModal'
+import { TworryLabel } from '../../utils/worry'
 
 export type TWorryContent = {
   content: string
   label: string
   bgImg: string
   text: string
+  id?: TworryLabel
 }
 
 const WorryDump = ({ handleNextStep, setGameState }: { handleNextStep: () => void; setGameState: Dispatch<SetStateAction<TGameState>> }) => {
@@ -31,7 +33,7 @@ const WorryDump = ({ handleNextStep, setGameState }: { handleNextStep: () => voi
     <div className="bg-tutorial flex h-full flex-col items-center justify-center">
       <div className="text-dialog p-3">
         <p className="font-galmuri9">{worryContent?.text}</p>
-        <p className="text-sm">생각이 계속 떠올라...!</p>
+        <p className="text-sm">그 생각이 계속 떠올라...!</p>
       </div>
       <div className="relative my-3 w-[90%]">
         <div className="absolute inset-0 top-5 h-[90%] max-h-full w-full overflow-y-auto whitespace-pre-wrap p-3 text-white">{worryContent?.content}</div>

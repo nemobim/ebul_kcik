@@ -29,7 +29,7 @@ export const useModal = (isFullScreen?: boolean) => {
           }
         }}
       >
-        <div id="alert-box" className={twMerge(`w-[85%]`, isClosing ? 'slide_out' : 'slide_in', isFullScreen && 'h-[90%]')}>
+        <div id="alert-box" className={twMerge(`flex w-[90%] items-center justify-center`, isClosing ? 'slide_out' : 'slide_in', isFullScreen && 'h-[90%] max-h-[900px]')}>
           {modalContent}
         </div>
       </div>,

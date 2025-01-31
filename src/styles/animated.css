@@ -173,3 +173,27 @@
 .animate-ripple {
   animation: ripple 1s ease-out forwards;
 }
+
+/* 이불 날리기 애니메이션 */
+@keyframes blanket-fly {
+  0% {
+    transform: translate(-50%, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(-40%, calc(-0.25 * var(--max-height))) rotate(10deg);
+  }
+  50% {
+    transform: translate(-60%, calc(-0.5 * var(--max-height))) rotate(-10deg);
+  }
+  75% {
+    transform: translate(-40%, calc(-0.65 * var(--max-height))) rotate(15deg);
+  }
+  100% {
+    transform: translate(-50%, calc(-1 * var(--max-height))) rotate(0deg);
+  }
+}
+
+.animate-blanket {
+  animation: blanket-fly 2s linear forwards;
+  --max-height: 70vh; /* 기본값 */
+}

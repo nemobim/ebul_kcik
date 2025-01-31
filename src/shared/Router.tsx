@@ -6,6 +6,7 @@ import { NotFound } from '../page/NotFound'
 import Rank from '../page/Rank'
 import Splash from '../page/Splash'
 import Tutorials from '../page/Tutorials'
+import SpecialThanks from '../page/SpecialThanks'
 
 const Router = () => {
   return (
@@ -18,6 +19,7 @@ const Router = () => {
         <Route path="/game" element={<Game />} /> {/*게임 진행 */}
         <Route path="/ranking" element={<Rank />} /> {/*랭킹 */}
         <Route path="/content" element={<Content />} /> {/*모아보기*/}
+        <Route path="/special-thanks" element={<SpecialThanks />} /> {/*special thanks*/}
       </Routes>
     </BrowserRouter>
   )

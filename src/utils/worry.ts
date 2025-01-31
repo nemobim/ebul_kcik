@@ -20,16 +20,16 @@ import shock from '../assets/rank/shock.png'
 import laugh from '../assets/rank/cryingLaugh.png'
 import sad from '../assets/rank/hing.png'
 
-export const worryList = [
-  { img: talk, label: '말', text: '입이 문제야', bgImg: talk_pattern },
-  { img: young, label: '어린시절', text: '귀엽지만은 않은 어린시절', bgImg: young_pattern },
-  { img: school, label: '학교', text: '교실에 묻어둔 이야기', bgImg: school_pattern },
-  { img: work, label: '직장', text: '회사에서 또 무슨 일이...', bgImg: work_pattern },
-  { img: alcohol, label: '술', text: '술이 웬수야', bgImg: alcohol_pattern },
-  { img: home, label: '집', text: '베개에만 털어놓는 사연들', bgImg: home_pattern },
-  { img: idol, label: '덕질', text: '덕질이 나를 ... 이렇게', bgImg: idol_pattern },
-  { img: heart, label: '사랑', text: '사랑이 죄는 아닌데...', bgImg: heart_pattern },
-  { img: etc, label: '기타', text: '별별 일들이 많잖아요..?', bgImg: etc_pattern },
+export const worryList: { img: string; label: string; text: string; bgImg: string; id: TworryLabel }[] = [
+  { img: talk, label: '말', text: '입이 문제야', bgImg: talk_pattern, id: 'talk' },
+  { img: young, label: '어린시절', text: '귀엽지만은 않은 어린시절', bgImg: young_pattern, id: 'young' },
+  { img: school, label: '학교', text: '교실에 묻어둔 이야기', bgImg: school_pattern, id: 'school' },
+  { img: work, label: '직장', text: '회사에서 또 무슨 일이...', bgImg: work_pattern, id: 'work' },
+  { img: alcohol, label: '술', text: '술이 웬수야', bgImg: alcohol_pattern, id: 'alcohol' },
+  { img: home, label: '집', text: '베개에만 털어놓는 사연들', bgImg: home_pattern, id: 'home' },
+  { img: idol, label: '덕질', text: '덕질이 나를 ... 이렇게', bgImg: idol_pattern, id: 'idol' },
+  { img: heart, label: '사랑', text: '사랑이 죄는 아닌데...', bgImg: heart_pattern, id: 'heart' },
+  { img: etc, label: '기타', text: '별별 일들이 많잖아요..?', bgImg: etc_pattern, id: 'etc' },
 ]
 
 export const worryImage: Record<TworryLabel, { img: string; bgImg: string }> = {
