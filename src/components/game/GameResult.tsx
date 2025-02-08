@@ -30,17 +30,20 @@ const GameResult = ({ gameState, initGame }: { gameState: TGameState; initGame: 
   }
 
   return (
-    <div className="h-full w-full">
-      <div className="relative h-full w-full bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url(${resultStage[stage]})` }}>
-        <img
-          key={stage} // key 변경하여 컴포넌트 리렌더링 유도
-          src={blanket}
-          alt="blanket"
-          onAnimationEnd={handleAnimationEnd}
-          className={twMerge('absolute bottom-0 left-1/2', stage === targetStage ? 'animate-blanket-stop' : 'animate-blanket')} // 동적 클래스 적용
-        />
-      </div>
-
+    <div className="relative h-full w-full">
+      <img
+        src={resultStage[stage]}
+        alt="background"
+        className="absolute left-0 top-0 h-full w-full object-cover"
+        style={{ objectFit: 'contain' }} // 비율 유지, 여백 없이 꽉 채우기
+      />
+      <img
+        key={stage} // key 변경하여 컴포넌트 리렌더링 유도
+        src={blanket}
+        alt="blanket"
+        onAnimationEnd={handleAnimationEnd}
+        className={twMerge('absolute bottom-0 left-1/2', stage === targetStage ? 'animate-blanket-stop' : 'animate-blanket')} // 동적 클래스 적용
+      />
       {Modal}
     </div>
   )
