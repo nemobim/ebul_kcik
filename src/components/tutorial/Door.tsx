@@ -42,7 +42,7 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
 
   return (
     <div className="relative flex h-full flex-col justify-center">
-      {roomName && !isDoorOpen && <button onClick={showNicknameModal} className="btn absolute left-[10%] top-[10%] bg-gray2 text-lg">{`> 다시 작성`}</button>}
+      {roomName && !isDoorOpen && <button onClick={showNicknameModal} className="btn absolute left-[10%] top-[10%] bg-gray2 text-lg">{`> 이름 수정`}</button>}
       <div className="relative">
         <img src={isDoorOpen ? doorOpen : doorClose} alt="방_문" className="relative z-[2] mx-auto w-[70%]" />
         <img src={bottomBlock} alt="바닥_벽돌" className={twMerge('absolute z-[1] w-full', isDoorOpen ? '-bottom-[40%]' : '-bottom-[50%]')} />
