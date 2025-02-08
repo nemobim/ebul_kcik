@@ -3,6 +3,7 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import ebulUser from '../../assets/game/game.png'
 import { TGameState } from '../../page/Game'
+import { SCORE_MULTIPLIER } from '../../utils/rank'
 import ComboEffect from './ComboEffect'
 
 export type TEffect = {
@@ -119,7 +120,8 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
   /** 게임 종료 후 상태 업데이트 */
   useEffect(() => {
     if (isGameOver) {
-      setGameState(prev => ({ ...prev, hitCount }))
+      // 타격 횟수 3배 후 결과 도출
+      setGameState(prev => ({ ...prev, score: hitCount * SCORE_MULTIPLIER }))
       handleNextStep()
     }
   }, [isGameOver, setGameState, hitCount, handleNextStep])

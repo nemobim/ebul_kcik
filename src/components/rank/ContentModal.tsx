@@ -1,6 +1,6 @@
-import { reactionIcon, TworryContent, TworryReaction, worryImage } from '../../utils/worry'
 import close from '../../assets/game/write/close.png'
 import { getRankImg } from '../../utils/rank'
+import { reactionIcon, TworryContent, worryImage } from '../../utils/worry'
 
 const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: TworryContent }) => {
   return (
@@ -11,7 +11,7 @@ const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: 
       <div>
         <div className="flex items-start justify-between">
           <div className="flex w-full items-center justify-between">
-            <div className="font-galmuri9 ml-3 mt-2 text-[1.1rem] text-main3">
+            <div className="ml-3 mt-2 font-galmuri9 text-[1.1rem] text-main3">
               <p>{content.user}</p>
               <p>{content.score}m</p>
             </div>

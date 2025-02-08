@@ -20,10 +20,11 @@ const ResultModal = ({ gameState, initGame }: { gameState: TGameState; initGame:
         </p>
         <p>저 멀리 날라갔다!</p>
         <div className="mt-10 flex w-full items-end justify-end gap-5">
-          <p className="font-galmuri9 text-[3rem] leading-[3rem] text-main3">{gameState?.hitCount}m</p>
-          <img src={getRankImg(gameState?.hitCount)} className="w-[4.5rem]" alt={gameState?.worryLabel} />
+          <p className="font-galmuri9 text-[3rem] leading-[3rem] text-main3">{gameState?.score}m</p>
+          <img src={getRankImg(gameState?.score)} className="w-[4.5rem]" alt={gameState?.worryLabel} />
         </div>
       </div>
+
       <div className="mt-5 flex w-[90%] items-center gap-5 text-lg">
         <button onClick={initGame} className="w-[30%] text-white">
           재도전

@@ -178,22 +178,64 @@
 @keyframes blanket-fly {
   0% {
     transform: translate(-50%, 0) rotate(0deg);
+    opacity: 1;
   }
   25% {
-    transform: translate(-40%, calc(-0.25 * var(--max-height))) rotate(10deg);
+    transform: translate(-40%, -25vh) rotate(10deg);
+    opacity: 1;
   }
   50% {
-    transform: translate(-60%, calc(-0.5 * var(--max-height))) rotate(-10deg);
+    transform: translate(-60%, -50vh) rotate(-10deg);
+    opacity: 1;
   }
   75% {
-    transform: translate(-40%, calc(-0.65 * var(--max-height))) rotate(15deg);
+    transform: translate(-40%, -75vh) rotate(15deg);
+    opacity: 1;
+  }
+  85% {
+    /* 80vh 도달하는 시점부터 서서히 흐려짐 */
+    opacity: 0.8;
+  }
+  95% {
+    opacity: 0.6;
   }
   100% {
-    transform: translate(-50%, calc(-1 * var(--max-height))) rotate(0deg);
+    transform: translate(-50%, -100vh) rotate(-15deg);
+    opacity: 0.3; /* 최종적으로 더 흐려지도록 조정 */
   }
 }
 
 .animate-blanket {
-  animation: blanket-fly 2s linear forwards;
-  --max-height: 70vh; /* 기본값 */
+  animation: blanket-fly 2.5s linear forwards;
+}
+
+/* 이불 걸치기 애니메이션 */
+@keyframes blanket-stop {
+  0% {
+    transform: translate(-50%, 0) rotate(0deg);
+    animation-timing-function: ease-in;
+  }
+
+  45% {
+    transform: translate(-45%, -45vh) rotate(15deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  65% {
+    transform: translate(-52%, -60vh) rotate(-8deg);
+    animation-timing-function: ease-out;
+  }
+
+  85% {
+    transform: translate(-48%, -58vh) rotate(5deg);
+    animation-timing-function: ease-out;
+  }
+
+  100% {
+    transform: translate(-50%, -60vh) rotate(0deg);
+  }
+}
+
+.animate-blanket-stop {
+  animation: blanket-stop 3s forwards;
 }

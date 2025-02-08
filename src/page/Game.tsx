@@ -7,7 +7,7 @@ import { TworryLabel } from '../utils/worry'
 
 export type TGameState = {
   worryLabel: TworryLabel | undefined
-  hitCount: number
+  score: number
   user: string
 }
 
@@ -18,7 +18,7 @@ const Game = () => {
   //게임 상태 관리
   const [gameState, setGameState] = useState<TGameState>({
     worryLabel: undefined,
-    hitCount: 0,
+    score: 0,
     user: '',
   })
 
@@ -29,7 +29,7 @@ const Game = () => {
 
   /**게임 초기화 */
   const initGame = () => {
-    setGameState(prev => ({ ...prev, hitCount: 0 }))
+    setGameState(prev => ({ ...prev, score: 0 }))
     setStep(1)
   }
 
@@ -40,7 +40,7 @@ const Game = () => {
     } else {
       navigate('/')
     }
-  }, [])
+  }, [navigate])
 
   /**튜토리얼 스텝
    * 0: 고민 적기

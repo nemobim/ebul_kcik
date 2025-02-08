@@ -1,15 +1,29 @@
-import { TGameState } from '../../page/Game'
+import { useState } from 'react'
+import { twMerge } from 'tailwind-merge'
 import blanket from '../../assets/game/result/blanket.png'
-import stage1 from '../../assets/game/result/stage1.png'
 import { useModal } from '../../hook/useModal'
+import { TGameState } from '../../page/Game'
+import { getResultStage, resultStage } from '../../utils/rank'
 import ResultModal from './Modal/ResultModal'
 
 const GameResult = ({ gameState, initGame }: { gameState: TGameState; initGame: () => void }) => {
   const { showModal, Modal } = useModal()
+  const [stage, setStage] = useState(0)
+  const targetStage = getResultStage(gameState.score) // 점수에 따른 목표 stage
 
-  /**결과 모달 */
+  /** 애니메이션 종료 후 다음 단계로 이동 */
+  const handleAnimationEnd = () => {
+    if (stage < targetStage) {
+      setTimeout(() => {
+        setStage(prev => prev + 1) // 다음 스테이지로 변경
+      }, 200) // 0.2초 후 애니메이션 재시작
+    } else {
+      showResultModal() // 모달 표시
+    }
+  }
+
+  /** 결과 모달 표시 */
   const showResultModal = () => {
-    //1초 후에 모달 열기
     setTimeout(() => {
       showModal(<ResultModal gameState={gameState} initGame={initGame} />)
     }, 1000)
@@ -17,17 +31,16 @@ const GameResult = ({ gameState, initGame }: { gameState: TGameState; initGame: 
 
   return (
     <div className="h-full w-full">
-      {gameState?.hitCount <= 80 && (
-        <div className="relative h-full w-full bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url(${stage1})` }}>
-          <img
-            src={blanket}
-            alt="blanket"
-            onAnimationEnd={showResultModal}
-            className="animate-blanket absolute bottom-0 left-1/2"
-            style={{ '--max-height': `60vh` } as React.CSSProperties} // CSS 변수 동적 설정
-          />
-        </div>
-      )}
+      <div className="relative h-full w-full bg-contain bg-center bg-no-repeat" style={{ backgroundImage: `url(${resultStage[stage]})` }}>
+        <img
+          key={stage} // key 변경하여 컴포넌트 리렌더링 유도
+          src={blanket}
+          alt="blanket"
+          onAnimationEnd={handleAnimationEnd}
+          className={twMerge('absolute bottom-0 left-1/2', stage === targetStage ? 'animate-blanket-stop' : 'animate-blanket')} // 동적 클래스 적용
+        />
+      </div>
+
       {Modal}
     </div>
   )
