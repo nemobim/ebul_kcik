@@ -15,7 +15,7 @@ const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: 
               <p>{content.user}</p>
               <p>{content.score}m</p>
             </div>
-            <img src={getRankImg(content.score)} className="w-[4.2rem] pr-2" alt={content.worryLabel} />
+            <img src={getRankImg(content.score)} className="w-[4rem]" alt={content.worryLabel} />
           </div>
           <button className="w-[2rem]" onClick={hideModal}>
             <img src={close} alt="닫기" />

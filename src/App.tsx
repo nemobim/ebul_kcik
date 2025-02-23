@@ -27,6 +27,8 @@ const App = () => {
     return <Error title="화면 사이즈 확인!" text="원활한 게임 플레이를 위해 권장 사이즈(310*660) 이상으로 플레이해주세요." />
   }
 
+  console.log(navigator.mediaDevices, navigator?.userAgent)
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="mx-auto flex h-screen max-w-md items-center justify-center bg-white">
