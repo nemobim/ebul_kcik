@@ -14,6 +14,8 @@ const App = () => {
     const handleResize = () => {
       //넓이 310px * 660px  이하의 화면은 게임 불가
       setIsSmallScreen(window.innerWidth <= 310 || window.innerHeight <= 660)
+
+      alert(window.innerWidth + ' ' + window.innerHeight)
     }
 
     // 초기 화면 크기 확인
