@@ -11,7 +11,7 @@ const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: 
       <div>
         <div className="flex items-start justify-between">
           <div className="flex w-full items-center justify-between">
-            <div className="ml-3 mt-2 font-galmuri9 text-[1.1rem] text-main3">
+            <div className="ml-3 mt-2 font-galmuri9 text-lg text-main3">
               <p>{content.user}</p>
               <p>{content.score}m</p>
             </div>

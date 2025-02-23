@@ -132,9 +132,9 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
         {/* 카운트다운 & 타이머 */}
         <div className="flex items-center justify-center">
           {isCounting || isGameRunning ? (
-            <p className={`text-white ${isCounting ? 'animate-pulse text-9xl' : 'text-6xl'} transition-all duration-500`}>{isCounting ? count : timeLeft}</p>
+            <p className={`text-white ${isCounting ? 'animate-pulse text-4xl' : 'text-2xl'} transition-all duration-500`}>{isCounting ? count : timeLeft}</p>
           ) : (
-            <p className="text-6xl text-white">준비</p>
+            <p className="text-4xl text-white">준비</p>
           )}
         </div>
 
