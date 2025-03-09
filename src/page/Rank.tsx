@@ -39,7 +39,7 @@ const Rank = () => {
         {[1, 0, 2].map(rank => (
           <div key={rank} className="flex w-1/3 flex-col items-center justify-end gap-3">
             <span className="font-galmuri9 text-xl">{RANK[rank].user}</span>
-            <p className="text-sm">{RANK[rank].score} mm</p>
+            <p className="text-sm">{RANK[rank].score} m</p>
             <img src={rankImg[rank]} className="w-[80%]" alt={`rank_${rank}`} />
             <p className="text-lg font-semibold text-main3">{rank + 1}등</p>
           </div>
@@ -50,14 +50,14 @@ const Rank = () => {
           <div key={rank.user} className="flex w-full items-center justify-between border-y-[3px] border-black bg-white px-10 py-4">
             <span className="text-sm text-main3">{index + 4}등</span>
             <span className="font-galmuri9">{rank.user}</span>
-            <p className="text-sm">{rank.score} mm</p>
+            <p className="text-sm">{rank.score} m</p>
           </div>
         ))}
       </div>
       <div className="sticky bottom-0 flex min-h-[4rem] w-[80%] max-w-[26rem] justify-between rounded-t-lg border-x-[3px] border-t-[3px] border-black bg-main2 px-10 pt-2 text-white">
         <span className="text-sm">{MY_RANK.rank}등</span>
         <span className="font-galmuri9">{MY_RANK.user}</span>
-        <p className="text-sm">{MY_RANK.score} mm</p>
+        <p className="text-sm">{MY_RANK.score} m</p>
       </div>
     </div>
   )

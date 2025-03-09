@@ -30,6 +30,7 @@ const Bed = () => {
 
   // 다음 대사로 이동
   const handleNextScript = () => {
+    // 타이핑 중이면 무시
     if (typing) return
 
     if (currentScript < bedScripts.length - 1) {
@@ -47,14 +48,14 @@ const Bed = () => {
         <img src={bedScripts[currentScript].img} alt="잠자는 사용자" className="w-full" />
       </div>
       {/**대사 박스 */}
-      <div className="text-dialog mt-5 flex justify-between px-3 py-5">
+      <div className="text-dialog mt-5 flex justify-between px-3 py-5" onClick={handleNextScript}>
         <p>
           {displayedText}
           {typing && <span className="animate-typing-cursor" />}
         </p>
         {/* 다음 버튼 (타이핑이 끝나면 활성화) */}
         {!typing && (
-          <button onClick={handleNextScript} className="animate-glow">
+          <button className="animate-glow">
             <img src={nextBtn} alt="다음 버튼" className="h-auto w-[90%] max-w-[100px]" />
           </button>
         )}

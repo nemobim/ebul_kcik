@@ -6,7 +6,7 @@ const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: 
   return (
     <div
       style={{ backgroundImage: `url(${worryImage[content.worryLabel].bgImg})` }}
-      className="flex h-full max-h-[50rem] min-h-[20rem] flex-col justify-between overflow-y-scroll rounded-xl border-[3px] border-black p-2"
+      className="flex h-full max-h-[90vh] min-h-[20rem] flex-col justify-between overflow-y-scroll rounded-xl border-[3px] border-black p-2"
     >
       <div>
         <div className="flex items-start justify-between">
@@ -15,7 +15,7 @@ const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: 
               <p>{content.user}</p>
               <p>{content.score}m</p>
             </div>
-            <img src={getRankImg(content.score)} className="w-[4rem]" alt={content.worryLabel} />
+            <img src={getRankImg(content.score)} className="mr-5 w-[4rem]" alt={content.worryLabel} />
           </div>
           <button className="w-[2rem]" onClick={hideModal}>
             <img src={close} alt="닫기" />

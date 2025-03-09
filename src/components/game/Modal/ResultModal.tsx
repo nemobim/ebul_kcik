@@ -13,13 +13,13 @@ const ResultModal = ({ gameState, initGame }: { gameState: TGameState; initGame:
         style={{ backgroundImage: `url(${worryImage[gameState?.worryLabel].bgImg})` }}
         className="flex h-full min-h-[20rem] w-[80%] flex-col items-center justify-center rounded-xl border-[3px] border-black px-4 text-xl"
       >
-        <p>이불과 함께</p>
         <p>
           <span className="mr-1 font-galmuri9 text-2xl font-semibold">{gameState?.user}</span>
-          남의 생각들이
+          님의 생각들이
         </p>
+        <p>방금 이불과 함께</p>
         <p>저 멀리 날라갔습니다.</p>
-        <div className="mt-10 flex w-full items-center justify-center gap-5">
+        <div className="mt-10 flex w-full items-center justify-between px-5">
           <p className="font-galmuri9 text-[2.5rem] leading-[3rem] text-main3">{gameState?.score}m</p>
           <img src={getRankImg(gameState?.score)} className="w-[4.5rem]" alt={gameState?.worryLabel} />
         </div>
