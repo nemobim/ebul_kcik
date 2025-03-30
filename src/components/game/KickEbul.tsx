@@ -1,7 +1,7 @@
 'use client'
 
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
-import ebulUser from '../../assets/game/game.png'
+import ebulUser from '../../assets/game/game.webp'
 import { TGameState } from '../../page/Game'
 import { SCORE_MULTIPLIER } from '../../utils/rank'
 import ComboEffect from './ComboEffect'

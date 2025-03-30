@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import marker from '../../assets/tutorial/room/mark.png'
-import roomImg from '../../assets/tutorial/room/my_room.png'
+import roomImg from '../../assets/tutorial/room/my_room.webp'
 
 const Room = ({ handleNextStep }: { handleNextStep: () => void }) => {
   return (

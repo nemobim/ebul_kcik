@@ -7,11 +7,11 @@ import first from '../assets/rank/first.png'
 import second from '../assets/rank/second.png'
 import third from '../assets/rank/third.png'
 
-import stage1 from '../assets/game/result/stage1.png'
-import stage2 from '../assets/game/result/stage2.png'
-import stage3 from '../assets/game/result/stage3.png'
-import stage4 from '../assets/game/result/stage4.png'
-import stage5 from '../assets/game/result/stage5.png'
+import stage1 from '../assets/game/result/stage1.webp'
+import stage2 from '../assets/game/result/stage2.webp'
+import stage3 from '../assets/game/result/stage3.webp'
+import stage4 from '../assets/game/result/stage4.webp'
+import stage5 from '../assets/game/result/stage5.webp'
 
 export const rankImg = [first, second, third]
 

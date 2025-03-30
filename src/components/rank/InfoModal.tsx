@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import askBanner from '../../assets/etc/askBanner.png'
+import askBanner from '../../assets/etc/askBanner.webp'
 import close from '../../assets/game/write/close.png'
 
 const InfoModal = ({ hideModal }: { hideModal: () => void }) => {
