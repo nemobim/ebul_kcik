@@ -2,8 +2,8 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import wakeUser from '../../assets/tutorial/bed/wake.png'
 import { useModal } from '../../hook/useModal'
 import { TGameState } from '../../page/Game'
-import WorryContentModal from './Modal/WorryContentModal'
 import { TworryLabel } from '../../utils/worry'
+import WorryContentModal from './Modal/WorryContentModal'
 
 export type TWorryContent = {
   content: string

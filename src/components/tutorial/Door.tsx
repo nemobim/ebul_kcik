@@ -40,6 +40,15 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
     setRoomName(storedName)
   }, [])
 
+  /**입장시 고유 아이디 생성 */
+  useEffect(() => {
+    const storedId = localStorage.getItem('uniqueId') || ''
+    if (!storedId) {
+      const newId = crypto.randomUUID()
+      localStorage.setItem('uniqueId', newId)
+    }
+  }, [])
+
   return (
     <div className="relative flex h-full flex-col justify-center">
       {roomName && !isDoorOpen && <button onClick={showNicknameModal} className="btn absolute left-[10%] top-[10%] bg-gray2 text-lg">{`> 이름 수정`}</button>}

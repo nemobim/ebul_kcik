@@ -53,7 +53,7 @@ const Game = () => {
     <GameResult gameState={gameState} initGame={initGame} />,
   ]
 
-  return <div className="h-full w-full">{gameSteps[step]}</div>
+  return <div className="h-full w-full">{gameSteps[1]}</div>
 }
 
 export default Game
