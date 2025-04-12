@@ -15,6 +15,9 @@ body {
   -ms-user-select: none;
   -webkit-user-select: none;
 
+  touch-action: none; /* 터치 이벤트 방지 */
+  overscroll-behavior: none; /* 모바일 브라우저 기본 스크롤 방지 */
+
   /* input focus 제거 */
   input:focus {
     outline: none;
