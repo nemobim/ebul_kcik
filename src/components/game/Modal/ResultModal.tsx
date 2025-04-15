@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useSaveScore } from '../../../api/firebaseApi'
-import { TGameState } from '../../../page/Game'
+import { TGameState } from '../../../types/game'
 import { getRankImg } from '../../../utils/rank'
 import { worryImage } from '../../../utils/worry'
 
@@ -15,11 +15,15 @@ const ResultModal = ({ gameState, initGame, nickname, uniqueId }: { gameState: T
   const saveTheScore = async () => {
     if (!nickname || !uniqueId || !gameState.worryLabel || !gameState.content || !gameState.score) return alert('게임 과정 중 오류가 발생했습니다. 다시 시도해주세요.')
 
+    //고유 ID와 현재 시간을 조합하여 고유 문서 ID 생성
+    const docId = `${uniqueId}_${Date.now()}`
+
     saveScore(
-      { nickname, uniqueId, gameState },
+      { nickname, uniqueId, gameState, docId },
       {
         onSuccess: () => {
           navigate('/ranking')
+          localStorage.setItem('isPlay', docId) //게임 플레이 여부와 가장 최근 게임 아이디 저장
         },
         onError: err => {
           console.error('에러 발생:', err)

@@ -4,7 +4,6 @@ import { ErrorBoundary } from 'react-error-boundary'
 import 'remixicon/fonts/remixicon.css'
 import Error from './components/error/Error'
 import ErrorFallBack from './page/ErrorFallBack'
-import { AlertProvider } from './provider/AlertProvider'
 import Router from './shared/Router'
 import './styles/animated.css'
 
@@ -44,9 +43,7 @@ const App = () => {
         <div className="h-full max-h-[900px] w-full overflow-hidden bg-black">
           <QueryClientProvider client={queryClient}>
             <ErrorBoundary FallbackComponent={ErrorFallBack}>
-              <AlertProvider>
-                <Router />
-              </AlertProvider>
+              <Router />
             </ErrorBoundary>
           </QueryClientProvider>
         </div>

@@ -1,17 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import wakeUser from '../../assets/tutorial/bed/wake.png'
 import { useModal } from '../../hook/useModal'
-import { TGameState } from '../../page/Game'
-import { TworryLabel } from '../../utils/worry'
+import { TGameState, TWorryContent } from '../../types/game'
 import WorryContentModal from './Modal/WorryContentModal'
-
-export type TWorryContent = {
-  content: string
-  label: string
-  bgImg: string
-  text: string
-  id?: TworryLabel
-}
 
 const WorryDump = ({ handleNextStep, setGameState }: { handleNextStep: () => void; setGameState: Dispatch<SetStateAction<TGameState>> }) => {
   const { Modal, hideModal, showModal } = useModal(true)

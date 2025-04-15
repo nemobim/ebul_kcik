@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import blanket from '../../assets/game/result/blanket.png'
 import { useModal } from '../../hook/useModal'
-import { TGameState } from '../../page/Game'
+import { TGameState } from '../../types/game'
 import { getResultStage, resultStage } from '../../utils/rank'
 import ResultModal from './Modal/ResultModal'
 

@@ -2,9 +2,8 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
 import close from '../../../assets/game/write/close.png'
-import { TGameState } from '../../../page/Game'
-import { TworryLabel, worryList } from '../../../utils/worry'
-import { TWorryContent } from '../WorryDump'
+import { TGameState, TWorryContent, TworryLabel } from '../../../types/game'
+import { WORRY_LIST } from '../../../utils/worry'
 
 const WorryContentModal = ({
   hideModal,
@@ -67,7 +66,7 @@ const WorryContentModal = ({
       <form className="flex flex-col items-center" onSubmit={handleSubmit(onSubmit)}>
         <h4>고민 조각</h4>
         <div className="my-4 grid grid-cols-3 gap-6 xs:gap-8">
-          {worryList.map(worry => (
+          {WORRY_LIST.map(worry => (
             <button key={worry.id} type="button" onClick={() => handleWorrySelect(worry)} className={twMerge(selectedWorry?.label === worry.label && 'font-semibold text-main3')}>
               <img src={worry.img} alt={worry.label} className="h-auto w-full" />
               <p className="text-sm">{worry.label}</p>

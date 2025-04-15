@@ -1,7 +1,8 @@
-import { TGameContent } from '../api/firebaseApi'
+import { TGameContent } from '../types/game'
 
-export const getMyRank = (ranks: TGameContent[], userId: string) => {
-  const index = ranks.findIndex(r => r.userId === userId)
+/** 본인 랭킹 찾기 */
+export const getMyRank = (ranks: TGameContent[], docId: string) => {
+  const index = ranks.findIndex(r => r.id === docId)
   if (index === -1) return null
 
   return {

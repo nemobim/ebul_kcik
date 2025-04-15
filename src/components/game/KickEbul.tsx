@@ -2,15 +2,9 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import ebulUser from '../../assets/game/game.webp'
 import hitEffect from '../../assets/game/kick.svg'
-import { TGameState } from '../../page/Game'
+import { TEffect, TGameState } from '../../types/game'
 import { SCORE_MULTIPLIER } from '../../utils/rank'
 import CountCombo from './CountCombo'
-
-export type TEffect = {
-  id: number
-  x: number
-  y: number
-}
 
 const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void; setGameState: Dispatch<SetStateAction<TGameState>> }) => {
   const [isGameRunning, setIsGameRunning] = useState(false) // 본 게임 시작 여부

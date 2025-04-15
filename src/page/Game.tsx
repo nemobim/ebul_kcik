@@ -3,14 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import GameResult from '../components/game/GameResult'
 import KickEbul from '../components/game/KickEbul'
 import WorryDump from '../components/game/WorryDump'
-import { TworryLabel } from '../utils/worry'
-
-export type TGameState = {
-  worryLabel: TworryLabel | undefined // 고민 레이블
-  score: number // 점수
-  user: string // 유저 이름
-  content: string // 고민 내용
-}
+import { TGameState } from '../types/game'
 
 const Game = () => {
   const navigate = useNavigate()

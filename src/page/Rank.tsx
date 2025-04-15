@@ -1,25 +1,26 @@
 import { useEffect, useState } from 'react'
-import { TGameContent, useGetTopRanks } from '../api/firebaseApi'
+import { useGetTopRanks } from '../api/firebaseApi'
 import { SpinnerLoading } from '../components/Loading'
 import RankTab from '../components/rank/RankTab'
+import { TGameContent } from '../types/game'
 import { getMyRank } from '../utils/content'
 import { rankImg } from '../utils/rank'
 
 const Rank = () => {
-  const { data: ranks = [], isLoading } = useGetTopRanks()
+  const { data: ranks = [], isLoading, isError } = useGetTopRanks()
   const [myRank, setMyRank] = useState<{ rank: number; content: TGameContent } | null>(null)
-  const uniqueId = localStorage.getItem('uniqueId') // 유저 구분 ID
+  const docId = localStorage.getItem('isPlay') // 가장최근 게임아이디
 
   useEffect(() => {
-    if (ranks.length > 0 && uniqueId) {
-      const myRank = getMyRank(ranks, uniqueId)
+    if (ranks.length > 0 && docId) {
+      const myRank = getMyRank(ranks, docId)
       setMyRank(myRank)
     }
-  }, [ranks, uniqueId])
+  }, [ranks, docId])
 
   return (
     <div className="relative h-full">
-      {isLoading ? (
+      {isLoading || isError ? (
         <SpinnerLoading />
       ) : (
         <div className="bg-worry flex h-full flex-col items-center overflow-y-auto pb-4 pt-12">

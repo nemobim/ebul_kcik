@@ -1,8 +1,29 @@
+import { useState } from 'react'
+import { useReactToContent } from '../../api/firebaseApi'
 import close from '../../assets/game/write/close.png'
+import { TGameContent, TworryReaction } from '../../types/game'
 import { getRankImg } from '../../utils/rank'
-import { reactionIcon, TworryContent, worryImage } from '../../utils/worry'
+import { reactionIcon, worryImage } from '../../utils/worry'
 
-const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: TworryContent }) => {
+const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: TGameContent }) => {
+  const [reactionState, setReactionState] = useState(content.reactions)
+
+  const { mutate: onReaction, isPending } = useReactToContent()
+
+  const handleReaction = async (reaction: TworryReaction) => {
+    onReaction(
+      { contentId: content.id, contentUserId: content.userId, reaction },
+      {
+        onSuccess: () => {
+          setReactionState(prev => ({
+            ...prev,
+            [reaction]: prev[reaction] + 1,
+          }))
+        },
+      },
+    )
+  }
+
   return (
     <div
       style={{ backgroundImage: `url(${worryImage[content.worryLabel].bgImg})` }}
@@ -22,15 +43,15 @@ const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: 
           </button>
         </div>
         <div className="my-2 px-2">
-          <p>{content.worryContent}</p>
+          <p>{content.content}</p>
         </div>
       </div>
       <div className="flex items-center justify-center gap-10">
         {Object.entries(reactionIcon).map(([key, value]) => (
-          <div className="text-center" key={key}>
-            <img src={value} alt={key} className="w-[3rem]" />
-            <p className="font-galmuri9 text-lg">0</p>
-          </div>
+          <button className="text-center" disabled={isPending} key={key} onClick={() => handleReaction(key as TworryReaction)}>
+            <img src={value} alt={key} className="size-[3rem]" />
+            <p className="font-galmuri9 text-lg">{reactionState[key as TworryReaction]}</p>
+          </button>
         ))}
       </div>
     </div>
