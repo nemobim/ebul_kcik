@@ -1,11 +1,33 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useSaveScore } from '../../../api/firebaseApi'
 import { TGameState } from '../../../page/Game'
 import { getRankImg } from '../../../utils/rank'
 import { worryImage } from '../../../utils/worry'
 
-const ResultModal = ({ gameState, initGame }: { gameState: TGameState; initGame: () => void }) => {
+const ResultModal = ({ gameState, initGame, nickname, uniqueId }: { gameState: TGameState; initGame: () => void; nickname: string; uniqueId: string }) => {
+  const navigate = useNavigate()
+  const { mutate: saveScore, isPending } = useSaveScore()
+
   //게임 상태가 없으면 모달 안 띄우기
   if (!gameState?.worryLabel) return null
+
+  /**게임 점수 저장 */
+  const saveTheScore = async () => {
+    if (!nickname || !uniqueId || !gameState.worryLabel || !gameState.content || !gameState.score) return alert('게임 과정 중 오류가 발생했습니다. 다시 시도해주세요.')
+
+    saveScore(
+      { nickname, uniqueId, gameState },
+      {
+        onSuccess: () => {
+          navigate('/ranking')
+        },
+        onError: err => {
+          console.error('에러 발생:', err)
+          alert('게임 저장 과정 중 오류가 발생했습니다. 다시 시도해주세요.')
+        },
+      },
+    )
+  }
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
@@ -24,12 +46,11 @@ const ResultModal = ({ gameState, initGame }: { gameState: TGameState; initGame:
           <img src={getRankImg(gameState?.score)} className="w-[4.5rem]" alt={gameState?.worryLabel} />
         </div>
       </div>
-
       <div className="mt-5 flex w-[80%] items-center gap-5 text-lg">
         <button onClick={initGame} className="w-[35%] text-white">
           재도전
         </button>
-        <Link to="/ranking" className="btn main3 w-[65%] text-center">{`랭킹보기 >`}</Link>
+        <button disabled={isPending} onClick={saveTheScore} className="btn main3 w-[65%] text-center">{`랭킹보기 >`}</button>
       </div>
     </div>
   )

@@ -1,11 +1,18 @@
-import { useEffect, useState } from 'react'
-import ebulUser from '../../assets/game/game.webp'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { TEffect } from '../../types/game'
+import ebulUser from '../../assets/game/game.webp'
 import hitEffect from '../../assets/game/kick.svg'
+import { TGameState } from '../../page/Game'
+import { SCORE_MULTIPLIER } from '../../utils/rank'
 import CountCombo from './CountCombo'
 
-const KickEbul = ({ handleNextStep }: { handleNextStep: () => void }) => {
+export type TEffect = {
+  id: number
+  x: number
+  y: number
+}
+
+const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void; setGameState: Dispatch<SetStateAction<TGameState>> }) => {
   const [isGameRunning, setIsGameRunning] = useState(false) // 본 게임 시작 여부
   const [timeCount, setTimeCount] = useState(20) // 본 게임 타이머
 
@@ -18,22 +25,20 @@ const KickEbul = ({ handleNextStep }: { handleNextStep: () => void }) => {
   }
 
   /** 타격 효과 추가 */
-  const handleTouch = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handlePointer = (e: React.PointerEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
 
-    const newTouches: TEffect[] = Array.from(e.changedTouches).map(touch => ({
-      id: Date.now() + Math.random(), // 고유 id
-      x: touch.clientX - rect.left,
-      y: touch.clientY - rect.top,
-    }))
+    const effect: TEffect = {
+      id: Date.now() + Math.random(),
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    }
 
-    setHitCount(prev => prev + newTouches.length)
+    setHitCount(prev => prev + 1)
+    setEffects(prev => [...prev, effect])
 
-    setEffects(prev => [...prev, ...newTouches])
-
-    // 5초후 타격 효과 제거
     setTimeout(() => {
-      setEffects(prev => prev.filter(eff => !newTouches.find(t => t.id === eff.id)))
+      setEffects(prev => prev.filter(eff => eff.id !== effect.id))
     }, 500)
   }
 
@@ -45,10 +50,6 @@ const KickEbul = ({ handleNextStep }: { handleNextStep: () => void }) => {
         if (prev <= 1) {
           clearInterval(timer)
           setIsGameRunning(false)
-
-          // 다음 단계로 이동
-          handleNextStep()
-
           return 0
         }
         return prev - 1
@@ -57,6 +58,15 @@ const KickEbul = ({ handleNextStep }: { handleNextStep: () => void }) => {
 
     return () => clearInterval(timer)
   }, [isGameRunning])
+
+  useEffect(() => {
+    //게임종료되면 점수 저장
+    if (timeCount === 0) {
+      const finalScore = hitCount * SCORE_MULTIPLIER
+      setGameState(prev => ({ ...prev, score: finalScore }))
+      handleNextStep()
+    }
+  }, [timeCount, handleNextStep, setGameState, hitCount])
 
   return (
     <div style={{ backgroundImage: `url(${ebulUser})` }} className="relative h-full bg-cover bg-center">
@@ -72,7 +82,7 @@ const KickEbul = ({ handleNextStep }: { handleNextStep: () => void }) => {
         {/* 게임 영역 */}
         <div className="mb-5 h-[40%] w-[86%] rounded-lg text-white outline-dashed outline-[6px] outline-offset-1 outline-main3">
           {isGameRunning ? (
-            <div className="relative h-full w-full" onPointerDown={handleTouch}>
+            <div className="relative h-full w-full" onPointerDown={handlePointer}>
               {/* 터치 이펙트 */}
               {effects.map(effect => (
                 <img

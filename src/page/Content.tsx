@@ -1,10 +1,15 @@
-import RankTab from '../components/rank/RankTab'
-import { RANK_CONTENT, TworryContent, worryImage } from '../utils/worry'
-import { useModal } from '../hook/useModal'
-import FloatBtn from '../components/rank/FloatBtn'
+import { useState } from 'react'
+import { useGetGameContent } from '../api/firebaseApi'
 import ContentModal from '../components/rank/ContentModal'
+import FloatBtn from '../components/rank/FloatBtn'
+import RankTab from '../components/rank/RankTab'
+import { useModal } from '../hook/useModal'
+import { RANK_CONTENT, TworryContent, worryImage } from '../utils/worry'
 
 const Content = () => {
+  const [sortType, setSortType] = useState<'score' | 'reactionTotal'>('score')
+  const { data: contents = [] } = useGetGameContent(sortType)
+
   const { showModal, hideModal, Modal } = useModal()
 
   const handleOpenModal = (content: TworryContent) => {
@@ -17,9 +22,9 @@ const Content = () => {
       {/* 필터 버튼 */}
       <div className="my-5 flex w-[80%] items-end justify-between">
         <p className="text-sm text-gray1">이불 더미 구경하기</p>
-        <select className="rounded border-[2px] border-black px-2 py-1 text-sm">
-          <option>멀리 날라간 순</option>
-          <option>공감 높은 순</option>
+        <select onChange={e => setSortType(e.target.value as 'score' | 'reactionTotal')} className="rounded border-[2px] border-black px-2 py-1 text-sm">
+          <option value="score">멀리 날라간 순</option>
+          <option value="reactionTotal">공감 높은 순</option>
         </select>
       </div>
       {/* 이불 더미 목록 */}

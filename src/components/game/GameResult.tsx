@@ -6,7 +6,7 @@ import { TGameState } from '../../page/Game'
 import { getResultStage, resultStage } from '../../utils/rank'
 import ResultModal from './Modal/ResultModal'
 
-const GameResult = ({ gameState, initGame }: { gameState: TGameState; initGame: () => void }) => {
+const GameResult = ({ gameState, initGame, nickname, uniqueId }: { gameState: TGameState; initGame: () => void; nickname: string; uniqueId: string }) => {
   const { showModal, Modal } = useModal()
   const [stage, setStage] = useState(0)
   const targetStage = getResultStage(gameState.score) // 점수에 따른 목표 stage
@@ -25,7 +25,7 @@ const GameResult = ({ gameState, initGame }: { gameState: TGameState; initGame: 
   /** 결과 모달 표시 */
   const showResultModal = () => {
     setTimeout(() => {
-      showModal(<ResultModal gameState={gameState} initGame={initGame} />)
+      showModal(<ResultModal gameState={gameState} initGame={initGame} nickname={nickname} uniqueId={uniqueId} />)
     }, 1000)
   }
 

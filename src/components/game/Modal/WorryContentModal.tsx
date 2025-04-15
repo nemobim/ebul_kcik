@@ -51,7 +51,7 @@ const WorryContentModal = ({
       text: selectedWorry.text,
       bgImg: selectedWorry.bgImg,
     })
-    setGameState(prev => ({ ...prev, worryLabel: selectedWorry.id }))
+    setGameState(prev => ({ ...prev, worryLabel: selectedWorry.id, content }))
     hideModal()
   }
 
