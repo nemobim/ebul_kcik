@@ -18,7 +18,7 @@ export const rankImg = [first, second, third]
 /**점수 계산 배수*/
 export const SCORE_MULTIPLIER = 3
 /**점수 목표*/
-const SCORE_TARGET = [110, 140, 180, 200]
+const SCORE_TARGET =  [140, 180, 220, 260]
 
 /**랭크에 맞는 이미지 반환*/
 export const getRankImg = (score: number) => {
