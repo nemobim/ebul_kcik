@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useGetGameContent } from '../api/firebaseApi'
 import { SpinnerLoading } from '../components/Loading'
 import ContentModal from '../components/rank/ContentModal'
@@ -12,6 +12,9 @@ const Content = () => {
   const [sortType, setSortType] = useState<TSortType>('createdAt')
   const { data: contents = [], isLoading, isError } = useGetGameContent(sortType)
 
+  //스크롤 ref
+  const scrollRef = useRef<HTMLDivElement>(null)
+
   const { showModal, hideModal, Modal } = useModal()
 
   const handleOpenModal = (content: TGameContent) => {
@@ -23,7 +26,7 @@ const Content = () => {
       {isLoading || isError ? (
         <SpinnerLoading />
       ) : (
-        <div className="bg-worry relative flex h-full flex-col items-center overflow-y-auto pt-12">
+        <div ref={scrollRef} className="bg-worry relative flex h-full flex-col items-center overflow-y-auto py-12">
           <RankTab />
           {/* 필터 버튼 */}
           <div className="my-5 flex w-[80%] items-end justify-between">
@@ -53,7 +56,7 @@ const Content = () => {
         </div>
       )}
       {/* 플로팅 버튼 */}
-      <FloatBtn />
+      <FloatBtn scrollRef={scrollRef} />
       {Modal}
     </div>
   )
