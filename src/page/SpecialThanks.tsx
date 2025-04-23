@@ -37,7 +37,7 @@ const SpecialThanks = () => {
   const handleSecretCount = () => {
     if (secretCount >= 10) {
       showModal(
-        <div className="flex w-[95%] flex-col gap-2 rounded-xl border-[3px] border-black bg-white p-3">
+        <div className="flex w-full flex-col gap-2 rounded-xl border-[3px] border-black bg-white p-3">
           <img src={secret} alt="secret" className="w-full" />
           <button
             className="btn main2"
@@ -55,8 +55,8 @@ const SpecialThanks = () => {
   }
 
   return (
-    <div className="relative h-screen bg-gradient-to-b from-white to-gray-200">
-      <div className="flex h-full flex-col items-center gap-2 overflow-y-auto">
+    <div className="relative h-full bg-gradient-to-b from-white to-gray-200">
+      <div className="flex h-full flex-col items-center gap-2 overflow-y-auto py-5">
         <div className="w-full break-all p-5 text-lg leading-relaxed">
           안녕하세요! 니니입니다. 지붕뚫고 이불킥은 매일 자기 전에 생각나는 고민들과 흑역사들 덕에 잠 못 이룬 밤이 많던 저의 모습을 반영한 서비스였습니다. 원래 기획자였던 제가 얼레벌레 픽셀도 찍고
           게임 디자인도 해보는 경험이 되었네요-! 이 게임도 나중에 보면 저의 흑역사일지도 모르지만, 그런 순간들이 모여야 인생이 재밌는 것 아니겠어요? 다들 즐기면서 살아보자구요 ㅎㅎ 감사합니다

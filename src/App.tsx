@@ -17,9 +17,9 @@ const App = () => {
   })
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="mx-auto flex h-screen max-w-md items-center justify-center bg-white">
-        <div className="h-full max-h-[900px] w-full overflow-hidden bg-black">
+    <div className="min-h-[100dvh] bg-gray-100">
+      <div className="mx-auto flex h-[100dvh] max-w-md items-center justify-center bg-white">
+        <div className="h-full max-h-[900px] w-full overflow-y-auto bg-black">
           <QueryClientProvider client={queryClient}>
             <ErrorBoundary FallbackComponent={ErrorFallBack}>
               <Router />

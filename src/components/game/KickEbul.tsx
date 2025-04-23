@@ -91,7 +91,7 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
           ) : (
             <div className="flex h-full flex-col items-center justify-center">
               <p className="mb-2 text-center text-sm">
-                제한 시간 동안 빠르게 터치해
+                20초 안에 화면을 빠르게 터치해
                 <br />
                 떠오른 생각을 날려버려요!
               </p>
