@@ -27,7 +27,7 @@ const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: 
   return (
     <div
       style={{ backgroundImage: `url(${worryImage[content.worryLabel].bgImg})` }}
-      className="flex h-full max-h-[90vh] min-h-[20rem] flex-col justify-between overflow-y-scroll rounded-xl border-[3px] border-black p-2"
+      className="flex h-full max-h-[90vh] min-h-[20rem] w-full flex-col justify-between overflow-y-scroll rounded-xl border-[3px] border-black p-2"
     >
       <div>
         <div className="flex items-start justify-between">

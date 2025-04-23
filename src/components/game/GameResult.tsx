@@ -30,19 +30,21 @@ const GameResult = ({ gameState, initGame, nickname, uniqueId }: { gameState: TG
   }
 
   return (
-    <div className="relative h-full w-full">
+    <div
+      className="relative h-full w-full"
+      style={
+        {
+          '--stage-height': window.innerHeight > 900 ? '900px' : `${window.innerHeight}px`,
+        } as React.CSSProperties
+      }
+    >
+      <img src={resultStage[stage]} alt="background" className="absolute left-0 top-0 h-full w-full object-cover" style={{ objectFit: 'contain' }} />
       <img
-        src={resultStage[stage]}
-        alt="background"
-        className="absolute left-0 top-0 h-full w-full object-cover"
-        style={{ objectFit: 'contain' }} // 비율 유지, 여백 없이 꽉 채우기
-      />
-      <img
-        key={stage} // key 변경하여 컴포넌트 리렌더링 유도
+        key={stage}
         src={blanket}
         alt="blanket"
         onAnimationEnd={handleAnimationEnd}
-        className={twMerge('absolute bottom-0 left-1/2', stage === targetStage ? 'animate-blanket-stop' : 'animate-blanket')} // 동적 클래스 적용
+        className={twMerge('absolute bottom-0 left-1/2', stage === targetStage ? 'animate-blanket-stop' : 'animate-blanket')}
       />
       {Modal}
     </div>

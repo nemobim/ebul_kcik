@@ -38,7 +38,7 @@ const Rank = () => {
           </div>
           <div className="mb-16 flex w-full flex-col gap-2">
             {ranks.slice(3).map((rank, index) => (
-              <div key={rank.user} className="flex w-full items-center justify-between border-y-[3px] border-black bg-white px-10 py-4">
+              <div key={rank.id} className="flex w-full items-center justify-between border-y-[3px] border-black bg-white px-10 py-4">
                 <span className="text-sm text-main3">{index + 4}등</span>
                 <span className="font-galmuri9">{rank.user}</span>
                 <p className="text-sm">{rank.score} m</p>
@@ -48,11 +48,13 @@ const Rank = () => {
         </div>
       )}
       {/* 나의 등수 플로팅 */}
-      {myRank?.rank && !isLoading && (
-        <div className="fixed bottom-0 left-1/2 flex h-[4rem] w-[80%] max-w-[26rem] -translate-x-1/2 justify-between rounded-t-lg border-x-[3px] border-t-[3px] border-black bg-main2 px-10 pt-4 text-white">
-          <span className="text-sm">{myRank?.rank || '-'}등</span>
-          <span className="font-galmuri9">{myRank?.content.user || '-'}</span>
-          <p className="text-sm">{myRank?.content.score || '-'} m</p>
+      {myRank && myRank.rank && !isLoading && (
+        <div className="absolute bottom-0 left-0 w-full px-4">
+          <div className="mx-auto flex h-[4rem] w-full max-w-[900px] justify-between rounded-t-lg border-x-[3px] border-t-[3px] border-black bg-main2 px-6 pt-4 text-white">
+            <span className="text-sm">{myRank.rank}등</span>
+            <span className="font-galmuri9">{myRank.content.user}</span>
+            <p className="text-sm">{myRank.content.score} m</p>
+          </div>
         </div>
       )}
     </div>

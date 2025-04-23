@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { collection, doc, getDoc, getDocs, increment, limit, orderBy, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
 import { db } from '../firebase/firebaseClient'
-import { TGameContent, TGameState, TworryReaction } from '../types/game'
+import { TGameContent, TGameState, TSortType, TworryReaction } from '../types/game'
 
 /**게임 점수 등록 */
 export const useSaveScore = () => {
@@ -41,7 +41,7 @@ export const useGetTopRanks = () => {
 }
 
 /** 게임 내용 조회 */
-export const useGetGameContent = (sortBy: 'score' | 'reactionTotal') => {
+export const useGetGameContent = (sortBy: TSortType) => {
   return useQuery<TGameContent[]>({
     queryKey: ['GAME_CONTENT', sortBy],
     queryFn: async () => {

@@ -188,27 +188,17 @@
     opacity: 1;
   }
   25% {
-    transform: translate(-40%, -25vh) rotate(10deg);
-    opacity: 1;
+    transform: translate(-40%, calc(-0.25 * var(--stage-height))) rotate(10deg);
   }
   50% {
-    transform: translate(-60%, -50vh) rotate(-10deg);
-    opacity: 1;
+    transform: translate(-60%, calc(-0.5 * var(--stage-height))) rotate(-10deg);
   }
   75% {
-    transform: translate(-40%, -75vh) rotate(15deg);
-    opacity: 1;
-  }
-  85% {
-    /* 80vh 도달하는 시점부터 서서히 흐려짐 */
-    opacity: 0.8;
-  }
-  95% {
-    opacity: 0.6;
+    transform: translate(-40%, calc(-0.75 * var(--stage-height))) rotate(15deg);
   }
   100% {
-    transform: translate(-50%, -100vh) rotate(-15deg);
-    opacity: 0.3; /* 최종적으로 더 흐려지도록 조정 */
+    transform: translate(-50%, calc(-1 * var(--stage-height))) rotate(-15deg);
+    opacity: 0.3;
   }
 }
 
@@ -220,26 +210,18 @@
 @keyframes blanket-stop {
   0% {
     transform: translate(-50%, 0) rotate(0deg);
-    animation-timing-function: ease-in;
   }
-
   45% {
-    transform: translate(-45%, -45vh) rotate(15deg);
-    animation-timing-function: ease-in-out;
+    transform: translate(-45%, calc(-0.45 * var(--stage-height))) rotate(15deg);
   }
-
   65% {
-    transform: translate(-52%, -60vh) rotate(-8deg);
-    animation-timing-function: ease-out;
+    transform: translate(-52%, calc(-0.6 * var(--stage-height))) rotate(-8deg);
   }
-
   85% {
-    transform: translate(-48%, -58vh) rotate(5deg);
-    animation-timing-function: ease-out;
+    transform: translate(-48%, calc(-0.58 * var(--stage-height))) rotate(5deg);
   }
-
   100% {
-    transform: translate(-50%, -60vh) rotate(0deg);
+    transform: translate(-50%, calc(-0.6 * var(--stage-height))) rotate(0deg);
   }
 }
 

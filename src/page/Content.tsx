@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useGetGameContent } from '../api/firebaseApi'
 import { SpinnerLoading } from '../components/Loading'
 import ContentModal from '../components/rank/ContentModal'
 import FloatBtn from '../components/rank/FloatBtn'
 import RankTab from '../components/rank/RankTab'
 import { useModal } from '../hook/useModal'
-import { TGameContent } from '../types/game'
+import { TGameContent, TSortType } from '../types/game'
 import { worryImage } from '../utils/worry'
 
 const Content = () => {
-  const [sortType, setSortType] = useState<'score' | 'reactionTotal'>('score')
+  const [sortType, setSortType] = useState<TSortType>('createdAt')
   const { data: contents = [], isLoading, isError } = useGetGameContent(sortType)
+
+  //스크롤 ref
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const { showModal, hideModal, Modal } = useModal()
 
@@ -23,12 +26,13 @@ const Content = () => {
       {isLoading || isError ? (
         <SpinnerLoading />
       ) : (
-        <div className="bg-worry relative flex h-full flex-col items-center overflow-y-auto pt-12">
+        <div ref={scrollRef} className="bg-worry relative flex h-full flex-col items-center overflow-y-auto py-12">
           <RankTab />
           {/* 필터 버튼 */}
           <div className="my-5 flex w-[80%] items-end justify-between">
             <p className="text-sm text-gray1">이불 더미 구경하기</p>
-            <select onChange={e => setSortType(e.target.value as 'score' | 'reactionTotal')} className="rounded border-[2px] border-black px-2 py-1 text-sm">
+            <select defaultValue={sortType} onChange={e => setSortType(e.target.value as TSortType)} className="rounded border-[2px] border-black px-2 py-1 text-sm">
+              <option value="createdAt">최신순</option>
               <option value="score">멀리 날라간 순</option>
               <option value="reactionTotal">공감 높은 순</option>
             </select>
@@ -52,7 +56,7 @@ const Content = () => {
         </div>
       )}
       {/* 플로팅 버튼 */}
-      <FloatBtn />
+      <FloatBtn scrollRef={scrollRef} />
       {Modal}
     </div>
   )

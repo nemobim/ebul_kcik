@@ -5,7 +5,7 @@ import close from '../../assets/game/write/close.png'
 const InfoModal = ({ hideModal }: { hideModal: () => void }) => {
   const handleShare = () => {
     const shareData = {
-      title: '지붕 뚫고 이불킥',
+      title: '이불뚫고 지붕킥',
       text: '잠들지 못하게 하는 당신의 생각을 이불과 함께 날려보세요-!',
       url: window.location.href, // 현재 URL
     }
