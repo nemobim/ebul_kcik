@@ -40,3 +40,6 @@ export type TGameContent = {
   reactions: Record<TworryReaction, number>
   reactionTotal: number
 }
+
+/** 정렬 타입 */
+export type TSortType = 'createdAt' | 'score' | 'reactionTotal'

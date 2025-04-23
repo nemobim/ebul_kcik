@@ -5,11 +5,11 @@ import ContentModal from '../components/rank/ContentModal'
 import FloatBtn from '../components/rank/FloatBtn'
 import RankTab from '../components/rank/RankTab'
 import { useModal } from '../hook/useModal'
-import { TGameContent } from '../types/game'
+import { TGameContent, TSortType } from '../types/game'
 import { worryImage } from '../utils/worry'
 
 const Content = () => {
-  const [sortType, setSortType] = useState<'score' | 'reactionTotal'>('score')
+  const [sortType, setSortType] = useState<TSortType>('createdAt')
   const { data: contents = [], isLoading, isError } = useGetGameContent(sortType)
 
   const { showModal, hideModal, Modal } = useModal()
@@ -28,7 +28,8 @@ const Content = () => {
           {/* 필터 버튼 */}
           <div className="my-5 flex w-[80%] items-end justify-between">
             <p className="text-sm text-gray1">이불 더미 구경하기</p>
-            <select onChange={e => setSortType(e.target.value as 'score' | 'reactionTotal')} className="rounded border-[2px] border-black px-2 py-1 text-sm">
+            <select defaultValue={sortType} onChange={e => setSortType(e.target.value as TSortType)} className="rounded border-[2px] border-black px-2 py-1 text-sm">
+              <option value="createdAt">최신순</option>
               <option value="score">멀리 날라간 순</option>
               <option value="reactionTotal">공감 높은 순</option>
             </select>
