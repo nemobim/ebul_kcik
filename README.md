@@ -5,7 +5,7 @@
   <img src="https://github.com/user-attachments/assets/b2b1ec42-d64e-412a-820b-e316dbf4746e" width="48%" />
 </p>
 
-👉 **[지금 바로 이불 차러 가기](ttps://ebul-kcik.vercel.app)**
+👉 **[지금 바로 이불 차러 가기](https://ebul-kcik.vercel.app)**
 
 ---
 
