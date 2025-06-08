@@ -1,4 +1,4 @@
-# 🛏️ 지붕뚫고 이불킥
+# 🛏️ 이불뚫고 지붕킥
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/949465f8-49a1-4e9e-ae92-848fa4092344" width="48%" />
