@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import { useGetGameContent } from '../api/firebaseApi'
 import { SpinnerLoading } from '../components/Loading'
 import ContentModal from '../components/rank/ContentModal'
@@ -7,6 +7,7 @@ import RankTab from '../components/rank/RankTab'
 import { useModal } from '../hook/useModal'
 import { TGameContent, TSortType } from '../types/game'
 import { worryImage } from '../utils/worry'
+import { ChangeEvent } from 'react'
 
 const Content = () => {
   const [sortType, setSortType] = useState<TSortType>('createdAt')
@@ -16,6 +17,11 @@ const Content = () => {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const { showModal, hideModal, Modal } = useModal()
+
+  // 이벤트 핸들러 메모이제이션
+  const handleSortChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
+    setSortType(e.target.value as TSortType)
+  }, [])
 
   const handleOpenModal = (content: TGameContent) => {
     showModal(<ContentModal hideModal={hideModal} content={content} />)
@@ -31,7 +37,7 @@ const Content = () => {
           {/* 필터 버튼 */}
           <div className="my-5 flex w-[80%] items-end justify-between">
             <p className="text-sm text-gray1">이불 더미 구경하기</p>
-            <select defaultValue={sortType} onChange={e => setSortType(e.target.value as TSortType)} className="rounded border-[2px] border-black px-2 py-1 text-sm">
+            <select defaultValue={sortType} onChange={handleSortChange} className="rounded border-[2px] border-black px-2 py-1 text-sm" aria-label="정렬 기준 선택">
               <option value="createdAt">최신순</option>
               <option value="score">멀리 날라간 순</option>
               <option value="reactionTotal">공감 높은 순</option>

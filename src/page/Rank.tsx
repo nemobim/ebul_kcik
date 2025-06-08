@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useGetTopRanks } from '../api/firebaseApi'
 import { SpinnerLoading } from '../components/Loading'
 import RankTab from '../components/rank/RankTab'
@@ -10,6 +10,8 @@ const Rank = () => {
   const { data: ranks = [], isLoading, isError } = useGetTopRanks()
   const [myRank, setMyRank] = useState<{ rank: number; content: TGameContent } | null>(null)
   const docId = localStorage.getItem('isPlay') // 가장최근 게임아이디
+
+  const sortedRanks = useMemo(() => ranks.slice(3), [ranks])
 
   useEffect(() => {
     if (ranks.length > 0 && docId) {
@@ -37,7 +39,7 @@ const Rank = () => {
             ))}
           </div>
           <div className="mb-16 flex w-full flex-col gap-2">
-            {ranks.slice(3).map((rank, index) => (
+            {sortedRanks.map((rank, index) => (
               <div key={rank.id} className="flex w-full items-center justify-between border-y-[3px] border-black bg-white px-10 py-4">
                 <span className="text-sm text-main3">{index + 4}등</span>
                 <span className="font-galmuri9">{rank.user}</span>

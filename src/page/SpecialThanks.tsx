@@ -21,16 +21,15 @@ const SpecialThanks = () => {
     }
   }, [])
 
+  // 폭죽 효과 설정
+  const FIREWORK_CONFIG = {
+    particleCount: 150,
+    spread: 70,
+    origin: { y: 0.7 },
+  } as const
+
   const handleFireworks = useCallback(() => {
-    if (confettiInstance.current) {
-      confettiInstance.current({
-        particleCount: 150, // 입자 개수
-        spread: 70, // 확산 범위
-        origin: {
-          y: 0.7, //위치 조정
-        },
-      })
-    }
+    confettiInstance.current?.(FIREWORK_CONFIG)
   }, [])
 
   /**신사동 이스터에그 */
@@ -76,8 +75,8 @@ const SpecialThanks = () => {
         {Modal}
         {/* 폭죽 효과*/}
         <canvas ref={canvasRef} className="pointer-events-none absolute left-0 top-0 h-full w-full" />
-        <button onClick={handleFireworks} className="mt-2 flex flex-col gap-1 text-4xl">
-          👏
+        <button onClick={handleFireworks} className="mt-2 flex flex-col gap-1 text-4xl" aria-label="폭죽 효과 보기">
+          <span aria-hidden="true">👏</span>
           <span className="text-xs">click me</span>
         </button>
         <Link to="/content" className="mb-5 rounded-md bg-slate-600 px-2 py-1 text-white">
