@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import Error from '../components/error/Error'
 
-export const NotFound = () => {
+const NotFound = () => {
   const navigate = useNavigate()
 
   /**홈으로 이동 */
@@ -17,3 +17,5 @@ export const NotFound = () => {
     </Error>
   )
 }
+
+export default NotFound

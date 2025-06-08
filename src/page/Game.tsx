@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import GameResult from '../components/game/GameResult'
 import KickEbul from '../components/game/KickEbul'
@@ -21,22 +21,23 @@ const Game = () => {
   })
 
   /**다음 단계로 넘기기 */
-  const handleNextStep = () => {
+  const handleNextStep = useCallback(() => {
     setStep(prev => prev + 1)
-  }
+  }, [])
 
   /**게임 초기화 */
-  const initGame = () => {
+  const initGame = useCallback(() => {
     setGameState(prev => ({ ...prev, score: 0 }))
     setStep(1)
-  }
+  }, [])
 
   useEffect(() => {
-    if (nickname && uniqueId) {
-      setGameState(prev => ({ ...prev, user: nickname }))
-    } else {
+    if (!nickname || !uniqueId) {
       navigate('/')
+      return
     }
+
+    setGameState(prev => ({ ...prev, user: nickname }))
   }, [navigate, nickname, uniqueId])
 
   // 닉네임이 없거나 고유 ID가 없으면 홈으로 이동
@@ -47,11 +48,14 @@ const Game = () => {
    * 1: 게임 시작
    * 2: 이불 날리기(결과)
    */
-  const gameSteps = [
-    <WorryDump handleNextStep={handleNextStep} setGameState={setGameState} />,
-    <KickEbul handleNextStep={handleNextStep} setGameState={setGameState} />,
-    <GameResult gameState={gameState} initGame={initGame} nickname={nickname} uniqueId={uniqueId} />,
-  ]
+  const gameSteps = useMemo(
+    () => [
+      <WorryDump key="worry" handleNextStep={handleNextStep} setGameState={setGameState} />,
+      <KickEbul key="kick" handleNextStep={handleNextStep} setGameState={setGameState} />,
+      <GameResult key="result" gameState={gameState} initGame={initGame} nickname={nickname} uniqueId={uniqueId} />,
+    ],
+    [handleNextStep, initGame, gameState, nickname, uniqueId],
+  )
 
   return <>{gameSteps[step]}</>
 }

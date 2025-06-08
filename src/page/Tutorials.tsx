@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Bed from '../components/tutorial/Bed'
 import Door from '../components/tutorial/Door'
 import Room from '../components/tutorial/Room'
@@ -16,7 +16,7 @@ const Tutorials = () => {
    * 1: 방에서 침대 클릭
    * 2: 침대에서 대사 출력
    */
-  const tutorialSteps = [<Door handleNextStep={handleNextStep} />, <Room handleNextStep={handleNextStep} />, <Bed />]
+  const tutorialSteps = useMemo(() => [<Door key="door" handleNextStep={handleNextStep} />, <Room key="room" handleNextStep={handleNextStep} />, <Bed key="bed" />], [handleNextStep])
 
   return <div className="bg-tutorial h-full">{tutorialSteps[step]}</div>
 }
