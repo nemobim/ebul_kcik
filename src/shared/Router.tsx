@@ -1,10 +1,10 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { LottieLoading } from '../components/Loading'
-import Splash from '../page/Splash'
 import Game from '../page/Game'
-import Tutorials from '../page/Tutorials'
 import NotFound from '../page/NotFound'
+import Splash from '../page/Splash'
+import Tutorials from '../page/Tutorials'
 
 const Content = lazy(() => import('../page/Content'))
 const Rank = lazy(() => import('../page/Rank'))
