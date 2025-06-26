@@ -36,8 +36,8 @@ const InfoModal = ({ hideModal }: { hideModal: () => void }) => {
         {`이불킥 커뮤니티 공유 >`}
       </button>
       <div className="mt-1 flex flex-col items-end gap-1 text-sm text-gray1">
-        <a href="https://www.instagram.com/nini_neuru/?igsh=MTYxOHhpOXpud2Rpeg%3D%3D#" target="_blank" rel="noopener noreferrer" className="hover:text-main2">
-          기획/디자인: @nini_neuru
+        <a href="https://www.instagram.com/yello.zib/" target="_blank" rel="noopener noreferrer" className="hover:text-main2">
+          기획/디자인: @yello.zib
         </a>
         <a href="https://github.com/nemobim" target="_blank" rel="noopener noreferrer" className="hover:text-main2">
           개발: @nemobim

@@ -74,10 +74,12 @@
 
 ## 👥 만든 사람들
 
-| 역할             | 사람                                         |
-| ---------------- | -------------------------------------------- |
-| 🎨 기획 & 디자인 | [@nini_neuru](https://www.instagram.com/nini_neuru/?igsh=MTYxOHhpOXpud2Rpeg%3D%3D#)|
-| 💻 기획 & 개발   | [@nemobim](https://github.com/nemobim)       |
+
+| 역할             | 사람                                               |
+| ---------------- | -------------------------------------------------- |
+| 🎨 기획 & 디자인 | [@yello.zib](https://www.instagram.com/yello.zib/) |
+| 💻 기획 & 개발   | [@nemobim](https://github.com/nemobim)             |
+
 
 ---
 
