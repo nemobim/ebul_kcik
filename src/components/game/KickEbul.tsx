@@ -8,6 +8,8 @@ import CountCombo from './CountCombo'
 
 const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void; setGameState: Dispatch<SetStateAction<TGameState>> }) => {
   const [isGameRunning, setIsGameRunning] = useState(false) // 본 게임 시작 여부
+  const [isCountdown, setIsCountdown] = useState(false) // 카운트다운 시작 여부
+  const [countdown, setCountdown] = useState(10) // 카운트다운 타이머
   const [timeCount, setTimeCount] = useState(20) // 본 게임 타이머
 
   const [effects, setEffects] = useState<TEffect[]>([]) //타격 효과
@@ -15,7 +17,8 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
 
   /** 게임 시작 */
   const handleStartClick = () => {
-    setIsGameRunning(true)
+    setIsCountdown(true)
+    setCountdown(10)
   }
 
   /** 타격 효과 추가 */
@@ -35,6 +38,24 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
       setEffects(prev => prev.filter(eff => eff.id !== effect.id))
     }, 500)
   }
+
+  useEffect(() => {
+    if (!isCountdown) return
+
+    const timer = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(timer)
+          setIsCountdown(false)
+          setIsGameRunning(true)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [isCountdown])
 
   useEffect(() => {
     if (!isGameRunning) return
@@ -67,7 +88,14 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
       <div className="flex h-full flex-col items-center justify-between py-8">
         {/* 카운트다운 & 타이머 */}
         <div className="flex items-center justify-center">
-          <p className={twMerge('text-4xl text-white', isGameRunning && 'animate-bounce')}>{isGameRunning ? timeCount : '준비'}</p>
+          {isCountdown ? (
+            <div className="text-center">
+              <p className="animate-pulse text-7xl font-bold text-white drop-shadow-lg">{countdown}</p>
+              <p className="mt-2 animate-pulse text-lg text-white/80">초 후 시작!</p>
+            </div>
+          ) : (
+            <p className={twMerge('text-4xl text-white', isGameRunning && 'animate-bounce')}>{isGameRunning ? timeCount : '준비'}</p>
+          )}
         </div>
 
         {/* 터치 카운트 */}
@@ -75,7 +103,17 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
 
         {/* 게임 영역 */}
         <div className="mb-5 h-[40%] w-[86%] rounded-lg text-white outline-dashed outline-[6px] outline-offset-1 outline-main3">
-          {isGameRunning ? (
+          {isCountdown ? (
+            <div className="flex h-full flex-col items-center justify-center">
+              <div className="text-center">
+                <div className="mb-4 animate-bounce">
+                  <div className="mb-2 text-6xl">🦶</div>
+                </div>
+                <p className="mb-2 text-lg font-semibold">게임이 곧 시작됩니다!</p>
+                <p className="text-sm text-white/80">해당 영역을 빠르게 연타해 떠오른 생각을 날려버려요!</p>
+              </div>
+            </div>
+          ) : isGameRunning ? (
             <div className="relative h-full w-full" onPointerDown={handlePointer}>
               {/* 터치 이펙트 */}
               {effects.map(effect => (
