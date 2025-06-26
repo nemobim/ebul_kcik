@@ -5,7 +5,12 @@
   <img src="https://github.com/user-attachments/assets/b2b1ec42-d64e-412a-820b-e316dbf4746e" width="48%" />
 </p>
 
-👉 **[지금 바로 이불 차러 가기](https://ebul-kcik.vercel.app)**
+<p>
+  <a href="https://ebul-kcik.vercel.app" target="_blank" rel="noopener noreferrer">
+    <strong>👉 지금 바로 이불 차러 가기</strong>
+  </a>
+</p>
+
 
 ---
 
@@ -69,10 +74,12 @@
 
 ## 👥 만든 사람들
 
+
 | 역할             | 사람                                               |
 | ---------------- | -------------------------------------------------- |
 | 🎨 기획 & 디자인 | [@yello.zib](https://www.instagram.com/yello.zib/) |
 | 💻 기획 & 개발   | [@nemobim](https://github.com/nemobim)             |
+
 
 ---
 
