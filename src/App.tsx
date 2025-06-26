@@ -17,6 +17,7 @@ const App = () => {
     },
   })
 
+  // 우클릭 방지
   useEffect(() => {
     const handleContextMenu = (e: MouseEvent) => {
       e.preventDefault()
