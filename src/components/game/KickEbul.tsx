@@ -9,7 +9,7 @@ import CountCombo from './CountCombo'
 const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void; setGameState: Dispatch<SetStateAction<TGameState>> }) => {
   const [isGameRunning, setIsGameRunning] = useState(false) // 본 게임 시작 여부
   const [isCountdown, setIsCountdown] = useState(false) // 카운트다운 시작 여부
-  const [countdown, setCountdown] = useState(10) // 카운트다운 타이머
+  const [countdown, setCountdown] = useState(5) // 카운트다운 타이머
   const [timeCount, setTimeCount] = useState(20) // 본 게임 타이머
 
   const [effects, setEffects] = useState<TEffect[]>([]) //타격 효과
@@ -18,7 +18,7 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
   /** 게임 시작 */
   const handleStartClick = () => {
     setIsCountdown(true)
-    setCountdown(10)
+    setCountdown(5)
   }
 
   /** 타격 효과 추가 */

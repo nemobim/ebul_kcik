@@ -4,6 +4,7 @@ import 'remixicon/fonts/remixicon.css'
 import ErrorFallBack from './page/ErrorFallBack'
 import Router from './shared/Router'
 import './styles/animated.css'
+import { useEffect } from 'react'
 
 const App = () => {
   const queryClient = new QueryClient({
@@ -15,6 +16,16 @@ const App = () => {
       },
     },
   })
+
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault()
+    }
+    document.addEventListener('contextmenu', handleContextMenu)
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu)
+    }
+  }, [])
 
   return (
     <div className="min-h-[100dvh] bg-gray-100">
