@@ -30,8 +30,12 @@ const Bed = () => {
 
   // 다음 대사로 이동
   const handleNextScript = () => {
-    // 타이핑 중이면 무시
-    if (typing) return
+    // 타이핑 중이면 전체 텍스트를 한번에 표시
+    if (typing) {
+      setDisplayedText(bedScripts[currentScript].script)
+      setTyping(false)
+      return
+    }
 
     if (currentScript < bedScripts.length - 1) {
       setTyping(true)
