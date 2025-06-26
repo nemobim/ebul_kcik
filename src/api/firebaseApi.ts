@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { collection, doc, getDoc, getDocs, increment, limit, orderBy, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
+import { collection, doc, getCountFromServer, getDoc, getDocs, increment, limit, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore'
 import { db } from '../firebase/firebaseClient'
 import { TGameContent, TGameState, TSortType, TworryReaction } from '../types/game'
 
@@ -37,6 +37,35 @@ export const useGetTopRanks = () => {
       const snapshot = await getDocs(q)
       return snapshot.docs.map(doc => doc.data() as TGameContent)
     },
+  })
+}
+
+/** 본인 순위 조회
+ * @description 쿼리키 : MY_RANK
+ */
+export const useMyRankInfo = (myId: string | null) => {
+  return useQuery({
+    queryKey: ['MY_RANK_INFO', myId],
+    queryFn: async () => {
+      if (!myId) return null
+
+      const docSnap = await getDoc(doc(db, 'contents', myId))
+      if (!docSnap.exists()) return null
+
+      const data = docSnap.data()
+      const score = data.score
+
+      const q = query(collection(db, 'contents'), where('score', '>', score))
+      const countSnap = await getCountFromServer(q)
+      const rank = countSnap.data().count + 1
+
+      return {
+        rank,
+        myScore: score,
+        user: data.user,
+      }
+    },
+    enabled: !!myId,
   })
 }
 

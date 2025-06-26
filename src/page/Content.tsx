@@ -1,13 +1,12 @@
-import { useRef, useState, useCallback } from 'react'
+import { ChangeEvent, useCallback, useRef, useState } from 'react'
 import { useGetGameContent } from '../api/firebaseApi'
-import { SpinnerLoading } from '../components/Loading'
+import { LottieLoading } from '../components/Loading'
 import ContentModal from '../components/rank/ContentModal'
 import FloatBtn from '../components/rank/FloatBtn'
 import RankTab from '../components/rank/RankTab'
 import { useModal } from '../hook/useModal'
 import { TGameContent, TSortType } from '../types/game'
 import { worryImage } from '../utils/worry'
-import { ChangeEvent } from 'react'
 
 const Content = () => {
   const [sortType, setSortType] = useState<TSortType>('createdAt')
@@ -30,7 +29,7 @@ const Content = () => {
   return (
     <div className="relative h-full">
       {isLoading || isError ? (
-        <SpinnerLoading />
+        <LottieLoading />
       ) : (
         <div ref={scrollRef} className="bg-worry relative flex h-full flex-col items-center overflow-y-auto py-12">
           <RankTab />
