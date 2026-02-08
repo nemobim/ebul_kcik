@@ -1,0 +1,87 @@
+---
+description: "Development workflow: task breakdown, error handling, codebase analysis"
+globs:
+alwaysApply: true
+---
+
+# Workflow
+
+## Task Approach
+
+Break every task into steps. Before writing code:
+
+1. Search the codebase for existing patterns using @Codebase
+2. Identify affected files and potential side effects
+3. Implement incrementally, verifying each step
+
+When modifying existing code, prefer minimal and focused changes. Do not refactor unrelated code unless explicitly asked.
+
+## Error Handling Process
+
+When an error occurs:
+
+1. Read the full error message and stack trace
+2. Search the codebase for similar patterns
+3. Fix the root cause, not the symptom
+4. Verify the fix does not break related functionality
+
+### Async Error Handling
+
+All async operations must have explicit error handling. Never silently swallow errors.
+
+```tsx
+// Good ✅
+const { mutate } = useMutation({
+  mutationFn: async (data: TPayload) => { /* ... */ },
+  onError: (error: Error) => alert(error.message ?? 'An error occurred.'),
+})
+
+// Bad ❌ — No error handling on mutation
+const { mutate } = useMutation({
+  mutationFn: async (data: TPayload) => { /* ... */ },
+})
+```
+
+### Error Boundary
+
+This project uses `react-error-boundary`. Wrap route-level or feature-level components with `<ErrorBoundary>` and provide a `FallbackComponent`.
+
+```tsx
+// Good ✅ — ErrorBoundary with fallback at route level
+<ErrorBoundary FallbackComponent={ErrorFallBack}>
+  <Router />
+</ErrorBoundary>
+
+// Bad ❌ — No error boundary wrapping async content
+<Router />
+```
+
+## Code Change Verification
+
+After making changes:
+
+1. Run `npm run lint` to check for linting errors
+2. Run `npm run build` to verify TypeScript compilation
+3. Check that no unused imports or variables remain (tsconfig strict mode enforces this)
+
+## Git Conventions
+
+Use conventional commit messages:
+
+```
+feat: add worry category selector
+fix: prevent duplicate reaction submission
+refactor: extract score calculation to utility
+style: adjust ranking page layout spacing
+```
+
+- One logical change per commit
+- Commit message describes **why**, not just **what**
+- Do not commit `.env` or Firebase credentials
+
+## Communication
+
+- Respond in Korean
+- If requirements or code patterns are ambiguous, ask for clarification before writing code
+- Before complex implementations, explain the approach in 2-3 sentences and get confirmation first
+- When suggesting changes to existing code, explain what changes and why before showing the diff

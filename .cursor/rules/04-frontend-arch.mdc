@@ -1,0 +1,227 @@
+---
+description: "Project architecture: directory structure, component patterns, state management, routing"
+globs: "src/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Frontend Architecture
+
+## Directory Structure
+
+```
+src/
+├── api/                    # React Query hooks wrapping Firebase operations
+│   └── firebaseApi.ts      # All query/mutation hooks (co-located)
+├── assets/                 # Static assets (images, lottie, icons)
+│   ├── game/               # Game-related images
+│   ├── icon/               # SVG icons
+│   ├── lottie/             # Lottie JSON animations
+│   ├── rank/               # Ranking page images
+│   └── tutorial/           # Tutorial flow images
+├── components/             # UI components grouped by feature
+│   ├── error/              # Error display components
+│   ├── game/               # Game feature components
+│   │   └── modal/          # Game-specific modals
+│   ├── rank/               # Ranking feature components
+│   └── tutorial/           # Tutorial step components
+├── firebase/               # Firebase client initialization
+│   └── firebaseClient.ts   # App, Firestore, Analytics instances
+├── hook/                   # Custom React hooks
+│   └── useModal.tsx        # Portal-based modal hook
+├── page/                   # Route-level page components
+├── shared/                 # Shared infrastructure (Router)
+├── styles/                 # Global CSS files
+├── types/                  # TypeScript type definitions
+└── utils/                  # Pure utility functions and constants
+```
+
+### Placement Rules
+
+| What | Where | Example |
+|------|-------|---------|
+| Route page component | `src/page/` | `Game.tsx`, `Rank.tsx` |
+| Feature UI component | `src/components/{feature}/` | `components/game/KickEbul.tsx` |
+| Feature-specific modal | `src/components/{feature}/modal/` | `components/game/modal/ResultModal.tsx` |
+| Firebase query/mutation hook | `src/api/firebaseApi.ts` | `useSaveScore`, `useGetTopRanks` |
+| Custom UI hook | `src/hook/` | `useModal.tsx` |
+| Type definitions | `src/types/` | `game.ts` |
+| Pure utility functions | `src/utils/` | `rank.ts`, `worry.ts` |
+| Static assets | `src/assets/{category}/` | `assets/game/kick.svg` |
+| Global styles | `src/styles/` | `index.css`, `animated.css` |
+
+```tsx
+// Good ✅ — New game modal goes in components/game/modal/
+// src/components/game/modal/NewModal.tsx
+
+// Bad ❌ — Modal placed at top-level components/
+// src/components/NewModal.tsx
+```
+
+## Component Patterns
+
+### Page Components
+
+Page components in `src/page/` are entry points for routes. They:
+- Fetch data (via React Query hooks)
+- Manage page-level state
+- Compose feature components
+- Handle navigation guards
+
+See @src/page/Game.tsx for the established pattern.
+
+```tsx
+// Good ✅ — Page component orchestrates child components
+const Game = () => {
+  const [step, setStep] = useState(0)
+  const [gameState, setGameState] = useState<TGameState>({ /* ... */ })
+
+  const gameSteps = useMemo(() => [
+    <WorryDump key="worry" handleNextStep={handleNextStep} setGameState={setGameState} />,
+    <KickEbul key="kick" handleNextStep={handleNextStep} setGameState={setGameState} />,
+    <GameResult key="result" gameState={gameState} />,
+  ], [/* deps */])
+
+  return <>{gameSteps[step]}</>
+}
+
+// Bad ❌ — Page component with all UI inline (no composition)
+const Game = () => {
+  // 500+ lines of mixed rendering, state, and logic
+}
+```
+
+### Feature Components
+
+Feature components in `src/components/{feature}/` receive data and callbacks via props. They should not directly access `localStorage` or navigate — delegate that to the parent page.
+
+```tsx
+// Good ✅ — Component receives handler via props
+const KickEbul = ({ handleNextStep, setGameState }: Props) => {
+  // Internal game logic
+  // Calls handleNextStep() when done
+}
+
+// Bad ❌ — Component directly navigates
+const KickEbul = () => {
+  const navigate = useNavigate()
+  // Navigates internally instead of letting parent control flow
+}
+```
+
+### Modal Pattern
+
+This project uses a portal-based modal hook. See @src/hook/useModal.tsx.
+
+```tsx
+// Good ✅ — Using the useModal hook
+const { Modal, showModal, hideModal } = useModal()
+
+showModal(<ResultModal onClose={hideModal} />)
+
+return (
+  <>
+    {/* page content */}
+    {Modal}
+  </>
+)
+
+// Bad ❌ — Manual modal state without the hook
+const [isOpen, setIsOpen] = useState(false)
+{isOpen && <div className="modal-overlay"><ResultModal /></div>}
+```
+
+### Props Pattern
+
+- Destructure props in function parameters
+- Use inline type annotations for simple components
+- Extract `type TProps` when props exceed 3 fields
+
+```tsx
+// Good ✅ — Inline type for simple props
+const Error = ({ title, text, children }: { title: string; text: string; children?: React.ReactNode }) => {
+
+// Good ✅ — Extracted type for complex props
+type TGameResultProps = {
+  gameState: TGameState
+  initGame: () => void
+  nickname: string
+  uniqueId: string
+}
+const GameResult = ({ gameState, initGame, nickname, uniqueId }: TGameResultProps) => {
+
+// Bad ❌ — Undeclared props type with any
+const GameResult = (props: any) => {
+```
+
+## State Management
+
+This project does NOT use a global state management library. State is managed in three tiers:
+
+| Tier | Tool | Example |
+|------|------|---------|
+| Server state | React Query | Firestore data (ranks, game content) |
+| Page state | `useState` | Game step, game state object |
+| Persistent state | `localStorage` | `nickname`, `uniqueId`, `isPlay` (doc ID) |
+
+### localStorage Keys
+
+| Key | Value | Set When |
+|-----|-------|----------|
+| `nickname` | User display name | Tutorial/onboarding |
+| `uniqueId` | User unique identifier | Tutorial/onboarding |
+| `isPlay` | Latest game document ID | After score submission |
+
+```tsx
+// Good ✅ — Reading localStorage with null check
+const nickname = localStorage.getItem('nickname')
+if (!nickname) return <Navigate to="/" />
+
+// Bad ❌ — Assuming localStorage always has value
+const nickname = localStorage.getItem('nickname')!
+```
+
+## Routing
+
+All routes are defined in @src/shared/Router.tsx. When adding a new route:
+
+1. Create the page component in `src/page/`
+2. Add the route in `Router.tsx`
+3. Use `React.lazy()` for non-critical pages
+4. Add a catch-all `*` route already exists for 404
+
+### Route Map
+
+| Path | Page | Lazy |
+|------|------|------|
+| `/` | `Splash` | No |
+| `/tutorials` | `Tutorials` | No |
+| `/game` | `Game` | No |
+| `/ranking` | `Rank` | Yes |
+| `/content` | `Content` | Yes |
+| `/special-thanks` | `SpecialThanks` | Yes |
+| `*` | `NotFound` | No |
+
+## Layout
+
+The app is wrapped in a mobile-first container (max-width `md`, centered, black background, max-height 900px). See @src/App.tsx.
+
+```tsx
+// This layout is defined in App.tsx — do not duplicate it in page components
+<div className="min-h-[100dvh] bg-gray-100">
+  <div className="mx-auto flex h-[100dvh] max-w-md items-center justify-center bg-white">
+    <div className="h-full max-h-[900px] w-full overflow-y-auto bg-black">
+      {/* Routes render here */}
+    </div>
+  </div>
+</div>
+```
+
+Page components should fill `h-full` and not set their own max-width or centering wrappers.
+
+```tsx
+// Good ✅ — Page fills parent container
+<div className="relative h-full">
+
+// Bad ❌ — Page re-creates the centering layout
+<div className="mx-auto flex max-w-md items-center justify-center">
+```

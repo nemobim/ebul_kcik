@@ -1,0 +1,272 @@
+---
+description: "Library-specific API patterns: React 18, TanStack React Query v5, Firebase v11 (Firestore), React Router DOM v6, React Hook Form v7, TailwindCSS v3, tailwind-merge, Lottie React, react-error-boundary"
+globs:
+alwaysApply: false
+---
+
+# Tech Stack Rules
+
+## React (v18.3)
+
+This is a client-side SPA (not Next.js). No Server Components, no SSR.
+
+### Component Declaration
+
+Use arrow functions with default export. This is the established pattern in this project.
+
+```tsx
+// Good ✅ — Arrow function component with default export
+const GameResult = ({ gameState, initGame }: Props) => {
+  return <div>{/* ... */}</div>
+}
+
+export default GameResult
+
+// Bad ❌ — Named export or function declaration (inconsistent with project)
+export function GameResult({ gameState, initGame }: Props) {
+  return <div>{/* ... */}</div>
+}
+```
+
+### Hooks
+
+- Use `useCallback` for functions passed as props or used in dependency arrays
+- Use `useMemo` for expensive computations or derived data
+- Use `useState` for local UI state only
+
+```tsx
+// Good ✅ — Memoized handler passed to child
+const handleNextStep = useCallback(() => {
+  setStep(prev => prev + 1)
+}, [])
+
+// Bad ❌ — Inline function re-created every render
+const handleNextStep = () => {
+  setStep(prev => prev + 1)
+}
+// ...passed as <Child onNext={handleNextStep} />
+```
+
+## TanStack React Query (v5.74)
+
+Server state is managed exclusively through React Query. Do not use useState for data fetched from Firebase.
+
+### Query Key Convention
+
+Use SCREAMING_SNAKE_CASE string arrays for query keys. See @src/api/firebaseApi.ts for the established pattern.
+
+```tsx
+// Good ✅ — Descriptive query key with parameter
+queryKey: ['GAME_CONTENT', sortBy]
+
+// Bad ❌ — Vague or unscoped query key
+queryKey: ['data']
+```
+
+### Query Hook Pattern
+
+All Firebase query hooks are co-located in `src/api/firebaseApi.ts`. Each hook wraps `useQuery` or `useMutation` and returns the React Query result directly.
+
+```tsx
+// Good ✅ — Typed query with proper enabled guard
+export const useMyRankInfo = (myId: string | null) => {
+  return useQuery({
+    queryKey: ['MY_RANK_INFO', myId],
+    queryFn: async () => {
+      if (!myId) return null
+      // ...fetch logic
+    },
+    enabled: !!myId,
+  })
+}
+
+// Bad ❌ — Query without enabled guard when parameter can be null
+export const useMyRankInfo = (myId: string | null) => {
+  return useQuery({
+    queryKey: ['MY_RANK_INFO', myId],
+    queryFn: async () => {
+      const docSnap = await getDoc(doc(db, 'contents', myId!)) // dangerous !
+    },
+  })
+}
+```
+
+### Mutation Pattern
+
+Mutations must have `onError` handler. Use `queryClient.invalidateQueries` in `onSuccess` to sync cache.
+
+```tsx
+// Good ✅ — Mutation with error handling and cache invalidation
+export const useReactToContent = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (params: TReactionParams) => { /* ... */ },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['GAME_CONTENT'] }),
+    onError: (error: Error) => alert(error.message ?? 'An error occurred.'),
+  })
+}
+
+// Bad ❌ — No onError, no cache invalidation
+export const useReactToContent = () => {
+  return useMutation({
+    mutationFn: async (params: TReactionParams) => { /* ... */ },
+  })
+}
+```
+
+### QueryClient Configuration
+
+QueryClient is instantiated in `App.tsx` with these defaults — maintain consistency:
+- `refetchOnWindowFocus: false`
+- `staleTime: 60 * 1000 * 10` (10 minutes)
+- `retry: 1`
+
+## Firebase (v11.3 — Modular SDK)
+
+Use the modular (tree-shakeable) import style. Never use compat imports.
+
+```tsx
+// Good ✅ — Modular import
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore'
+
+// Bad ❌ — Compat import
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/firestore'
+```
+
+### Firestore Operations
+
+All Firestore operations go through `src/api/firebaseApi.ts`, using the `db` instance from @src/firebase/firebaseClient.ts.
+
+- Use `setDoc` with explicit document ID for writes
+- Use `serverTimestamp()` for date fields
+- Use `increment()` for atomic counter updates
+- Use `getCountFromServer` for count queries (avoids reading all documents)
+
+```tsx
+// Good ✅ — Atomic increment with server-side operation
+await updateDoc(contentRef, {
+  [`reactions.${reaction}`]: increment(1),
+  reactionTotal: increment(1),
+})
+
+// Bad ❌ — Client-side read-then-write (race condition)
+const snap = await getDoc(contentRef)
+const current = snap.data().reactionTotal
+await updateDoc(contentRef, { reactionTotal: current + 1 })
+```
+
+### Firebase Config
+
+All Firebase config values come from Vite environment variables (`import.meta.env.VITE_*`). Never hardcode credentials.
+
+## React Router DOM (v6.27)
+
+### Routing Structure
+
+Routes are defined in @src/shared/Router.tsx using `<BrowserRouter>` + `<Routes>` + `<Route>`.
+
+### Lazy Loading
+
+Non-critical pages use `React.lazy()` with `<Suspense fallback={<LottieLoading />}>`.
+
+```tsx
+// Good ✅ — Lazy load for non-initial routes
+const Content = lazy(() => import('../page/Content'))
+const Rank = lazy(() => import('../page/Rank'))
+
+// Bad ❌ — Eager import for rarely visited page
+import SpecialThanks from '../page/SpecialThanks'
+```
+
+### Navigation Guard
+
+Use `useNavigate()` in `useEffect` and `<Navigate>` component for auth guards.
+
+```tsx
+// Good ✅ — Guard pattern used in this project
+useEffect(() => {
+  if (!nickname || !uniqueId) {
+    navigate('/')
+    return
+  }
+}, [navigate, nickname, uniqueId])
+
+if (!nickname || !uniqueId) return <Navigate to="/" />
+```
+
+## React Hook Form (v7.54)
+
+Use `react-hook-form` for all form state. No Yup/Zod schema library is installed — use inline validation rules.
+
+```tsx
+// Good ✅ — react-hook-form with register and inline validation
+const { register, handleSubmit, formState: { errors } } = useForm<TFormValues>()
+
+<input {...register('nickname', { required: true, maxLength: 10 })} />
+{errors.nickname && <span>Required</span>}
+
+// Bad ❌ — Manual controlled input state
+const [nickname, setNickname] = useState('')
+const handleChange = (e) => setNickname(e.target.value)
+```
+
+## TailwindCSS (v3.4) + tailwind-merge
+
+### Custom Theme
+
+This project defines custom colors and fonts in @tailwind.config.js. Use the semantic color names:
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `main1` | `#FCEF8D` | Primary yellow |
+| `main2` | `#5B5BEC` | Primary purple |
+| `main3` | `#EA6262` | Primary red / accent |
+| `gray1` | `#5E5565` | Dark gray |
+| `gray2` | `#AEA7B3` | Medium gray |
+| `gray3` | `#D6CFDA` | Light gray |
+| `font` | `#1F102A` | Text color |
+
+Custom fonts: `font-galmuri11`, `font-galmuri9`
+Custom breakpoints: `xxs: 310px`, `xs: 380px`
+
+### Class Merging
+
+Use `twMerge()` from `tailwind-merge` when conditionally combining Tailwind classes. Import from `tailwind-merge`.
+
+```tsx
+// Good ✅ — twMerge for conditional classes
+import { twMerge } from 'tailwind-merge'
+<p className={twMerge('text-4xl text-white', isGameRunning && 'animate-bounce')}>
+
+// Bad ❌ — String concatenation (may produce conflicting classes)
+<p className={`text-4xl text-white ${isGameRunning ? 'animate-bounce' : ''}`}>
+```
+
+## Lottie React (v2.4)
+
+Use `lottie-react` for JSON-based animations. Import animation data from `src/assets/lottie/`.
+
+```tsx
+// Good ✅
+import Lottie from 'lottie-react'
+import loading from '../assets/lottie/loading.json'
+
+<Lottie animationData={loading} loop={true} />
+
+// Bad ❌ — Using raw <video> or GIF for animations that should be Lottie
+<video src="/loading.mp4" autoPlay loop />
+```
+
+## Remixicon (v4.5)
+
+Import the CSS globally once. Use `<i>` tags with `ri-*` class names.
+
+```tsx
+// Good ✅ — Already imported globally in App.tsx
+import 'remixicon/fonts/remixicon.css'
+<i className="ri-arrow-left-line" />
+
+// Bad ❌ — Individual SVG imports for icons that exist in Remixicon
+import ArrowLeft from './icons/arrow-left.svg'
+```

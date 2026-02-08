@@ -1,0 +1,195 @@
+---
+description: "Code quality standards: naming, TypeScript strict mode, readability, constants"
+globs:
+alwaysApply: true
+---
+
+# Clean Code
+
+## Naming Conventions
+
+### Components and Files
+
+- Components: **PascalCase** (`GameResult.tsx`, `KickEbul.tsx`)
+- Pages: **PascalCase** in `src/page/` (`Game.tsx`, `Rank.tsx`)
+- Utilities: **camelCase** (`rank.ts`, `worry.ts`)
+- Hooks: **camelCase** with `use` prefix (`useModal.tsx`)
+- Type files: **camelCase** (`game.ts`)
+
+### Variables and Functions
+
+| Category | Pattern | Example |
+|----------|---------|---------|
+| Event handler (internal) | `handle~` | `handleNextStep`, `handleStartClick`, `handlePointer` |
+| Event handler (prop) | `on~` | `onClose`, `onSubmit` |
+| Boolean state | `is~`, `has~`, `can~` | `isGameRunning`, `isCountdown`, `isClosing` |
+| Counts | `~Count` | `hitCount`, `timeCount` |
+| Dates | `~At` | `createdAt` |
+| API hooks (read) | `useGet~` / `use~` | `useGetTopRanks`, `useMyRankInfo` |
+| API hooks (write) | `useSave~` / `useReact~` | `useSaveScore`, `useReactToContent` |
+
+```tsx
+// Good ✅
+const [isGameRunning, setIsGameRunning] = useState(false)
+const [hitCount, setHitCount] = useState(0)
+const handleStartClick = () => { /* ... */ }
+
+// Bad ❌
+const [gameRunning, setGameRunning] = useState(false)  // missing is~ prefix
+const [hits, setHits] = useState(0)                     // missing ~Count suffix
+const startClick = () => { /* ... */ }                   // missing handle~ prefix
+```
+
+### Types
+
+- Prefix all type aliases with `T` (project convention)
+- Use descriptive names that indicate the domain
+
+```tsx
+// Good ✅
+type TGameState = { score: number; user: string; content: string }
+type TworryLabel = 'talk' | 'young' | 'school' | 'work'
+type TEffect = { id: number; x: number; y: number }
+
+// Bad ❌
+type GameState = { score: number; user: string }  // missing T prefix
+type Label = string                                // too vague
+interface IEffect { id: number }                   // wrong prefix (I instead of T)
+```
+
+## TypeScript
+
+TypeScript strict mode is enabled (`"strict": true` in tsconfig). Follow these rules:
+
+### No `any`
+
+Never use `any`. Use `unknown` with type guards when the type is truly unpredictable.
+
+```tsx
+// Good ✅
+const parseResponse = (data: unknown): TGameContent => {
+  if (typeof data === 'object' && data !== null && 'id' in data) {
+    return data as TGameContent
+  }
+  throw new Error('Invalid data format')
+}
+
+// Bad ❌
+const parseResponse = (data: any) => data.id
+```
+
+### Use `type` for All Type Definitions
+
+This project uses `type` (not `interface`) consistently. Follow the existing pattern.
+
+```tsx
+// Good ✅ — Matches project convention
+type TGameContent = {
+  id: string
+  user: string
+  score: number
+}
+
+// Bad ❌ — Inconsistent with project
+interface IGameContent {
+  id: string
+  user: string
+  score: number
+}
+```
+
+### Explicit Return Types on Exported Functions
+
+Non-component exported functions should have explicit return types.
+
+```tsx
+// Good ✅
+export const getRankImg = (score: number): string => {
+  if (score >= SCORE_TARGET[3] * SCORE_MULTIPLIER) return UFO
+  return hanger
+}
+
+// Bad ❌ — No return type on exported utility
+export const getRankImg = (score: number) => {
+  if (score >= SCORE_TARGET[3] * SCORE_MULTIPLIER) return UFO
+  return hanger
+}
+```
+
+## Constants
+
+No magic numbers. Always declare named constants with semantic meaning.
+
+```tsx
+// Good ✅
+const SCORE_MULTIPLIER = 3
+const SCORE_TARGET = [140, 180, 220, 260]
+const COUNTDOWN_SECONDS = 5
+const GAME_DURATION_SECONDS = 20
+
+// Bad ❌ — Magic numbers scattered in code
+setCountdown(5)
+setTimeCount(20)
+const finalScore = hitCount * 3
+```
+
+Colocate constants with the logic they govern. Do not scatter related values across distant files.
+
+## Functions
+
+### Single Responsibility
+
+Functions must only do what their name implies. Never mix data fetching with logging, analytics, or unrelated side effects.
+
+```tsx
+// Good ✅ — handlePointer only handles pointer input
+const handlePointer = (e: React.PointerEvent<HTMLDivElement>) => {
+  const rect = e.currentTarget.getBoundingClientRect()
+  const effect: TEffect = {
+    id: Date.now() + Math.random(),
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top,
+  }
+  setHitCount(prev => prev + 1)
+  setEffects(prev => [...prev, effect])
+}
+
+// Bad ❌ — Mixed concerns: input handling + analytics + navigation
+const handlePointer = (e: React.PointerEvent<HTMLDivElement>) => {
+  // ...pointer logic
+  analytics.track('hit')
+  if (hitCount > 100) navigate('/result')
+}
+```
+
+### Early Returns
+
+Use guard clauses and early returns. No nested ternaries.
+
+```tsx
+// Good ✅ — Early return guard
+if (!nickname || !uniqueId) return <Navigate to="/" />
+
+// Bad ❌ — Nested ternary
+return nickname ? (uniqueId ? <Game /> : <Navigate to="/" />) : <Navigate to="/" />
+```
+
+## Abstraction
+
+Do not abstract until the same pattern appears in 3+ places and is stable. Duplication is better than a wrong abstraction.
+
+## Imports
+
+- No barrel exports (`index.ts` re-exports). Import directly from the source file.
+- Group imports: React/library imports first, then project imports, then styles.
+
+```tsx
+// Good ✅ — Direct imports, grouped
+import { useCallback, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import GameResult from '../components/game/GameResult'
+import { TGameState } from '../types/game'
+
+// Bad ❌ — Barrel import
+import { GameResult, KickEbul, WorryDump } from '../components/game'
+```
