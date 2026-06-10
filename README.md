@@ -48,7 +48,7 @@
 
 - React 18.3.1
 - TypeScript 5.5.3
-- Vite 5.4.8
+- Vite 7
 - TanStack Query
 - React Router DOM
 - Tailwind CSS
@@ -85,3 +85,5 @@
 
 > **흑역사는 누구나 있다.  
 > 날려보낼 용기가 없을 뿐.**
+
+프로젝트의 상세 설계와 개선 계획은 [docs/README.md](./docs/README.md)를 참고하세요.
