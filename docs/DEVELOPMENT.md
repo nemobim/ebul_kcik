@@ -82,14 +82,9 @@ lint 상세:
 
 현재 쿼리는 단일 필드 `orderBy`와 `score > value` count를 사용합니다. 콘솔이 인덱스를 요구하면 오류 링크를 따라 생성하되, 생성한 인덱스와 Rules는 저장소에서 형상 관리해야 합니다.
 
-저장소에 없는 항목:
+저장소에 있는 Firebase 형상: `firebase.json`, Firestore Security Rules(`firestore.rules`), 인덱스 설정(`firestore.indexes.json`). 규칙·인덱스 변경은 `firebase deploy --only firestore`로 배포해야 실제 반영됩니다.
 
-- `firebase.json`
-- Firestore Security Rules
-- Firestore index 설정
-- Emulator 설정
-
-운영 연결 전 [SECURITY-PRIVACY.md](./SECURITY-PRIVACY.md)를 먼저 확인합니다.
+아직 없는 항목: Emulator 설정.
 
 ---
 

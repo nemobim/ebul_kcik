@@ -17,7 +17,6 @@
 | [AUDIO.md](./AUDIO.md)                       | 배경음악·효과음 설계 및 구현 방향                     | 기획, 개발         |
 | [ROADMAP.md](./ROADMAP.md)                   | Phase별 개발 로드맵 및 추가 기능                      | 기획, 전체         |
 | [DEVELOPMENT.md](./DEVELOPMENT.md)           | 로컬 실행, 환경 변수, 검증 및 배포 절차               | 개발               |
-| [SECURITY-PRIVACY.md](./SECURITY-PRIVACY.md) | 공개 UGC·개인정보·Firestore Rules 최소 점검 (라이트)  | 기획, 개발         |
 
 ---
 
@@ -25,7 +24,6 @@
 
 - **현황 문서** (`PRD`, `ARCHITECTURE`, `DEVELOPMENT`): 코드베이스와 검증 결과 기준의 사실 기록
 - **개선 문서** (`UI-UX`, `GAME-EXPERIENCE`, `AUDIO`, `ROADMAP`): 분석 결과를 바탕으로 한 제안 및 향후 작업 항목 (코드 위험·성능 잔여 항목은 `ROADMAP`에 통합)
-- **운영 기준** (`SECURITY-PRIVACY`): 코드만으로 확인 가능한 위험과 배포 전 확인 항목
 
 ---
 

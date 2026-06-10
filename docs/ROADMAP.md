@@ -54,10 +54,10 @@
 
 | #   | 작업                             | 문서                  |
 | --- | -------------------------------- | --------------------- |
-| 1   | 신고/숨김 및 삭제 요청 절차      | SECURITY-PRIVACY §2.3 |
-| 2   | Firebase Anonymous Auth 검토     | SECURITY-PRIVACY §2.1 |
-| 3   | Analytics 재도입 시 목적·동의 결정 (현재 초기화 제거됨) | SECURITY-PRIVACY §2.4 |
-| 4   | 브라우저 E2E와 Rules test 확대   | DEVELOPMENT §8        |
+| 1   | 신고/숨김 및 삭제 요청 절차      | firestore.rules (현재 클라이언트 delete 차단) |
+| 2   | Firebase Anonymous Auth 검토     | firestore.rules (헤더 주석)                   |
+| 3   | Analytics 재도입 시 목적·동의 결정 (현재 초기화 제거됨) | ARCHITECTURE §5.1            |
+| 4   | 브라우저 E2E와 Rules test 확대   | DEVELOPMENT §8                                |
 
 ---
 
@@ -108,4 +108,3 @@ flowchart LR
 | 게임 연출     | [GAME-EXPERIENCE.md](./GAME-EXPERIENCE.md)   |
 | 사운드        | [AUDIO.md](./AUDIO.md)                       |
 | 개발 절차     | [DEVELOPMENT.md](./DEVELOPMENT.md)           |
-| 보안/개인정보 | [SECURITY-PRIVACY.md](./SECURITY-PRIVACY.md) |

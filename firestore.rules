@@ -3,7 +3,7 @@ rules_version = '2';
 // 이불뚫고 지붕킥 Firestore Security Rules
 //
 // 주의: 현재 앱은 Firebase Auth를 사용하지 않고 localStorage UUID로만 사용자를
-// 식별합니다(SECURITY-PRIVACY.md §2.1). 따라서 request.auth 기반 소유권 검증이
+// 식별합니다. 따라서 request.auth 기반 소유권 검증이
 // 불가능하며, 아래 규칙은 "필드 형태/값 범위 검증"과 "변경 가능한 필드 제한"에
 // 집중합니다. 완전한 소유권 보장이 필요하면 Firebase Anonymous Auth 도입 후
 // userId == request.auth.uid 조건을 추가해야 합니다.

@@ -2,7 +2,7 @@
  * localStorage 기반 세션 helper
  *
  * nickname/uniqueId/isPlay 키와 접근 로직을 한곳에 모아 흩어진 문자열 사용을 제거한다.
- * (인증 수단이 아니며, 보안 경계는 Firestore Rules가 담당 — SECURITY-PRIVACY.md 참고)
+ * (인증 수단이 아니며, 보안 경계는 Firestore Rules가 담당 — firestore.rules 참고)
  */
 const KEYS = {
   nickname: 'nickname',

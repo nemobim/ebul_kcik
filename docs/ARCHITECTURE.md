@@ -183,7 +183,7 @@ min-h-[100dvh] bg-gray-100
 
 `getFirestore()`, `getAnalytics()` 초기화. `analytics`는 export되나 **커스텀 이벤트 추적에는 미사용**입니다.
 
-저장소에는 `firebase.json`, Firestore Security Rules, 인덱스 설정이 없습니다. 따라서 실제 배포 프로젝트의 읽기/쓰기 권한은 이 코드만으로 검증할 수 없습니다. 운영 전 [SECURITY-PRIVACY.md](./SECURITY-PRIVACY.md)의 점검이 필요합니다.
+저장소에 `firebase.json`, Firestore Security Rules([firestore.rules](../firestore.rules)), 인덱스 설정(`firestore.indexes.json`)이 있습니다. 다만 규칙 변경은 `firebase deploy --only firestore:rules`로 배포해야 실제 반영되므로, 저장소 규칙과 배포 프로젝트의 실제 권한이 일치하는지는 별도 확인이 필요합니다.
 
 ### 5.2 Firestore 컬렉션
 
