@@ -17,7 +17,7 @@
 | [AUDIO.md](./AUDIO.md)                       | 배경음악·효과음 설계 및 구현 방향                     | 기획, 개발         |
 | [ROADMAP.md](./ROADMAP.md)                   | Phase별 개발 로드맵 및 추가 기능                      | 기획, 전체         |
 | [DEVELOPMENT.md](./DEVELOPMENT.md)           | 로컬 실행, 환경 변수, 검증 및 배포 절차               | 개발               |
-| [SECURITY-PRIVACY.md](./SECURITY-PRIVACY.md) | Firestore 권한, UGC, 개인정보 및 운영 점검            | 기획, 개발, 운영   |
+| [SECURITY-PRIVACY.md](./SECURITY-PRIVACY.md) | 공개 UGC·개인정보·Firestore Rules 최소 점검 (라이트)  | 기획, 개발         |
 
 ---
 
