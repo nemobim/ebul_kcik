@@ -51,19 +51,19 @@ const Bed = () => {
       <div className="relative w-[90%]">
         <img src={bedScripts[currentScript].img} alt="잠자는 사용자" className="w-full" />
       </div>
-      {/**대사 박스 */}
-      <div className="text-dialog mt-5 flex justify-between px-3 py-5" onClick={handleNextScript}>
+      {/**대사 박스 (전체 영역 클릭/키보드로 다음 진행) */}
+      <button type="button" className="text-dialog mt-5 flex justify-between px-3 py-5 text-left" onClick={handleNextScript} aria-label="다음 대사">
         <p>
           {displayedText}
           {typing && <span className="animate-typing-cursor" />}
         </p>
-        {/* 다음 버튼 (타이핑이 끝나면 활성화) */}
+        {/* 다음 표시 (타이핑이 끝나면 활성화) */}
         {!typing && (
-          <button className="animate-glow">
-            <img src={nextBtn} alt="다음 버튼" className="h-auto w-[90%] max-w-[100px]" />
-          </button>
+          <span className="animate-glow">
+            <img src={nextBtn} alt="" className="h-auto w-[90%] max-w-[100px]" />
+          </span>
         )}
-      </div>
+      </button>
     </div>
   )
 }

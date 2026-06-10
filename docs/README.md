@@ -43,6 +43,6 @@ React 18 · TypeScript 5.5 · Vite 7 (lockfile 7.3.2) · TanStack Query v5 · Fi
 
 - 오디오 미구현 (→ [AUDIO.md](./AUDIO.md))
 - 게임 연출·접근성 개선 미착수 (→ [GAME-EXPERIENCE.md](./GAME-EXPERIENCE.md), [UI-UX.md](./UI-UX.md))
-- 남은 코드 위험·성능 정리 항목 (→ [ROADMAP.md](./ROADMAP.md) 「잔여 코드 품질 항목」)
+- 남은 성능 정리 항목: splash 자산 최적화, Galmuri 폰트 self-host (→ [ROADMAP.md](./ROADMAP.md) 「잔여 코드 품질 항목」). 코드 위험·정리 7건은 2026-06-11 완료
 
-> 최종 코드 대조일: 2026-06-10
+> 최종 코드 대조일: 2026-06-11

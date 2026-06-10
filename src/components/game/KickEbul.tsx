@@ -102,7 +102,7 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
   }, [timeCount, handleNextStep, setGameState, hitCount])
 
   return (
-    <div style={{ backgroundImage: `url(${ebulUser})` }} className="relative h-full bg-cover bg-center">
+    <div style={{ backgroundImage: `url(${ebulUser})` }} className="relative h-full touch-none select-none bg-cover bg-center">
       <div className="flex h-full flex-col items-center justify-between py-8">
         {/* 카운트다운 & 타이머 */}
         <div className="flex items-center justify-center">

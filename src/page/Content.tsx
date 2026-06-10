@@ -51,7 +51,12 @@ const Content = () => {
           ) : (
             <div className="grid w-[80%] grid-cols-2 gap-4">
               {contents.map(content => (
-                <div key={content.id} onClick={() => handleOpenModal(content)} className="w-full rounded-lg border-[3px] border-black bg-white py-2 pr-2 text-sm">
+                <button
+                  key={content.id}
+                  type="button"
+                  onClick={() => handleOpenModal(content)}
+                  className="w-full rounded-lg border-[3px] border-black bg-white py-2 pr-2 text-left text-sm"
+                >
                   <div className="flex items-center justify-between">
                     <img src={worryImage[content.worryLabel].img} className="w-[90%] max-w-[4rem]" alt={content.worryLabel} />
                     <div className="text-right text-main3">
@@ -61,7 +66,7 @@ const Content = () => {
                   </div>
                   <p className="my-2 line-clamp-3 pl-2">{content?.content}</p>
                   <p className="pl-2 text-gray2"> {content?.user}</p>
-                </div>
+                </button>
               ))}
             </div>
           )}

@@ -107,7 +107,7 @@
 | 4   | alert/clipboard 피드백 통합      | REFACTORING §22       |
 | 5   | 신고/숨김 및 삭제 요청 절차      | SECURITY-PRIVACY §2.3 |
 | 6   | Firebase Anonymous Auth 검토     | SECURITY-PRIVACY §2.1 |
-| 7   | Analytics 목적·동의 결정         | SECURITY-PRIVACY §2.4 |
+| 7   | Analytics 재도입 시 목적·동의 결정 (현재 초기화 제거됨) | SECURITY-PRIVACY §2.4 |
 | 8   | 브라우저 E2E와 Rules test 확대   | DEVELOPMENT §8        |
 
 ---
@@ -125,15 +125,17 @@ Phase 1·2·4 진행 후 코드에 아직 반영되지 않은 항목입니다. (
 
 ### 코드 위험·정리
 
-| #   | 작업                                            | 위치/메모                                                                 |
+2026-06-11 일괄 처리 완료. 아래 7건은 모두 코드에 반영됨.
+
+| #   | 작업                                            | 처리 결과                                                                 |
 | --- | ----------------------------------------------- | ------------------------------------------------------------------------- |
-| 1   | 전역 `touch-action`/`user-select`를 게임 영역으로 제한 | `src/styles/index.css:12-19` — body 전역 적용이 Content/Rank 스크롤·텍스트 선택을 해침. 연타 영역에만 적용 |
-| 2   | `createdAt` 타입 일치                            | `src/types/game.ts:39` — `string`이지만 저장값은 `serverTimestamp()`. `Timestamp \| null` 등 실제 읽기 상태와 일치 |
-| 3   | Analytics 목적·동의 정의 또는 초기화 제거        | `src/firebase/firebaseClient.ts:23` — `getAnalytics` 초기화만 있고 이벤트/동의 안내 없음 |
-| 4   | `RankTab.tsx` 파일명 ↔ 컴포넌트명 일치           | 실제 컴포넌트명은 `TabNavigation`. 검색성·stack trace 가독성 |
-| 5   | 클릭 가능 비버튼 요소 button화                   | `Content.tsx` 카드, `Bed.tsx` 대화창, `SpecialThanks.tsx` span — 키보드 접근 불가 (UI-UX §4 연계) |
-| 6   | `Rank.tsx` 불필요한 `useMemo` 정리               | `ranks.slice(3)` 메모이제이션 불필요                                       |
-| 7   | 오래된 TODO/주석 정리                            | `src/firebase/firebaseClient.ts:5` 보일러플레이트 TODO 등                  |
+| 1   | 전역 `touch-action`/`user-select`를 게임 영역으로 제한 | ✅ `index.css` body 전역 규칙 제거, `KickEbul`(연타 화면)에 `touch-none select-none` 적용. Content/Rank 스크롤·선택 복원 |
+| 2   | `createdAt` 타입 일치                            | ✅ `src/types/game.ts` `createdAt: Timestamp`로 변경, `validateContent`에 검증 추가 |
+| 3   | Analytics 초기화 제거                            | ✅ `firebaseClient.ts`에서 `getAnalytics` import·init·export 제거 (미사용). 재도입은 Phase 4 #7 참고 |
+| 4   | `RankTab.tsx` 파일명 ↔ 컴포넌트명 일치           | ✅ 컴포넌트명 `TabNavigation` → `RankTab` |
+| 5   | 클릭 가능 비버튼 요소 button화                   | ✅ `Content.tsx` 카드, `Bed.tsx` 대화창, `SpecialThanks.tsx` 모두 `<button>`화 |
+| 6   | `Rank.tsx` 불필요한 `useMemo` 정리               | ✅ `ranks.slice(3)` 직접 호출로 변경, `useMemo` import 제거 |
+| 7   | 오래된 TODO/주석 정리                            | ✅ `firebaseClient.ts` 보일러플레이트 TODO 제거 |
 
 ---
 
