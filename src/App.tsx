@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ErrorBoundary } from 'react-error-boundary'
-import 'remixicon/fonts/remixicon.css'
 import ErrorFallBack from './page/ErrorFallBack'
 import Router from './shared/Router'
 import './styles/animated.css'

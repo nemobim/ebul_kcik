@@ -1,9 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import GameResult from '../components/game/GameResult'
-import KickEbul from '../components/game/KickEbul'
+import { LottieLoading } from '../components/Loading'
 import WorryDump from '../components/game/WorryDump'
 import { TGameState } from '../types/game'
+
+// 연타/결과 화면은 고민 작성 이후에만 필요하므로 lazy로 분리해 /game 초기 chunk 축소
+const KickEbul = lazy(() => import('../components/game/KickEbul'))
+const GameResult = lazy(() => import('../components/game/GameResult'))
 
 const Game = () => {
   const navigate = useNavigate()
@@ -48,14 +51,18 @@ const Game = () => {
    * 1: 게임 시작
    * 2: 이불 날리기(결과)
    */
-  switch (step) {
-    case 1:
-      return <KickEbul handleNextStep={handleNextStep} setGameState={setGameState} />
-    case 2:
-      return <GameResult gameState={gameState} initGame={initGame} nickname={nickname} uniqueId={uniqueId} />
-    default:
-      return <WorryDump handleNextStep={handleNextStep} setGameState={setGameState} />
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return <KickEbul handleNextStep={handleNextStep} setGameState={setGameState} />
+      case 2:
+        return <GameResult gameState={gameState} initGame={initGame} nickname={nickname} uniqueId={uniqueId} />
+      default:
+        return <WorryDump handleNextStep={handleNextStep} setGameState={setGameState} />
+    }
   }
+
+  return <Suspense fallback={<LottieLoading />}>{renderStep()}</Suspense>
 }
 
 export default Game

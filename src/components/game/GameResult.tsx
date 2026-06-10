@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import blanket from '../../assets/game/result/blanket.png'
 import { useModal } from '../../hook/useModal'
@@ -10,6 +10,15 @@ const GameResult = ({ gameState, initGame, nickname, uniqueId }: { gameState: TG
   const { showModal, Modal } = useModal()
   const [stage, setStage] = useState(0)
   const targetStage = getResultStage(gameState.score) // 점수에 따른 목표 stage
+
+  // stage 전환 깜빡임 방지를 위해 결과 이미지(stage 5장 + blanket)를 미리 디코딩
+  useEffect(() => {
+    ;[...resultStage, blanket].forEach(src => {
+      const img = new Image()
+      img.src = src
+      img.decode().catch(() => {})
+    })
+  }, [])
 
   /** 애니메이션 종료 후 다음 단계로 이동 */
   const handleAnimationEnd = () => {
