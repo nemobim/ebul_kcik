@@ -19,7 +19,7 @@ export type TWorryContent = {
   label: string
   bgImg: string
   text: string
-  id?: TworryLabel
+  id: TworryLabel
 }
 
 /**고민 레이블 */

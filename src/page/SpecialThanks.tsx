@@ -4,6 +4,13 @@ import { Link } from 'react-router-dom'
 import secret from '../assets/etc/hmm.jpg'
 import { useModal } from '../hook/useModal'
 
+// 폭죽 효과 설정 (렌더마다 재생성 방지를 위해 모듈 스코프에 정의)
+const FIREWORK_CONFIG = {
+  particleCount: 150,
+  spread: 70,
+  origin: { y: 0.7 },
+} as const
+
 const SpecialThanks = () => {
   const [secretCount, setSecretCount] = useState(0)
   const { Modal, showModal, hideModal } = useModal()
@@ -20,13 +27,6 @@ const SpecialThanks = () => {
       })
     }
   }, [])
-
-  // 폭죽 효과 설정
-  const FIREWORK_CONFIG = {
-    particleCount: 150,
-    spread: 70,
-    origin: { y: 0.7 },
-  } as const
 
   const handleFireworks = useCallback(() => {
     confettiInstance.current?.(FIREWORK_CONFIG)

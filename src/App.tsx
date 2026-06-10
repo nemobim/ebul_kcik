@@ -6,17 +6,18 @@ import Router from './shared/Router'
 import './styles/animated.css'
 import { useEffect } from 'react'
 
-const App = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false, // 윈도우 포커스 시 재요청 여부
-        staleTime: 60 * 1000 * 10, // 데이터가 만료되기 전까지의 시간 (10분)
-        retry: 1, // 재시도 횟수
-      },
+// QueryClient는 모듈 스코프에서 한 번만 생성 (App 재렌더 시 캐시 유지)
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // 윈도우 포커스 시 재요청 여부
+      staleTime: 60 * 1000 * 10, // 데이터가 만료되기 전까지의 시간 (10분)
+      retry: 1, // 재시도 횟수
     },
-  })
+  },
+})
 
+const App = () => {
   // 우클릭 방지
   useEffect(() => {
     const handleContextMenu = (e: MouseEvent) => {

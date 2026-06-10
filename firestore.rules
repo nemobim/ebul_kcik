@@ -1,0 +1,83 @@
+rules_version = '2';
+
+// 이불뚫고 지붕킥 Firestore Security Rules
+//
+// 주의: 현재 앱은 Firebase Auth를 사용하지 않고 localStorage UUID로만 사용자를
+// 식별합니다(SECURITY-PRIVACY.md §2.1). 따라서 request.auth 기반 소유권 검증이
+// 불가능하며, 아래 규칙은 "필드 형태/값 범위 검증"과 "변경 가능한 필드 제한"에
+// 집중합니다. 완전한 소유권 보장이 필요하면 Firebase Anonymous Auth 도입 후
+// userId == request.auth.uid 조건을 추가해야 합니다.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 허용된 worryLabel 9종 (PRD §4)
+    function isValidWorryLabel(label) {
+      return label in ['talk', 'young', 'school', 'work', 'alcohol', 'home', 'idol', 'heart', 'etc'];
+    }
+
+    // ---- contents 컬렉션 ----
+    match /contents/{contentId} {
+      allow read: if true;
+
+      // 신규 점수 저장 (useSaveScore)
+      allow create: if
+        request.resource.data.keys().hasOnly(
+          ['id', 'user', 'userId', 'score', 'worryLabel', 'content', 'createdAt', 'reactions', 'reactionTotal']
+        )
+        && request.resource.data.id == contentId
+        && request.resource.data.user is string
+        && request.resource.data.user.size() >= 1
+        && request.resource.data.user.size() <= 5
+        && request.resource.data.userId is string
+        && request.resource.data.userId.size() >= 1
+        && request.resource.data.score is int
+        && request.resource.data.score >= 0
+        && isValidWorryLabel(request.resource.data.worryLabel)
+        && request.resource.data.content is string
+        && request.resource.data.content.size() >= 1
+        && request.resource.data.content.size() <= 500
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.reactions.keys().hasOnly(['shock', 'laugh', 'sad'])
+        && request.resource.data.reactions.shock == 0
+        && request.resource.data.reactions.laugh == 0
+        && request.resource.data.reactions.sad == 0
+        && request.resource.data.reactionTotal == 0;
+
+      // 공감 반응 증가만 허용 (useReactToContent)
+      // score/userId/user/content/worryLabel/id/createdAt 등 핵심 필드는 변경 불가
+      allow update: if
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions', 'reactionTotal'])
+        && request.resource.data.reactionTotal == resource.data.reactionTotal + 1
+        && request.resource.data.reactions.keys().hasOnly(['shock', 'laugh', 'sad'])
+        && (
+          (request.resource.data.reactions.shock == resource.data.reactions.shock + 1
+            && request.resource.data.reactions.laugh == resource.data.reactions.laugh
+            && request.resource.data.reactions.sad == resource.data.reactions.sad)
+          || (request.resource.data.reactions.laugh == resource.data.reactions.laugh + 1
+            && request.resource.data.reactions.shock == resource.data.reactions.shock
+            && request.resource.data.reactions.sad == resource.data.reactions.sad)
+          || (request.resource.data.reactions.sad == resource.data.reactions.sad + 1
+            && request.resource.data.reactions.shock == resource.data.reactions.shock
+            && request.resource.data.reactions.laugh == resource.data.reactions.laugh)
+        );
+
+      // 삭제 기능 미구현: 클라이언트 삭제 금지 (운영자는 콘솔에서 처리)
+      allow delete: if false;
+    }
+
+    // ---- userReactions 컬렉션 ----
+    // 문서 ID: {userId}_{contentId}, 필드: { shock?: true, laugh?: true, sad?: true }
+    match /userReactions/{reactionId} {
+      allow read: if true;
+
+      allow create, update: if
+        request.resource.data.keys().hasOnly(['shock', 'laugh', 'sad'])
+        && (!('shock' in request.resource.data) || request.resource.data.shock == true)
+        && (!('laugh' in request.resource.data) || request.resource.data.laugh == true)
+        && (!('sad' in request.resource.data) || request.resource.data.sad == true);
+
+      allow delete: if false;
+    }
+  }
+}

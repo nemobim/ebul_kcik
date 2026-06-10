@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import GameResult from '../components/game/GameResult'
 import KickEbul from '../components/game/KickEbul'
@@ -43,21 +43,19 @@ const Game = () => {
   // 닉네임이 없거나 고유 ID가 없으면 홈으로 이동
   if (!nickname || !uniqueId) return <Navigate to="/" />
 
-  /**튜토리얼 스텝
+  /**게임 스텝
    * 0: 고민 적기
    * 1: 게임 시작
    * 2: 이불 날리기(결과)
    */
-  const gameSteps = useMemo(
-    () => [
-      <WorryDump key="worry" handleNextStep={handleNextStep} setGameState={setGameState} />,
-      <KickEbul key="kick" handleNextStep={handleNextStep} setGameState={setGameState} />,
-      <GameResult key="result" gameState={gameState} initGame={initGame} nickname={nickname} uniqueId={uniqueId} />,
-    ],
-    [handleNextStep, initGame, gameState, nickname, uniqueId],
-  )
-
-  return <>{gameSteps[step]}</>
+  switch (step) {
+    case 1:
+      return <KickEbul handleNextStep={handleNextStep} setGameState={setGameState} />
+    case 2:
+      return <GameResult gameState={gameState} initGame={initGame} nickname={nickname} uniqueId={uniqueId} />
+    default:
+      return <WorryDump handleNextStep={handleNextStep} setGameState={setGameState} />
+  }
 }
 
 export default Game

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import Bed from '../components/tutorial/Bed'
 import Door from '../components/tutorial/Door'
 import Room from '../components/tutorial/Room'
@@ -16,9 +16,18 @@ const Tutorials = () => {
    * 1: 방에서 침대 클릭
    * 2: 침대에서 대사 출력
    */
-  const tutorialSteps = useMemo(() => [<Door key="door" handleNextStep={handleNextStep} />, <Room key="room" handleNextStep={handleNextStep} />, <Bed key="bed" />], [handleNextStep])
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return <Room handleNextStep={handleNextStep} />
+      case 2:
+        return <Bed />
+      default:
+        return <Door handleNextStep={handleNextStep} />
+    }
+  }
 
-  return <div className="bg-tutorial h-full">{tutorialSteps[step]}</div>
+  return <div className="bg-tutorial h-full">{renderStep()}</div>
 }
 
 export default Tutorials

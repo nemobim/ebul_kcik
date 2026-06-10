@@ -13,7 +13,6 @@ const RoomNameModal = ({ hideModal, setRoomName, roomName }: { hideModal: () => 
   const watchNickname = watch('nickname')
 
   const handleSubmitNickname = ({ nickname }: { nickname: string }) => {
-    //TODO: 닉네임 저장
     localStorage.setItem('nickname', nickname)
     setRoomName(nickname)
 
@@ -33,7 +32,7 @@ const RoomNameModal = ({ hideModal, setRoomName, roomName }: { hideModal: () => 
               return koreanRegex.test(value) || '닉네임은 한글만 입력해주세요.'
             },
           })}
-          maxLength={8}
+          maxLength={5}
           placeholder="닉네임을 적어주세요."
           className="w-full rounded-lg px-4 py-[14px]"
         />

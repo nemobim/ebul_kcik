@@ -13,7 +13,7 @@ const ResultModal = ({ gameState, initGame, nickname, uniqueId }: { gameState: T
 
   /**게임 점수 저장 */
   const saveTheScore = async () => {
-    if (!nickname || !uniqueId || !gameState.worryLabel || !gameState.content || !gameState.score) return alert('게임 과정 중 오류가 발생했습니다. 다시 시도해주세요.')
+    if (!nickname || !uniqueId || !gameState.worryLabel || !gameState.content || gameState.score == null) return alert('게임 과정 중 오류가 발생했습니다. 다시 시도해주세요.')
 
     //고유 ID와 현재 시간을 조합하여 고유 문서 ID 생성
     const docId = `${uniqueId}_${Date.now()}`
