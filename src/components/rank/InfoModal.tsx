@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import askBanner from '../../assets/etc/askBanner.webp'
 import close from '../../assets/game/write/close.png'
+import { toast } from '../../utils/toast'
 
 const InfoModal = ({ hideModal }: { hideModal: () => void }) => {
-  const handleShare = () => {
+  const handleShare = async () => {
     const shareData = {
       title: '이불뚫고 지붕킥',
       text: '잠들지 못하게 하는 당신의 생각을 이불과 함께 날려보세요-!',
@@ -11,13 +12,21 @@ const InfoModal = ({ hideModal }: { hideModal: () => void }) => {
     }
 
     if (navigator.share) {
-      navigator.share(shareData).catch(err => {
-        console.error('공유 실패:', err)
-      })
-    } else {
-      // 데스크탑은 링크 복사
-      navigator.clipboard.writeText(shareData.url)
-      alert('링크가 복사되었습니다!')
+      try {
+        await navigator.share(shareData)
+      } catch (err) {
+        // 사용자가 공유를 취소한 경우(AbortError)는 무시
+        if ((err as Error)?.name !== 'AbortError') console.error('공유 실패:', err)
+      }
+      return
+    }
+
+    // 데스크탑은 링크 복사 — 성공 확인 후 안내
+    try {
+      await navigator.clipboard.writeText(shareData.url)
+      toast('링크가 복사되었습니다!')
+    } catch {
+      toast('링크 복사에 실패했어요. 주소창의 주소를 직접 복사해주세요.')
     }
   }
 

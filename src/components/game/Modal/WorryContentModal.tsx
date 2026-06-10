@@ -25,6 +25,7 @@ const WorryContentModal = ({
     label: worryContent?.label || '',
     text: worryContent?.text || '',
     bgImg: worryContent?.bgImg || '',
+    id: worryContent?.id,
   })
 
   const {
@@ -38,17 +39,20 @@ const WorryContentModal = ({
   })
 
   /**고민 조각 선택 */
-  const handleWorrySelect = (worry: { label: string; text: string; bgImg: string }) => {
+  const handleWorrySelect = (worry: { label: string; text: string; bgImg: string; id: TworryLabel }) => {
     setSelectedWorry(worry)
   }
 
   /**고민 적기 제출 */
   const onSubmit = ({ content }: { content: string }) => {
+    if (!selectedWorry.id) return
+
     setWorryContent({
       content,
       label: selectedWorry.label,
       text: selectedWorry.text,
       bgImg: selectedWorry.bgImg,
+      id: selectedWorry.id,
     })
     setGameState(prev => ({ ...prev, worryLabel: selectedWorry.id, content }))
     hideModal()
@@ -95,6 +99,9 @@ const WorryContentModal = ({
           />
         </div>
         {errors.content && <p className="mt-1 w-full text-sm text-red-500">{errors?.content.message}</p>}
+        <p className="mt-3 w-full text-xs leading-relaxed text-gray1">
+          작성한 내용과 닉네임은 다른 사용자에게 공개됩니다. 실명·연락처·회사/학교명 등 개인정보는 적지 말아주세요.
+        </p>
         <button disabled={!selectedWorry.label} type="submit" className="btn main3 mt-4 w-full text-xl">
           작성 완료
         </button>

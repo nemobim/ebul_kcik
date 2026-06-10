@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-ebul \"node test/firestore.rules.test.mjs\""
   },
   "dependencies": {
     "@tanstack/react-query": "^5.74.3",
@@ -19,11 +21,11 @@
     "react-error-boundary": "^5.0.0",
     "react-hook-form": "^7.54.2",
     "react-router-dom": "^6.27.0",
-    "remixicon": "^4.5.0",
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
+    "@firebase/rules-unit-testing": "^4.0.1",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.4.1",
@@ -31,6 +33,7 @@
     "eslint": "^9.11.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",
+    "firebase-tools": "^13.35.1",
     "globals": "^15.9.0",
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
@@ -38,6 +41,7 @@
     "tailwindcss": "^3.4.14",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.7.0",
-    "vite": "^7.2.7"
+    "vite": "^7.2.7",
+    "vitest": "^3.2.6"
   }
 }

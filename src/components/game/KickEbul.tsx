@@ -14,6 +14,23 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
 
   const [effects, setEffects] = useState<TEffect[]>([]) //타격 효과
   const [hitCount, setHitCount] = useState(0) //타격 횟수
+  const [isBgReady, setIsBgReady] = useState(false) // 배경 이미지 준비 여부
+
+  // 배경 이미지를 디코딩한 뒤 시작 버튼 활성화 (느린 네트워크에서 빈 배경으로 시작 방지)
+  useEffect(() => {
+    let cancelled = false
+    const img = new Image()
+    img.src = ebulUser
+    img
+      .decode()
+      .catch(() => {}) // 디코드 실패해도 게임 진행은 막지 않음
+      .finally(() => {
+        if (!cancelled) setIsBgReady(true)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   /** 게임 시작 */
   const handleStartClick = () => {
@@ -33,10 +50,11 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
 
     setHitCount(prev => prev + 1)
     setEffects(prev => [...prev, effect])
+  }
 
-    setTimeout(() => {
-      setEffects(prev => prev.filter(eff => eff.id !== effect.id))
-    }, 500)
+  /** 타격 effect는 애니메이션 종료 시 제거 (타이머 누적 방지) */
+  const handleEffectAnimationEnd = (id: number) => {
+    setEffects(prev => prev.filter(eff => eff.id !== id))
   }
 
   useEffect(() => {
@@ -121,6 +139,7 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
                   key={effect.id}
                   src={hitEffect}
                   alt="hit"
+                  onAnimationEnd={() => handleEffectAnimationEnd(effect.id)}
                   className="animate-scale-fade pointer-events-none absolute size-12"
                   style={{ left: effect.x, top: effect.y, transform: 'translate(-50%, -50%)' }}
                 />
@@ -133,8 +152,8 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
                 <br />
                 떠오른 생각을 날려버려요!
               </p>
-              <button onClick={handleStartClick} className="mt-10 rounded-lg bg-main3 px-5 py-2 text-white">
-                게임 시작
+              <button onClick={handleStartClick} disabled={!isBgReady} className="mt-10 rounded-lg bg-main3 px-5 py-2 text-white disabled:opacity-50">
+                {isBgReady ? '게임 시작' : '준비 중...'}
               </button>
             </div>
           )}

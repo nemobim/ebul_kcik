@@ -1,10 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { collection, doc, getCountFromServer, getDoc, getDocs, increment, limit, orderBy, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore'
+import { collection, doc, getCountFromServer, getDoc, getDocs, increment, limit, orderBy, query, runTransaction, serverTimestamp, setDoc, where } from 'firebase/firestore'
 import { db } from '../firebase/firebaseClient'
 import { TGameContent, TGameState, TSortType, TworryReaction } from '../types/game'
+import { session } from '../utils/session'
+import { toast } from '../utils/toast'
+import { parseGameContent } from '../utils/validateContent'
 
 /**게임 점수 등록 */
 export const useSaveScore = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: async ({ nickname, uniqueId, gameState, docId }: { nickname: string; uniqueId: string; gameState: TGameState; docId: string }) => {
       await setDoc(doc(db, 'contents', docId), {
@@ -23,6 +28,12 @@ export const useSaveScore = () => {
         reactionTotal: 0,
       })
     },
+    // 저장 직후 랭킹/내 순위/모아보기 캐시를 무효화해 최신 데이터 반영
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['TOP_RANKS'] })
+      queryClient.invalidateQueries({ queryKey: ['MY_RANK_INFO'] })
+      queryClient.invalidateQueries({ queryKey: ['GAME_CONTENT'] })
+    },
   })
 }
 
@@ -35,7 +46,7 @@ export const useGetTopRanks = () => {
     queryFn: async () => {
       const q = query(collection(db, 'contents'), orderBy('score', 'desc'), limit(100))
       const snapshot = await getDocs(q)
-      return snapshot.docs.map(doc => doc.data() as TGameContent)
+      return snapshot.docs.map(doc => parseGameContent(doc.data())).filter((c): c is TGameContent => c !== null)
     },
   })
 }
@@ -76,7 +87,7 @@ export const useGetGameContent = (sortBy: TSortType) => {
     queryFn: async () => {
       const q = query(collection(db, 'contents'), orderBy(sortBy, 'desc'), limit(100))
       const snapshot = await getDocs(q)
-      return snapshot.docs.map(doc => doc.data() as TGameContent)
+      return snapshot.docs.map(doc => parseGameContent(doc.data())).filter((c): c is TGameContent => c !== null)
     },
   })
 }
@@ -87,7 +98,7 @@ export const useReactToContent = () => {
 
   return useMutation({
     mutationFn: async ({ contentId, contentUserId, reaction }: { contentId: string; contentUserId: string; reaction: TworryReaction }) => {
-      const userId = localStorage.getItem('uniqueId')
+      const userId = session.getUniqueId()
 
       if (!userId) throw new Error('유저 정보를 찾을 수 없습니다.')
       if (userId === contentUserId) throw new Error('본인 글에는 공감을 누를 수 없습니다.')
@@ -95,21 +106,20 @@ export const useReactToContent = () => {
       const reactionRef = doc(db, 'userReactions', `${userId}_${contentId}`) // 유저 리액션 기록
       const contentRef = doc(db, 'contents', contentId) // 게시물 기록
 
-      const snap = await getDoc(reactionRef) // 유저 리액션 기록 조회
-      const alreadyReacted = snap.exists() && snap.data()[reaction] // 이미 공감을 눌렀는지 확인
+      // 중복 확인 → count 증가 → 기록 저장을 트랜잭션으로 원자 처리
+      // (동시 요청 중복 통과 및 부분 성공으로 인한 중복 증가 방지)
+      await runTransaction(db, async tx => {
+        const snap = await tx.get(reactionRef) // 유저 리액션 기록 조회
+        if (snap.exists() && snap.data()[reaction]) throw new Error('이미 이 글에 공감을 누르셨어요!')
 
-      if (alreadyReacted) throw new Error('이미 이 글에 공감을 누르셨어요!')
-
-      // 리액션 숫자 증가
-      await updateDoc(contentRef, {
-        [`reactions.${reaction}`]: increment(1),
-        reactionTotal: increment(1),
+        tx.update(contentRef, {
+          [`reactions.${reaction}`]: increment(1),
+          reactionTotal: increment(1),
+        })
+        tx.set(reactionRef, { [reaction]: true }, { merge: true })
       })
-
-      // 리액션 기록 저장
-      await setDoc(reactionRef, { [reaction]: true }, { merge: true })
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['GAME_CONTENT'] }),
-    onError: (error: Error) => alert(error.message ?? '문제가 발생했습니다.'),
+    onError: (error: Error) => toast(error.message ?? '문제가 발생했습니다.'),
   })
 }

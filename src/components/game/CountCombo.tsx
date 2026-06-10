@@ -9,16 +9,18 @@ const CountCombo = ({ count }: { count: number }) => {
     if (count === 0) return
 
     setAnimate(true)
-    const timeout = setTimeout(() => setAnimate(false), 300)
+    const popTimer = setTimeout(() => setAnimate(false), 300)
 
     // 10 단위로 버스트 애니메이션 실행
+    let burstTimer: ReturnType<typeof setTimeout> | undefined
     if (count % 10 === 0) {
       setBurst(true)
-      setTimeout(() => setBurst(false), 600)
+      burstTimer = setTimeout(() => setBurst(false), 600)
     }
 
     return () => {
-      clearTimeout(timeout)
+      clearTimeout(popTimer)
+      clearTimeout(burstTimer)
     }
   }, [count])
 

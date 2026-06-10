@@ -1,5 +1,6 @@
 import { ChangeEvent, useCallback, useRef, useState } from 'react'
 import { useGetGameContent } from '../api/firebaseApi'
+import { EmptyState, ErrorRetry } from '../components/ErrorRetry'
 import { LottieLoading } from '../components/Loading'
 import ContentModal from '../components/rank/ContentModal'
 import FloatBtn from '../components/rank/FloatBtn'
@@ -10,7 +11,7 @@ import { worryImage } from '../utils/worry'
 
 const Content = () => {
   const [sortType, setSortType] = useState<TSortType>('createdAt')
-  const { data: contents = [], isLoading, isError } = useGetGameContent(sortType)
+  const { data: contents = [], isLoading, isError, refetch } = useGetGameContent(sortType)
 
   //스크롤 ref
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -26,9 +27,11 @@ const Content = () => {
     showModal(<ContentModal hideModal={hideModal} content={content} />)
   }
 
+  if (isError) return <ErrorRetry onRetry={() => refetch()} message="이불 더미를 불러오지 못했어요." />
+
   return (
     <div className="relative h-full">
-      {isLoading || isError ? (
+      {isLoading ? (
         <LottieLoading />
       ) : (
         <div ref={scrollRef} className="bg-worry relative flex h-full flex-col items-center overflow-y-auto py-12">
@@ -43,21 +46,25 @@ const Content = () => {
             </select>
           </div>
           {/* 이불 더미 목록 */}
-          <div className="grid w-[80%] grid-cols-2 gap-4">
-            {contents.map(content => (
-              <div key={content.id} onClick={() => handleOpenModal(content)} className="w-full rounded-lg border-[3px] border-black bg-white py-2 pr-2 text-sm">
-                <div className="flex items-center justify-between">
-                  <img src={worryImage[content.worryLabel].img} className="w-[90%] max-w-[4rem]" alt={content.worryLabel} />
-                  <div className="text-right text-main3">
-                    <p>{content?.reactionTotal}☺</p>
-                    <p>{content?.score}m</p>
+          {contents.length === 0 ? (
+            <EmptyState message="아직 쌓인 이불 더미가 없어요." />
+          ) : (
+            <div className="grid w-[80%] grid-cols-2 gap-4">
+              {contents.map(content => (
+                <div key={content.id} onClick={() => handleOpenModal(content)} className="w-full rounded-lg border-[3px] border-black bg-white py-2 pr-2 text-sm">
+                  <div className="flex items-center justify-between">
+                    <img src={worryImage[content.worryLabel].img} className="w-[90%] max-w-[4rem]" alt={content.worryLabel} />
+                    <div className="text-right text-main3">
+                      <p>{content?.reactionTotal}☺</p>
+                      <p>{content?.score}m</p>
+                    </div>
                   </div>
+                  <p className="my-2 line-clamp-3 pl-2">{content?.content}</p>
+                  <p className="pl-2 text-gray2"> {content?.user}</p>
                 </div>
-                <p className="my-2 line-clamp-3 pl-2">{content?.content}</p>
-                <p className="pl-2 text-gray2"> {content?.user}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
       {/* 플로팅 버튼 */}
