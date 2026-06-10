@@ -4,10 +4,11 @@ import { EmptyState, ErrorRetry } from '../components/ErrorRetry'
 import { LottieLoading } from '../components/Loading'
 import RankTab from '../components/rank/RankTab'
 import { rankImg } from '../utils/rank'
+import { session } from '../utils/session'
 
 const Rank = () => {
   const { data: ranks = [], isLoading, isError, refetch } = useGetTopRanks()
-  const docId = localStorage.getItem('isPlay') // 가장최근 게임아이디
+  const docId = session.getLastPlayId() // 가장최근 게임아이디
 
   /**본인 순위 */
   const { data: rank, isLoading: isRankLoading } = useMyRankInfo(docId)

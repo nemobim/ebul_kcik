@@ -2,9 +2,10 @@ import { Link } from 'react-router-dom'
 import marker from '../../assets/tutorial/room/mark.png'
 import roomImg from '../../assets/tutorial/room/my_room.webp'
 import { useModal } from '../../hook/useModal'
+import { session } from '../../utils/session'
 const Room = ({ handleNextStep }: { handleNextStep: () => void }) => {
   //게임 진행여부 판단
-  const isPlayedGame = localStorage.getItem('isPlay')
+  const isPlayedGame = session.getLastPlayId()
 
   const { Modal, showModal, hideModal } = useModal()
 

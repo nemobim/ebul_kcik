@@ -33,44 +33,8 @@ export const WORRY_LIST: { img: string; label: string; text: string; bgImg: stri
   { img: etc, label: '기타', text: '별별 일들이 많잖아요..?', bgImg: etc_pattern, id: 'etc' },
 ]
 
-export const worryImage: Record<TworryLabel, { img: string; bgImg: string }> = {
-  talk: {
-    img: talk,
-    bgImg: talk_pattern,
-  },
-  young: {
-    img: young,
-    bgImg: young_pattern,
-  },
-  school: {
-    img: school,
-    bgImg: school_pattern,
-  },
-  work: {
-    img: work,
-    bgImg: work_pattern,
-  },
-  alcohol: {
-    img: alcohol,
-    bgImg: alcohol_pattern,
-  },
-  home: {
-    img: home,
-    bgImg: home_pattern,
-  },
-  idol: {
-    img: idol,
-    bgImg: idol_pattern,
-  },
-  heart: {
-    img: heart,
-    bgImg: heart_pattern,
-  },
-  etc: {
-    img: etc,
-    bgImg: etc_pattern,
-  },
-}
+// WORRY_LIST를 단일 source로 worryImage(label → 이미지) 매핑을 파생한다
+export const worryImage = Object.fromEntries(WORRY_LIST.map(({ id, img, bgImg }) => [id, { img, bgImg }])) as Record<TworryLabel, { img: string; bgImg: string }>
 
 export const reactionIcon: Record<TworryReaction, string> = {
   shock: shock,

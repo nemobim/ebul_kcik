@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form'
+import { session } from '../../../utils/session'
 
 const RoomNameModal = ({ hideModal, setRoomName, roomName }: { hideModal: () => void; setRoomName: Dispatch<SetStateAction<string>>; roomName: string }) => {
   const {
@@ -13,7 +14,7 @@ const RoomNameModal = ({ hideModal, setRoomName, roomName }: { hideModal: () => 
   const watchNickname = watch('nickname')
 
   const handleSubmitNickname = ({ nickname }: { nickname: string }) => {
-    localStorage.setItem('nickname', nickname)
+    session.setNickname(nickname)
     setRoomName(nickname)
 
     hideModal()

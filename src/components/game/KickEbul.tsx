@@ -50,10 +50,11 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
 
     setHitCount(prev => prev + 1)
     setEffects(prev => [...prev, effect])
+  }
 
-    setTimeout(() => {
-      setEffects(prev => prev.filter(eff => eff.id !== effect.id))
-    }, 500)
+  /** 타격 effect는 애니메이션 종료 시 제거 (타이머 누적 방지) */
+  const handleEffectAnimationEnd = (id: number) => {
+    setEffects(prev => prev.filter(eff => eff.id !== id))
   }
 
   useEffect(() => {
@@ -138,6 +139,7 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
                   key={effect.id}
                   src={hitEffect}
                   alt="hit"
+                  onAnimationEnd={() => handleEffectAnimationEnd(effect.id)}
                   className="animate-scale-fade pointer-events-none absolute size-12"
                   style={{ left: effect.x, top: effect.y, transform: 'translate(-50%, -50%)' }}
                 />

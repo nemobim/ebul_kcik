@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { collection, doc, getCountFromServer, getDoc, getDocs, increment, limit, orderBy, query, runTransaction, serverTimestamp, setDoc, where } from 'firebase/firestore'
 import { db } from '../firebase/firebaseClient'
 import { TGameContent, TGameState, TSortType, TworryReaction } from '../types/game'
+import { session } from '../utils/session'
+import { toast } from '../utils/toast'
 import { parseGameContent } from '../utils/validateContent'
 
 /**게임 점수 등록 */
@@ -96,7 +98,7 @@ export const useReactToContent = () => {
 
   return useMutation({
     mutationFn: async ({ contentId, contentUserId, reaction }: { contentId: string; contentUserId: string; reaction: TworryReaction }) => {
-      const userId = localStorage.getItem('uniqueId')
+      const userId = session.getUniqueId()
 
       if (!userId) throw new Error('유저 정보를 찾을 수 없습니다.')
       if (userId === contentUserId) throw new Error('본인 글에는 공감을 누를 수 없습니다.')
@@ -118,6 +120,6 @@ export const useReactToContent = () => {
       })
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['GAME_CONTENT'] }),
-    onError: (error: Error) => alert(error.message ?? '문제가 발생했습니다.'),
+    onError: (error: Error) => toast(error.message ?? '문제가 발생했습니다.'),
   })
 }

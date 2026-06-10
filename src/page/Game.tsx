@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { LottieLoading } from '../components/Loading'
 import WorryDump from '../components/game/WorryDump'
 import { TGameState } from '../types/game'
+import { session } from '../utils/session'
 
 // 연타/결과 화면은 고민 작성 이후에만 필요하므로 lazy로 분리해 /game 초기 chunk 축소
 const KickEbul = lazy(() => import('../components/game/KickEbul'))
@@ -12,8 +13,8 @@ const Game = () => {
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
 
-  const nickname = localStorage.getItem('nickname')
-  const uniqueId = localStorage.getItem('uniqueId')
+  const nickname = session.getNickname()
+  const uniqueId = session.getUniqueId()
 
   //게임 상태 관리
   const [gameState, setGameState] = useState<TGameState>({

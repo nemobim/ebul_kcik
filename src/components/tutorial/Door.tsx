@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import bottomBlock from '../../assets/tutorial/door/bottom.webp'
 import doorClose from '../../assets/tutorial/door/doorclose.webp'
@@ -6,16 +6,18 @@ import doorOpen from '../../assets/tutorial/door/dooropen.webp'
 import pointer from '../../assets/tutorial/door/pointer.png'
 import questionMark from '../../assets/tutorial/door/question.png'
 import { useModal } from '../../hook/useModal'
+import { session } from '../../utils/session'
 import RoomNameModal from '../game/Modal/RoomNameModal'
 
 const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
   const { Modal, showModal, hideModal } = useModal()
 
-  //TODO: 닉네임 저장
   const [roomName, setRoomName] = useState<string>('')
 
   //문 바꿔치기
   const [isDoorOpen, setIsDoorOpen] = useState(false)
+
+  const transitionTimer = useRef<ReturnType<typeof setTimeout>>()
 
   /**닉네임 받아오기 모달 표시 */
   const showNicknameModal = () => {
@@ -27,8 +29,8 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
     if (roomName) {
       //이름 설정한 다음에만 가능
       setIsDoorOpen(true)
-      //문 바꿔치기 후 2초 뒤에 이동
-      setTimeout(() => {
+      //문 바꿔치기 후 1초 뒤에 이동
+      transitionTimer.current = setTimeout(() => {
         handleNextStep()
       }, 1000)
     }
@@ -36,18 +38,16 @@ const Door = ({ handleNextStep }: { handleNextStep: () => void }) => {
 
   /**닉네임 설정 */
   useEffect(() => {
-    const storedName = localStorage.getItem('nickname') || ''
-    setRoomName(storedName)
+    setRoomName(session.getNickname() || '')
   }, [])
 
   /**입장시 고유 아이디 생성 */
   useEffect(() => {
-    const storedId = localStorage.getItem('uniqueId') || ''
-    if (!storedId) {
-      const newId = crypto.randomUUID()
-      localStorage.setItem('uniqueId', newId)
-    }
+    session.ensureUniqueId()
   }, [])
+
+  // unmount 시 전환 타이머 정리 (언마운트 후 state update/이동 방지)
+  useEffect(() => () => clearTimeout(transitionTimer.current), [])
 
   return (
     <div className="relative flex h-full flex-col justify-center">

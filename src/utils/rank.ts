@@ -17,26 +17,26 @@ export const rankImg = [first, second, third]
 
 /**점수 계산 배수*/
 export const SCORE_MULTIPLIER = 3
-/**점수 목표*/
-const SCORE_TARGET =  [140, 180, 220, 260]
+/**점수 목표 (hitCount 기준)*/
+const SCORE_TARGET = [140, 180, 220, 260]
+/**tier 진입 점수 임계값 (배수 적용)*/
+const TIER_THRESHOLDS = SCORE_TARGET.map(target => target * SCORE_MULTIPLIER)
 
-/**랭크에 맞는 이미지 반환*/
-export const getRankImg = (score: number) => {
-  if (score >= SCORE_TARGET[3] * SCORE_MULTIPLIER) return UFO
-  if (score >= SCORE_TARGET[2] * SCORE_MULTIPLIER) return bird
-  if (score >= SCORE_TARGET[1] * SCORE_MULTIPLIER) return bat
-  if (score >= SCORE_TARGET[0] * SCORE_MULTIPLIER) return star
-  return hanger
-}
+/**tier별 등급 아이콘 (index 0~4)*/
+const tierRankImg = [hanger, star, bat, bird, UFO]
 
-/**점수에 맞는 배경 이미지 반환 */
-export const getResultStage = (score: number) => {
-  if (score >= SCORE_TARGET[3] * SCORE_MULTIPLIER) return 4
-  if (score >= SCORE_TARGET[2] * SCORE_MULTIPLIER) return 3
-  if (score >= SCORE_TARGET[1] * SCORE_MULTIPLIER) return 2
-  if (score >= SCORE_TARGET[0] * SCORE_MULTIPLIER) return 1
-
+/**점수로 tier(0~4) 계산 — getRankImg/getResultStage 공통 기준*/
+export const getScoreTier = (score: number): number => {
+  for (let i = TIER_THRESHOLDS.length - 1; i >= 0; i--) {
+    if (score >= TIER_THRESHOLDS[i]) return i + 1
+  }
   return 0
 }
+
+/**랭크에 맞는 이미지 반환*/
+export const getRankImg = (score: number) => tierRankImg[getScoreTier(score)]
+
+/**점수에 맞는 배경 stage(0~4) 반환 */
+export const getResultStage = (score: number) => getScoreTier(score)
 
 export const resultStage = [stage1, stage2, stage3, stage4, stage5]
