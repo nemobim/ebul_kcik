@@ -331,6 +331,6 @@ sequenceDiagram
 | ------------------------------ | --------------------------------------------- | ------------------- |
 | 메인 chunk 500KB 초과          | 초기 로드 비용 (번들 분할 미적용)             | ROADMAP.md 성능 잔여 |
 | 오디오 레이어 없음             | 게임 몰입감 부족                              | AUDIO.md            |
-| 게임 연출·접근성 개선 미착수   | 키보드 입력·연출 완성도                       | GAME-EXPERIENCE.md, UI-UX.md |
 
 > 과거 이슈였던 전역 `touch-action`/`user-select`, `createdAt` 타입 불일치는 해결됨(전역 CSS 제거, 타입 `Timestamp` 통일).
+> 게임 연출(progress UI·콤보·crossfade·easing·resize)과 접근성(모달 focus trap·키보드 입력·`prefers-reduced-motion`)은 코드 적용 완료(남은 항목은 `ROADMAP.md` Phase 3 참고).

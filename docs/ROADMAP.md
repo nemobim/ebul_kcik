@@ -30,23 +30,18 @@
 
 ### 게임플레이
 
-| #   | 작업                              | 문서                     |
+> 완료: 카운트다운 progress ring·타이머 progress bar(마지막 5초 적색), 콤보 milestone 문구와 실시간 거리(m) 표시, blanket-fly ease-out easing과 stage 배경 crossfade, 타격 시 `navigator.vibrate` 햅틱, GameResult stage-height resize 대응.
+
+| #   | 작업                              | 메모                     |
 | --- | --------------------------------- | ------------------------ |
-| 5   | 카운트다운/타이머 progress UI     | GAME-EXPERIENCE §1.5     |
-| 6   | 콤보 milestone과 실시간 거리 표시 | GAME-EXPERIENCE §1.3, §3 |
-| 7   | blanket easing과 stage crossfade  | GAME-EXPERIENCE §2.3~2.4 |
-| 8   | 결과 연출 skip과 delay 조정       | GAME-EXPERIENCE §2.8     |
-| 9   | 실제 기기 멀티터치·햅틱 검증      | GAME-EXPERIENCE §1.4~1.6 |
+| 8   | 결과 연출 skip과 delay 조정       | blanket-stop 후 1초 delay 유지 중. "결과 보기" 스킵 버튼 미구현 |
+| 9   | 실제 기기 멀티터치 검증           | 햅틱은 구현됨. iOS/Android 동시 pointer·제스처 동작은 실기기 확인 필요 |
 
 ### 접근성
 
-> 전역 touch-action 제한 해제와 클릭 카드 버튼화는 완료됨.
+> 완료: 전역 touch-action 해제·클릭 카드 버튼화, 모달 `role="dialog"`/`aria-modal`/ESC/focus trap(`useModal`), 게임 영역 키보드 입력(Space·Enter)과 `role`/`tabIndex`/`aria-label`, `prefers-reduced-motion` 대응(`animated.css`), 폼 label·글자 수 카운터.
 
-| #   | 작업                                   | 문서     |
-| --- | -------------------------------------- | -------- |
-| 10  | 모달 focus trap, ESC, dialog semantics | UI-UX §4 |
-| 11  | 키보드 게임 입력(연타 영역 키보드 대응) | UI-UX §4 |
-| 12  | `prefers-reduced-motion` 대응          | UI-UX §4 |
+남은 접근성 항목 없음(코드 적용 완료). 추가 검증은 실기기 스크린리더 테스트 정도.
 
 ---
 
@@ -86,6 +81,19 @@
 
 기본 OG 태그는 이미 `index.html`에 있습니다. 남은 작업은 상대 경로인 `og:image`를 절대 URL로 검증하고, 결과별 동적 공유 카드가 필요하면 별도 렌더링 방식을 설계하는 것입니다.
 
+### 연출·UX 폴리시 (미착수, 선택)
+
+코드 적용이 끝난 항목 외 남은 아이디어:
+
+| 아이디어              | 설명                                                       |
+| --------------------- | ---------------------------------------------------------- |
+| stage별 particle/Lottie | stage 2+ 별·구름, stage 4 UFO beam, 전환 시 짧은 Lottie    |
+| 콤보 배율 게임플레이  | 일정 간격 내 연속 터치 시 점수 배율(난이도 추가)           |
+| ModalCard 공통 컴포넌트 | `border-[3px] border-black bg-white` 반복 패턴 추출        |
+| Splash 스킵           | Lottie 자동 이동 전 탭하여 스킵                            |
+| ErrorBoundary 리포팅  | `ErrorFallBack`에 오류 ID·전송 추가                        |
+| 결과 skip 버튼        | blanket 연출 중 "결과 보기"로 즉시 모달                    |
+
 ---
 
 ## 의존성 관계
@@ -104,7 +112,5 @@ flowchart LR
 | ------------- | -------------------------------------------- |
 | 제품 현황     | [PRD.md](./PRD.md)                           |
 | 아키텍처      | [ARCHITECTURE.md](./ARCHITECTURE.md)         |
-| UI/UX         | [UI-UX.md](./UI-UX.md)                       |
-| 게임 연출     | [GAME-EXPERIENCE.md](./GAME-EXPERIENCE.md)   |
 | 사운드        | [AUDIO.md](./AUDIO.md)                       |
 | 개발 절차     | [DEVELOPMENT.md](./DEVELOPMENT.md)           |

@@ -276,6 +276,6 @@ src/assets/audio/
 
 ## 10. 관련 문서
 
-- 게임 피드백 연동: [GAME-EXPERIENCE.md](./GAME-EXPERIENCE.md)
+- 게임 피드백 연동: [ROADMAP.md](./ROADMAP.md) Phase 3 게임플레이
 - 남은 성능 항목: [ROADMAP.md](./ROADMAP.md) 「성능 잔여 항목」
 - 일정: [ROADMAP.md](./ROADMAP.md) Phase 3

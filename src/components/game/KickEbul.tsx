@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import ebulUser from '../../assets/game/game.webp'
 import hitEffect from '../../assets/game/kick.svg'
@@ -6,15 +6,20 @@ import { TEffect, TGameState } from '../../types/game'
 import { SCORE_MULTIPLIER } from '../../utils/rank'
 import CountCombo from './CountCombo'
 
+const COUNTDOWN_SECONDS = 5
+const GAME_SECONDS = 20
+
 const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void; setGameState: Dispatch<SetStateAction<TGameState>> }) => {
   const [isGameRunning, setIsGameRunning] = useState(false) // 본 게임 시작 여부
   const [isCountdown, setIsCountdown] = useState(false) // 카운트다운 시작 여부
-  const [countdown, setCountdown] = useState(5) // 카운트다운 타이머
-  const [timeCount, setTimeCount] = useState(20) // 본 게임 타이머
+  const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS) // 카운트다운 타이머
+  const [timeCount, setTimeCount] = useState(GAME_SECONDS) // 본 게임 타이머
 
   const [effects, setEffects] = useState<TEffect[]>([]) //타격 효과
   const [hitCount, setHitCount] = useState(0) //타격 횟수
   const [isBgReady, setIsBgReady] = useState(false) // 배경 이미지 준비 여부
+
+  const playAreaRef = useRef<HTMLDivElement>(null) // 키보드 입력 시 이펙트 위치 계산용
 
   // 배경 이미지를 디코딩한 뒤 시작 버튼 활성화 (느린 네트워크에서 빈 배경으로 시작 방지)
   useEffect(() => {
@@ -35,21 +40,37 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
   /** 게임 시작 */
   const handleStartClick = () => {
     setIsCountdown(true)
-    setCountdown(5)
+    setCountdown(COUNTDOWN_SECONDS)
   }
 
-  /** 타격 효과 추가 */
-  const handlePointer = (e: React.PointerEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-
+  /** 타격 1회 등록 (포인터·키보드 공통) */
+  const registerHit = (x: number, y: number) => {
     const effect: TEffect = {
       id: Date.now() + Math.random(),
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+      x,
+      y,
     }
 
+    navigator.vibrate?.(10) // 지원 기기에서 가벼운 햅틱 피드백
     setHitCount(prev => prev + 1)
     setEffects(prev => [...prev, effect])
+  }
+
+  /** 포인터 타격 */
+  const handlePointer = (e: React.PointerEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    registerHit(e.clientX - rect.left, e.clientY - rect.top)
+  }
+
+  /** 키보드 타격 (Space/Enter) — 접근성 대응 */
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== ' ' && e.key !== 'Enter') return
+    e.preventDefault() // Space 스크롤 방지
+    const rect = playAreaRef.current?.getBoundingClientRect()
+    // 영역 중앙 부근에 약간의 변주를 주어 이펙트 표시
+    const x = rect ? rect.width * (0.35 + Math.random() * 0.3) : 0
+    const y = rect ? rect.height * (0.35 + Math.random() * 0.3) : 0
+    registerHit(x, y)
   }
 
   /** 타격 effect는 애니메이션 종료 시 제거 (타이머 누적 방지) */
@@ -101,18 +122,48 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
     }
   }, [timeCount, handleNextStep, setGameState, hitCount])
 
+  const isUrgent = isGameRunning && timeCount <= 5 // 마지막 5초 긴급 연출
+
   return (
     <div style={{ backgroundImage: `url(${ebulUser})` }} className="relative h-full touch-none select-none bg-cover bg-center">
       <div className="flex h-full flex-col items-center justify-between py-8">
         {/* 카운트다운 & 타이머 */}
-        <div className="flex items-center justify-center">
+        <div className="flex w-[86%] flex-col items-center justify-center">
           {isCountdown ? (
-            <div className="text-center">
-              <p className="animate-pulse text-7xl font-bold text-white drop-shadow-lg">{countdown}</p>
-              <p className="mt-2 animate-pulse text-lg text-white/80">초 후 시작!</p>
+            // 카운트다운: progress ring + 숫자
+            <div className="relative flex h-24 w-24 items-center justify-center">
+              <svg className="absolute inset-0 -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="8" />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="#fff"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray={2 * Math.PI * 45}
+                  strokeDashoffset={2 * Math.PI * 45 * (1 - countdown / COUNTDOWN_SECONDS)}
+                  className="transition-[stroke-dashoffset] duration-1000 ease-linear"
+                />
+              </svg>
+              <p className="text-5xl font-bold text-white drop-shadow-lg" aria-label={`${countdown}초 후 시작`}>
+                {countdown}
+              </p>
+            </div>
+          ) : isGameRunning ? (
+            // 게임 진행: 상단 progress bar + 남은 초
+            <div className="w-full" role="timer" aria-label={`남은 시간 ${timeCount}초`}>
+              <div className="mb-2 h-3 w-full overflow-hidden rounded-full border-[2px] border-black bg-white/60">
+                <div
+                  className={twMerge('h-full rounded-full transition-[width] duration-1000 ease-linear', isUrgent ? 'bg-red-500' : 'bg-main3')}
+                  style={{ width: `${(timeCount / GAME_SECONDS) * 100}%` }}
+                />
+              </div>
+              <p className={twMerge('text-center font-bold text-white drop-shadow-lg transition-all', isUrgent ? 'animate-pulse text-5xl text-red-300' : 'text-3xl')}>{timeCount}</p>
             </div>
           ) : (
-            <p className={twMerge('text-4xl text-white', isGameRunning && 'animate-bounce')}>{isGameRunning ? timeCount : '준비'}</p>
+            <p className="text-4xl text-white">준비</p>
           )}
         </div>
 
@@ -120,7 +171,7 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
         {hitCount > 0 && <CountCombo count={hitCount} />}
 
         {/* 게임 영역 */}
-        <div className="mb-5 h-[40%] w-[86%] rounded-lg text-white outline-dashed outline-[6px] outline-offset-1 outline-main3">
+        <div className={twMerge('mb-5 h-[40%] w-[86%] rounded-lg text-white outline-dashed outline-[6px] outline-offset-1 outline-main3', isUrgent && 'outline-red-500')}>
           {isCountdown ? (
             <div className="flex h-full flex-col items-center justify-center">
               <div className="text-center">
@@ -132,7 +183,15 @@ const KickEbul = ({ handleNextStep, setGameState }: { handleNextStep: () => void
               </div>
             </div>
           ) : isGameRunning ? (
-            <div className="relative h-full w-full" onPointerDown={handlePointer}>
+            <div
+              ref={playAreaRef}
+              role="button"
+              tabIndex={0}
+              aria-label="이불 차기 — 빠르게 연타하세요"
+              className="relative h-full w-full focus:outline-none focus-visible:outline-dashed focus-visible:outline-[3px] focus-visible:outline-white"
+              onPointerDown={handlePointer}
+              onKeyDown={handleKeyDown}
+            >
               {/* 터치 이펙트 */}
               {effects.map(effect => (
                 <img

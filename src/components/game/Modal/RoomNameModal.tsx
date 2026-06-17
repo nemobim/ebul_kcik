@@ -24,7 +24,11 @@ const RoomNameModal = ({ hideModal, setRoomName, roomName }: { hideModal: () => 
     <form onSubmit={handleSubmit(handleSubmitNickname)} className="flex flex-col items-center gap-4 rounded-xl border-[3px] border-black bg-main1 px-[20px] py-[28px]">
       <h2 className="font-semibold">NAME</h2>
       <div className="w-full">
+        <label htmlFor="nickname" className="sr-only">
+          닉네임
+        </label>
         <input
+          id="nickname"
           {...register('nickname', {
             required: '닉네임을 입력해주세요.',
             maxLength: { value: 5, message: '닉네임은 5자 이내로 입력해주세요.' },
