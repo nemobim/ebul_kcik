@@ -253,7 +253,7 @@ Stage 0 fly ──→ Stage 1 fly (이불 Y 위치 누적, 배경 crossfade)
 
 ## 6. 관련 문서
 
-- 남은 성능 항목: [ROADMAP.md](./ROADMAP.md) 「잔여 코드 품질 항목」
+- 남은 성능 항목: [ROADMAP.md](./ROADMAP.md) 「성능 잔여 항목」
 - 사운드: [AUDIO.md](./AUDIO.md)
 - UI/UX: [UI-UX.md](./UI-UX.md)
-- 일정: [ROADMAP.md](./ROADMAP.md) Phase 2~3
+- 일정: [ROADMAP.md](./ROADMAP.md) Phase 3

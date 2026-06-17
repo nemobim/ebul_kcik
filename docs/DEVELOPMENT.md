@@ -42,34 +42,32 @@ VITE_MEASUREMENT_ID=
 
 ## 4. 명령어
 
-| 명령              | 용도                                         |
-| ----------------- | -------------------------------------------- |
-| `pnpm run dev`     | Vite 개발 서버                               |
-| `pnpm run build`   | TypeScript project build + production bundle |
-| `pnpm run lint`    | ESLint 검사                                  |
-| `pnpm run preview` | production build 로컬 확인                   |
+| 명령                | 용도                                         |
+| ------------------- | -------------------------------------------- |
+| `pnpm run dev`       | Vite 개발 서버                               |
+| `pnpm run build`     | TypeScript project build + production bundle |
+| `pnpm run lint`      | ESLint 검사                                  |
+| `pnpm run preview`   | production build 로컬 확인                   |
+| `pnpm run test`      | Vitest 단위 테스트 (`vitest run`)            |
+| `pnpm run test:rules`| Firestore Rules 테스트 (에뮬레이터 실행)     |
 
-현재 test, format, typecheck 전용 스크립트는 없습니다. build가 TypeScript 검사를 포함합니다.
+별도 typecheck 스크립트는 없으며 `build`가 `tsc -b`로 TypeScript 검사를 포함합니다. 포맷은 `prettier`(devDependency, `prettier-plugin-tailwindcss` 포함)로 처리합니다.
 
 ---
 
 ## 5. 현재 검증 상태
 
-2026-06-10, 기존 로컬 의존성 기준:
+2026-06-17, `pnpm install --frozen-lockfile` 기준:
 
-| 검사            | 결과                             |
-| --------------- | -------------------------------- |
-| `npm run build` | 성공. 메인 chunk 500KB 초과 경고 |
-| `npm run lint`  | 실패. 1 error, 2 warnings        |
-| 자동화 테스트   | 없음                             |
+| 검사             | 결과                                       |
+| ---------------- | ------------------------------------------ |
+| `pnpm run lint`  | 성공. 0 error, 0 warning                   |
+| `pnpm run build` | 성공. 메인 chunk 약 1,031KB로 500KB 초과 경고 |
+| `pnpm run test`  | 성공. 2 파일, 5 테스트 통과                 |
 
-lint 상세:
+> 메인 chunk 경고는 번들 분할 관련 잔여 항목으로, 동작 오류는 아닙니다. ([ROADMAP.md](./ROADMAP.md) 「성능 잔여 항목」)
 
-- `Game.tsx`: early return 이후 `useMemo` 호출 오류
-- `SpecialThanks.tsx`: `useCallback` dependency warning
-- `Tutorials.tsx`: 매 렌더 변경되는 callback dependency warning
-
-수정 후 완료 기준은 `pnpm install --frozen-lockfile && pnpm run lint && pnpm run build` 모두 성공입니다.
+완료 기준은 `pnpm install --frozen-lockfile && pnpm run lint && pnpm run build && pnpm run test` 모두 성공입니다.
 
 ---
 
@@ -84,7 +82,7 @@ lint 상세:
 
 저장소에 있는 Firebase 형상: `firebase.json`, Firestore Security Rules(`firestore.rules`), 인덱스 설정(`firestore.indexes.json`). 규칙·인덱스 변경은 `firebase deploy --only firestore`로 배포해야 실제 반영됩니다.
 
-아직 없는 항목: Emulator 설정.
+Firestore 에뮬레이터 기반 Rules 테스트가 있습니다: `pnpm run test:rules`는 `firebase emulators:exec`로 에뮬레이터를 띄우고 `test/firestore.rules.test.mjs`(`@firebase/rules-unit-testing`)를 실행합니다. 실행에는 로컬 Java 런타임이 필요합니다.
 
 ---
 
@@ -115,6 +113,7 @@ PR마다 다음을 실행합니다.
 pnpm install --frozen-lockfile
 pnpm run lint
 pnpm run build
+pnpm run test
 ```
 
-게임 점수 계산, stage threshold, worry schema, Firestore converter부터 단위 테스트를 추가하고 주요 사용자 흐름은 브라우저 E2E로 보완합니다.
+단위 테스트는 점수/stage 로직(`src/utils/rank.test.ts`)과 고민 입력 검증(`src/utils/validateContent.test.ts`), Firestore Rules(`test/firestore.rules.test.mjs`)에 이미 존재합니다. 남은 보강 영역은 worry schema·Firestore converter 단위 테스트와 주요 사용자 흐름의 브라우저 E2E입니다.

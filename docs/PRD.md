@@ -196,13 +196,13 @@ SCORE_MULTIPLIER = 3
 | 항목                                      | 상태                                          |
 | ----------------------------------------- | --------------------------------------------- |
 | 오디오 (BGM/SFX)                          | 미구현                                        |
-| Firebase Analytics 이벤트                 | SDK 초기화만 수행, 이벤트 추적 미사용         |
-| 게임 에셋 preload / 목록 이미지 lazy load | 미구현 (페이지 route lazy는 일부 적용)        |
+| Firebase Analytics                        | 초기화 제거됨 (firestore만 초기화)            |
+| 목록 이미지 lazy load                     | 미구현 (결과 stage 이미지 preload·route lazy는 적용) |
 | PWA / 오프라인                            | 미구현                                        |
 | Firebase Auth                             | 미구현 (localStorage 기반)                    |
 | 접근성 (키보드, 스크린리더)               | 부분적                                        |
 | UGC 신고/삭제 및 개인정보 안내            | 미구현                                        |
-| Firestore Rules 형상 관리                 | 저장소에 규칙 파일이 없어 배포 설정 확인 불가 |
+| Firestore Rules 형상 관리                 | `firestore.rules`·`firestore.indexes.json` 저장소 존재 (배포 반영 여부만 별도 확인) |
 
 ---
 

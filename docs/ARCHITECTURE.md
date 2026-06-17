@@ -2,21 +2,22 @@
 
 ## 1. 기술 스택
 
-| 영역       | 기술                                         | 버전 (package.json 기준)    |
-| ---------- | -------------------------------------------- | --------------------------- |
-| 런타임     | React                                        | 18.3.1                      |
-| 언어       | TypeScript                                   | 5.5.3 (strict)              |
-| 빌드       | Vite                                         | 7.3.2 (`package-lock.json`) |
-| 스타일     | Tailwind CSS                                 | 3.4.14                      |
-| 라우팅     | React Router DOM                             | 6.27.0                      |
-| 서버 상태  | TanStack React Query                         | 5.74.3                      |
-| 폼         | React Hook Form                              | 7.54.2                      |
-| 백엔드     | Firebase (Firestore, Analytics)              | 11.3.1                      |
-| 애니메이션 | Lottie React, CSS keyframes, canvas-confetti | —                           |
-| 에러 처리  | react-error-boundary                         | 5.0.0                       |
-| 유틸       | tailwind-merge                               | 2.5.4                       |
+| 영역       | 기술                                         | 버전 (package.json 기준)   |
+| ---------- | -------------------------------------------- | -------------------------- |
+| 런타임     | React                                        | 18.3.1                     |
+| 언어       | TypeScript                                   | 5.5.3 (strict)             |
+| 빌드       | Vite                                         | 7.2.7+ (lockfile 7.3.2)    |
+| 스타일     | Tailwind CSS                                 | 3.4.14                     |
+| 라우팅     | React Router DOM                             | 6.27.0                     |
+| 서버 상태  | TanStack React Query                         | 5.74.3                     |
+| 폼         | React Hook Form                              | 7.54.2                     |
+| 백엔드     | Firebase (Firestore)                         | 11.3.1                     |
+| 애니메이션 | Lottie React, CSS keyframes, canvas-confetti | —                          |
+| 에러 처리  | react-error-boundary                         | 5.0.0                      |
+| 테스트     | Vitest, @firebase/rules-unit-testing         | 3.2.6 / 4.0.1              |
+| 유틸       | tailwind-merge                               | 2.5.4                      |
 
-> **버전 기준:** 재현 가능한 설치 버전은 `package-lock.json`을 기준으로 합니다. `package.json`의 Vite 범위는 `^7.2.7`, lockfile은 7.3.2입니다. 검토 당시 로컬 `node_modules`는 5.4.9로 불일치했으므로 `npm ci`로 동기화해야 합니다.
+> **패키지 매니저·버전 기준:** 이 프로젝트는 **pnpm**(`packageManager: pnpm@10.12.4`)을 사용합니다. 재현 가능한 설치 버전은 `pnpm-lock.yaml`을 기준으로 하며, `pnpm install --frozen-lockfile`로 lockfile과 설치 상태를 일치시킵니다. `package.json`의 Vite 범위는 `^7.2.7`, lockfile 해석 버전은 7.3.2입니다.
 
 ---
 
@@ -25,7 +26,8 @@
 ```
 ebul_kcik/
 ├── public/
-│   └── favicon.svg
+│   ├── favicon.svg
+│   └── og-main-image.webp
 ├── src/
 │   ├── main.tsx                 # React 엔트리
 │   ├── App.tsx                  # QueryClient, ErrorBoundary, 앱 셸
@@ -39,8 +41,7 @@ ebul_kcik/
 │   │   ├── Content.tsx
 │   │   ├── SpecialThanks.tsx
 │   │   ├── NotFound.tsx
-│   │   ├── ErrorFallBack.tsx
-│   │   └── Score.tsx            # (미사용 dead code)
+│   │   └── ErrorFallBack.tsx
 │   ├── components/
 │   │   ├── game/                # 게임 핵심 UI
 │   │   │   ├── KickEbul.tsx
@@ -51,6 +52,8 @@ ebul_kcik/
 │   │   ├── tutorial/            # 튜토리얼 시퀀스
 │   │   ├── rank/                # 랭킹/모아보기 UI
 │   │   ├── error/
+│   │   │   └── Error.tsx
+│   │   ├── ErrorRetry.tsx       # 쿼리 실패 시 재시도 UI
 │   │   └── Loading.tsx
 │   ├── api/
 │   │   └── firebaseApi.ts       # React Query + Firestore 훅
@@ -59,20 +62,32 @@ ebul_kcik/
 │   ├── hook/
 │   │   └── useModal.tsx         # Portal 기반 모달
 │   ├── types/
-│   │   └── game.ts              # 도메인 타입
+│   │   ├── game.ts              # 도메인 타입
+│   │   └── index.d.ts           # 모듈 선언 (canvas-confetti)
 │   ├── utils/
 │   │   ├── rank.ts              # 점수/스테이지/랭크 이미지
+│   │   ├── rank.test.ts         # rank 단위 테스트
 │   │   ├── worry.ts             # 고민 카테고리/이미지
+│   │   ├── session.ts           # localStorage 세션 helper
+│   │   ├── toast.ts             # 인앱 토스트 (alert 대체)
+│   │   ├── validateContent.ts   # 고민 입력 검증
+│   │   ├── validateContent.test.ts
 │   │   └── scripts.ts
 │   ├── assets/                  # 이미지, Lottie JSON, SVG
 │   └── styles/
 │       ├── index.css            # 글로벌, 버튼, 폰트
 │       ├── animated.css         # keyframe 애니메이션
 │       └── modal.css
+├── test/
+│   └── firestore.rules.test.mjs # Firestore Rules 테스트 (에뮬레이터)
 ├── docs/                        # 프로젝트 문서
+├── firebase.json                # Firestore rules/indexes 경로
+├── firestore.rules              # Firestore Security Rules
+├── firestore.indexes.json       # Firestore 인덱스 설정
 ├── vercel.json                  # SPA rewrite
-├── vite.config.ts
+├── vite.config.ts               # Vite + Vitest 설정
 ├── tailwind.config.js
+├── pnpm-lock.yaml
 └── package.json
 ```
 
@@ -181,7 +196,7 @@ min-h-[100dvh] bg-gray-100
 - `VITE_APP_ID`
 - `VITE_MEASUREMENT_ID`
 
-`getFirestore()`, `getAnalytics()` 초기화. `analytics`는 export되나 **커스텀 이벤트 추적에는 미사용**입니다.
+`initializeApp()` 후 `getFirestore()`만 초기화하여 `app`, `db`를 export합니다. **Analytics는 초기화하지 않습니다**(`getAnalytics` 호출 제거됨). `VITE_MEASUREMENT_ID`는 config 객체에 남아 있으나 실제로 사용되지 않습니다.
 
 저장소에 `firebase.json`, Firestore Security Rules([firestore.rules](../firestore.rules)), 인덱스 설정(`firestore.indexes.json`)이 있습니다. 다만 규칙 변경은 `firebase deploy --only firestore:rules`로 배포해야 실제 반영되므로, 저장소 규칙과 배포 프로젝트의 실제 권한이 일치하는지는 별도 확인이 필요합니다.
 
@@ -200,7 +215,7 @@ type TGameContent = {
   score: number
   worryLabel: TworryLabel
   content: string
-  createdAt: string // 실제: Firestore Timestamp
+  createdAt: Timestamp // Firestore Timestamp (firebase/firestore)
   reactions: Record<TworryReaction, number>
   reactionTotal: number
 }
@@ -258,17 +273,21 @@ sequenceDiagram
 | `assets/rank/`        | 1~3등, 공감 아이콘               |
 | `assets/lottie/`      | splash.json, loading.json        |
 
-### 6.3 미적용 최적화
+### 6.3 적용된 최적화
+
+- 결과 stage 배경은 `new Image()` + `decode()`로 사전 디코딩 (`GameResult.tsx:19-21`)
+- 라우트 lazy: Rank, Content, SpecialThanks (`React.lazy`)
+
+### 6.4 미적용 최적화
 
 - `<link rel="preload">` 없음
 - `<img loading="lazy">` 없음
-- `new Image()` / `decode()` preload 없음
 - 이미지 빌드 최적화 플러그인 없음
 - Game step별 code splitting 없음
 
 > static import가 이미지 파일 자체를 JS 번들에 인라인하거나 모든 이미지를 즉시 다운로드한다는 뜻은 아닙니다. 현재 병목은 실제 빌드 크기와 Network/Performance 측정으로 판단해야 합니다.
 
-남은 성능 항목: [ROADMAP.md](./ROADMAP.md) 「잔여 코드 품질 항목」
+남은 성능 항목: [ROADMAP.md](./ROADMAP.md) 「성능 잔여 항목」
 
 ---
 
@@ -310,7 +329,8 @@ sequenceDiagram
 
 | 이슈                           | 영향                                          | 문서                |
 | ------------------------------ | --------------------------------------------- | ------------------- |
-| 전역 touch-action/user-select  | Content/Rank 스크롤·선택 접근성 저하          | ROADMAP.md 잔여     |
-| createdAt 타입 불일치          | Firestore 읽기값과 타입 정의 어긋남           | ROADMAP.md 잔여     |
+| 메인 chunk 500KB 초과          | 초기 로드 비용 (번들 분할 미적용)             | ROADMAP.md 성능 잔여 |
 | 오디오 레이어 없음             | 게임 몰입감 부족                              | AUDIO.md            |
 | 게임 연출·접근성 개선 미착수   | 키보드 입력·연출 완성도                       | GAME-EXPERIENCE.md, UI-UX.md |
+
+> 과거 이슈였던 전역 `touch-action`/`user-select`, `createdAt` 타입 불일치는 해결됨(전역 CSS 제거, 타입 `Timestamp` 통일).

@@ -31,7 +31,9 @@
 
 ### 기술 스택 요약
 
-React 18 · TypeScript 5.5 · Vite 7 (lockfile 7.3.2) · TanStack Query v5 · Firebase v11 · Tailwind CSS 3
+React 18 · TypeScript 5.5 · Vite 7 (lockfile 7.3.2) · TanStack Query v5 · Firebase v11 (Firestore) · Tailwind CSS 3 · Vitest 3
+
+> 패키지 매니저: **pnpm** (`pnpm@10.12.4`, `pnpm-lock.yaml` 기준)
 
 ### 핵심 게임 흐름
 
@@ -40,7 +42,14 @@ React 18 · TypeScript 5.5 · Vite 7 (lockfile 7.3.2) · TanStack Query v5 · Fi
 ### 알려진 주요 이슈
 
 - 오디오 미구현 (→ [AUDIO.md](./AUDIO.md))
-- 게임 연출·접근성 개선 미착수 (→ [GAME-EXPERIENCE.md](./GAME-EXPERIENCE.md), [UI-UX.md](./UI-UX.md))
-- 남은 성능 정리 항목: splash 자산 최적화, Galmuri 폰트 self-host (→ [ROADMAP.md](./ROADMAP.md) 「성능 잔여 항목」). 코드 위험·정리 7건은 2026-06-11 완료
+- 게임 연출·접근성(모달 focus trap·키보드 입력·`prefers-reduced-motion`) 개선 미착수 (→ [GAME-EXPERIENCE.md](./GAME-EXPERIENCE.md), [UI-UX.md](./UI-UX.md))
+- 남은 성능 정리 항목: 메인 chunk 분할, splash 자산 최적화, Galmuri 폰트 self-host (→ [ROADMAP.md](./ROADMAP.md) 「성능 잔여 항목」)
 
-> 최종 코드 대조일: 2026-06-11
+### 최근 반영 (2026-06-17 대조)
+
+- npm → **pnpm** 전환, Vitest 단위 테스트 + Firestore Rules 테스트 추가
+- `alert()` → `utils/toast.ts` 인앱 토스트
+- Rank/Content 에러 UI(`ErrorRetry`)·빈 상태(`EmptyState`)
+- Firebase Analytics 초기화 제거(firestore만), 전역 `touch-action` 제거
+
+> 최종 코드 대조일: 2026-06-17

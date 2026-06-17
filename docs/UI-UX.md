@@ -23,15 +23,14 @@
 
 | 문제                            | 위치                                | 영향                                   |
 | ------------------------------- | ----------------------------------- | -------------------------------------- |
-| `alert()` 사용                  | ResultModal, InfoModal, firebaseApi | 네이티브 다이얼로그, 몰입감 저하       |
-| isError → 무한 로딩             | Rank.tsx, Content.tsx               | Firebase 오류 시 사용자 혼란           |
+| ~~`alert()` 사용~~ (해결됨)     | ResultModal, InfoModal, firebaseApi | `utils/toast.ts` 인앱 토스트로 교체 완료 |
+| ~~isError → 무한 로딩~~ (해결됨) | Rank.tsx, Content.tsx               | `ErrorRetry`(재시도) + `EmptyState`(빈 목록)로 처리 완료 |
 | ErrorFallBack 관측성 부족       | ErrorFallBack.tsx                   | 홈/재시도는 있으나 오류 전송·추적 없음 |
-| 저장/공감 오류가 `alert()` 의존 | ResultModal, firebaseApi            | 문맥이 끊기고 복구 동선이 불명확       |
 
 ### 2.2 개선 제안
 
-1. **통합 피드백 컴포넌트** — Toast 또는 인앱 알림 모달 (`useModal` 활용)
-2. **에러 상태 UI** — `Error.tsx` + "다시 시도" 버튼 (React Query `refetch`)
+1. ~~**통합 피드백 컴포넌트** — Toast 또는 인앱 알림 모달~~ → `utils/toast.ts`로 구현 완료 (ResultModal·InfoModal·firebaseApi)
+2. ~~**에러 상태 UI** — "다시 시도" 버튼 (React Query `refetch`)~~ → `components/ErrorRetry.tsx`로 구현 완료 (Rank/Content `isError` 시 노출)
 3. **ErrorBoundary 개선** — 현재 홈/재시도 유지 + 에러 리포팅과 오류 ID 추가
 4. **mutation 피드백 통일** — 현재 공감 수는 성공 후에만 증가하므로 rollback은 불필요. pending/error/success 상태를 인앱 UI로 표시
 
@@ -114,17 +113,10 @@
 - `prefers-reduced-motion` 미적용 (`animated.css`)
 - 제안: `@media (prefers-reduced-motion: reduce)` 에서 blanket-fly, bounce, pulse 비활성화
 
-#### 전역 CSS
+#### 전역 CSS (해결됨)
 
-```css
-/* src/styles/index.css */
-touch-action: none;
-user-select: none;
-```
-
-- 게임 연타에는 유리
-- Content/Rank 스크롤, 텍스트 선택에 영향 가능
-- 제안: 게임 페이지에만 `touch-action: none` 적용
+- 과거 `index.css`의 전역 `touch-action: none` / `user-select: none`은 제거됨 → Content/Rank 스크롤·텍스트 선택 영향 해소
+- 연타가 핵심인 게임 영역에서 스크롤 간섭이 다시 문제되면, 전역이 아닌 게임 컴포넌트 한정으로 `touch-action`을 재적용하는 방식을 권장
 
 ---
 
@@ -209,24 +201,25 @@ rounded-xl border-[3px] border-black bg-white p-3
 - TOP 3 시상대 + 4~100 리스트 — 시각적으로 잘 구분됨
 - 내 순위 플로팅 — `isPlay` 없으면 미표시 (의도 확인 필요)
 - `score || '-'`, `rank.myScore` 조건 때문에 0점은 `-`로 보이거나 내 순위가 숨겨짐
-- 데이터가 0건일 때 명시적인 empty state 없음
+- 데이터가 0건일 때 `EmptyState`로 안내 메시지 표시 (구현 완료)
 
 ### 7.6 Content
 
 - 2열 그리드, 카드 클릭 → ContentModal
 - 제안: 카드 hover/active 상태 (모바일 tap feedback)
-- 데이터가 0건일 때 빈 화면만 표시되므로 empty state 필요
+- 데이터가 0건일 때 `EmptyState`로 안내 메시지 표시 (구현 완료)
 
 ---
 
 ## 8. 우선순위
 
+> ~~취소선~~ 항목은 완료됨 (toast·ErrorRetry·EmptyState·전역 touch-action 게임 영역 제한 등).
+
 | 우선순위 | 항목                                           | 공수  |
 | -------- | ---------------------------------------------- | ----- |
-| 높음     | Rank/Content 에러 UI                           | 0.5일 |
-| 높음     | alert → 인앱 피드백                            | 1일   |
-| 높음     | 전역 `touch-action: none`을 게임 영역으로 제한 | 0.5일 |
-| 높음     | 0점 표시 조건 수정 + empty state               | 0.5일 |
+| ~~높음~~ | ~~Rank/Content 에러 UI~~ (완료: ErrorRetry)    | —     |
+| ~~높음~~ | ~~alert → 인앱 피드백~~ (완료: toast.ts)       | —     |
+| 높음     | 0점 표시 조건 수정 (empty state는 완료)        | 0.5일 |
 | 중간     | 모달 접근성 (focus trap, ESC)                  | 1~2일 |
 | 중간     | 폼 label/maxLength 정리                        | 0.5일 |
 | 중간     | prefers-reduced-motion                         | 0.5일 |
@@ -238,6 +231,6 @@ rounded-xl border-[3px] border-black bg-white p-3
 ## 9. 관련 문서
 
 - 게임 피드백/연출: [GAME-EXPERIENCE.md](./GAME-EXPERIENCE.md)
-- 남은 성능 항목: [ROADMAP.md](./ROADMAP.md) 「잔여 코드 품질 항목」
+- 남은 성능 항목: [ROADMAP.md](./ROADMAP.md) 「성능 잔여 항목」
 - 사운드 피드백: [AUDIO.md](./AUDIO.md)
 - 전체 일정: [ROADMAP.md](./ROADMAP.md)
