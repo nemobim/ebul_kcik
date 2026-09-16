@@ -7,10 +7,11 @@ import { session } from '../utils/session'
 
 const Rank = () => {
   const { data: ranks = [], isLoading, isError, refetch } = useGetTopRanks()
-  const docId = session.getLastPlayId() // 가장최근 게임아이디
+  // scores 컬렉션은 uniqueId를 문서 id로 쓰므로 lastPlayId(contents docId) 대신 uniqueId로 조회한다
+  const myUniqueId = session.getUniqueId()
 
   /**본인 순위 */
-  const { data: rank, isLoading: isRankLoading } = useMyRankInfo(docId)
+  const { data: rank, isLoading: isRankLoading } = useMyRankInfo(myUniqueId)
 
   /** 3등 이후 순위 */
   const sortedRanks = ranks.slice(3)
