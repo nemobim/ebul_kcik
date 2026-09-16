@@ -24,3 +24,14 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# 서비스 계정 키 (실제 비밀). 레포 밖에 보관하는 것이 원칙이지만,
+# 실수로 프로젝트 안에 내려받아도 커밋되지 않도록 방어적으로 제외한다.
+*-firebase-adminsdk-*.json
+serviceAccount*.json
+service-account*.json
+firebase-key*.json
+.firebase-credentials/
+
+# Firebase CLI 로컬 캐시
+.firebase/

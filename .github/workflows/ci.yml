@@ -6,6 +6,10 @@ on:
   push:
     branches: [main, dev]
 
+# 최소 권한: CI는 체크아웃/빌드/테스트만 하므로 읽기 권한이면 충분하다
+permissions:
+  contents: read
+
 jobs:
   build:
     name: lint · build · test
@@ -30,6 +34,13 @@ jobs:
           VITE_APP_ID: ci-dummy
           VITE_MEASUREMENT_ID: ci-dummy
       - run: pnpm test
+
+      # 배포 산출물에 실리는 의존성의 취약점만 보고한다.
+      # firebase-tools 등 CLI 전용 개발 의존성 권고문은 제외되며,
+      # 조치 여부는 사람이 판단해야 하므로 빌드를 실패시키지 않는다(continue-on-error).
+      - name: audit production dependencies
+        continue-on-error: true
+        run: pnpm audit --prod
 
   rules-test:
     name: firestore rules test
