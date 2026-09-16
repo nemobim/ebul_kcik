@@ -6,19 +6,24 @@ on:
   push:
     branches: [main, dev]
 
+# 최소 권한: CI는 체크아웃/빌드/테스트만 하므로 읽기 권한이면 충분하다
+permissions:
+  contents: read
+
 jobs:
   build:
     name: lint · build · test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run build
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run build
         env:
           # 빌드는 환경변수 없이도 통과해야 하므로 더미 값 주입 (실제 값은 배포 환경에서 설정)
           VITE_API_KEY: ci-dummy
@@ -28,20 +33,28 @@ jobs:
           VITE_MESSAGING_SENDER_ID: ci-dummy
           VITE_APP_ID: ci-dummy
           VITE_MEASUREMENT_ID: ci-dummy
-      - run: npm test
+      - run: pnpm test
+
+      # 배포 산출물에 실리는 의존성의 취약점만 보고한다.
+      # firebase-tools 등 CLI 전용 개발 의존성 권고문은 제외되며,
+      # 조치 여부는 사람이 판단해야 하므로 빌드를 실패시키지 않는다(continue-on-error).
+      - name: audit production dependencies
+        continue-on-error: true
+        run: pnpm audit --prod
 
   rules-test:
     name: firestore rules test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          cache: pnpm
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
-      - run: npm ci
-      - run: npm run test:rules
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run test:rules

@@ -68,9 +68,9 @@ const SpecialThanks = () => {
         </div>
         <p className="mt-1 text-[12px] font-semibold">
           ps. special thanks to
-          <span onClick={handleSecretCount} className="ml-1">
+          <button type="button" onClick={handleSecretCount} className="ml-1 inline">
             @신사동 일반인
-          </span>
+          </button>
         </p>
         {Modal}
         {/* 폭죽 효과*/}

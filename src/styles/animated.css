@@ -203,7 +203,7 @@
 }
 
 .animate-blanket {
-  animation: blanket-fly 2.5s linear forwards;
+  animation: blanket-fly 2.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
 }
 
 /* 이불 걸치기 애니메이션 */
@@ -227,4 +227,41 @@
 
 .animate-blanket-stop {
   animation: blanket-stop 3s forwards;
+}
+
+/* 결과 stage 배경 crossfade (즉시 교체 시 깜빡임 방지) */
+.animate-stage-fade {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* 모션 민감 사용자 대응: 반복·과한 모션 비활성화, 핵심 전환만 즉시 완료 */
+@media (prefers-reduced-motion: reduce) {
+  .animate-scale,
+  .animate-jump,
+  .animate-glow,
+  .animate-typing-cursor::after,
+  .animate-count-pop,
+  .animate-burst-scale,
+  .animate-scale-fade,
+  .animate-stage-fade,
+  .animate-bounce,
+  .animate-pulse,
+  .animate-ping {
+    animation: none !important;
+  }
+
+  /* 이불 날리기는 연출의 핵심이므로 제거하지 않되, 흔들림 없이 짧게 마무리 */
+  .animate-blanket,
+  .animate-blanket-stop {
+    animation-duration: 0.6s !important;
+    animation-timing-function: ease-out !important;
+  }
+
+  /* 팝업 진입/퇴장은 즉시 완료 */
+  .slide_in,
+  .slide_out,
+  .fade_in,
+  .fade_out {
+    animation-duration: 0.01s !important;
+  }
 }

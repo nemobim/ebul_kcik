@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useGetTopRanks, useMyRankInfo } from '../api/firebaseApi'
 import { EmptyState, ErrorRetry } from '../components/ErrorRetry'
 import { LottieLoading } from '../components/Loading'
@@ -14,7 +13,7 @@ const Rank = () => {
   const { data: rank, isLoading: isRankLoading } = useMyRankInfo(docId)
 
   /** 3등 이후 순위 */
-  const sortedRanks = useMemo(() => ranks.slice(3), [ranks])
+  const sortedRanks = ranks.slice(3)
 
   if (isError) return <ErrorRetry onRetry={() => refetch()} message="랭킹을 불러오지 못했어요." />
 

@@ -9,9 +9,17 @@ import ResultModal from './Modal/ResultModal'
 const GameResult = ({ gameState, initGame, nickname, uniqueId }: { gameState: TGameState; initGame: () => void; nickname: string; uniqueId: string }) => {
   const { showModal, Modal } = useModal()
   const [stage, setStage] = useState(0)
+  const [viewportHeight, setViewportHeight] = useState(() => window.innerHeight) // 회전·리사이즈 대응
   const targetStage = getResultStage(gameState.score) // 점수에 따른 목표 stage
 
   const timers = useRef<ReturnType<typeof setTimeout>[]>([])
+
+  // 기기 회전·리사이즈 시 stage-height 갱신 (이불 비행 높이 calibration)
+  useEffect(() => {
+    const handleResize = () => setViewportHeight(window.innerHeight)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   // stage 전환 깜빡임 방지를 위해 결과 이미지(stage 5장 + blanket)를 미리 디코딩
   useEffect(() => {
@@ -55,11 +63,17 @@ const GameResult = ({ gameState, initGame, nickname, uniqueId }: { gameState: TG
       className="relative h-full w-full"
       style={
         {
-          '--stage-height': window.innerHeight > 900 ? '900px' : `${window.innerHeight}px`,
+          '--stage-height': viewportHeight > 900 ? '900px' : `${viewportHeight}px`,
         } as React.CSSProperties
       }
     >
-      <img src={resultStage[stage]} alt="background" className="absolute left-0 top-0 h-full w-full object-cover" style={{ objectFit: 'contain' }} />
+      <img
+        key={stage}
+        src={resultStage[stage]}
+        alt="background"
+        className="animate-stage-fade absolute left-0 top-0 h-full w-full object-cover"
+        style={{ objectFit: 'contain' }}
+      />
       <img
         key={stage}
         src={blanket}

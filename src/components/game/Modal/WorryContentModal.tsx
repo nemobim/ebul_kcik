@@ -31,12 +31,16 @@ const WorryContentModal = ({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<{ content: string }>({
     defaultValues: {
       content: worryContent?.content,
     },
   })
+
+  /** 입력 글자 수 (카운터 표시용) */
+  const contentLength = watch('content')?.length ?? 0
 
   /**고민 조각 선택 */
   const handleWorrySelect = (worry: { label: string; text: string; bgImg: string; id: TworryLabel }) => {
@@ -92,11 +96,13 @@ const WorryContentModal = ({
               },
             })}
             disabled={!selectedWorry.label}
+            aria-label="고민 내용"
             className="mt-2 w-full resize-none bg-transparent"
             rows={10}
             maxLength={500}
             placeholder="자기 전 갑자기 떠오른 흑역사나 고민을 적어주세요."
           />
+          <p className="text-right text-xs text-gray1">{contentLength}/500</p>
         </div>
         {errors.content && <p className="mt-1 w-full text-sm text-red-500">{errors?.content.message}</p>}
         <p className="mt-3 w-full text-xs leading-relaxed text-gray1">

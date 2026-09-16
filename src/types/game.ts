@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore'
+
 /**타격 효과 */
 export type TEffect = {
   id: number
@@ -36,7 +38,7 @@ export type TGameContent = {
   score: number
   worryLabel: TworryLabel
   content: string
-  createdAt: string
+  createdAt: Timestamp
   reactions: Record<TworryReaction, number>
   reactionTotal: number
 }

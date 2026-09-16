@@ -5,7 +5,7 @@ const RANK_NAV = [
   { title: '내용 보기', url: '/content' },
 ]
 
-const TabNavigation = () => {
+const RankTab = () => {
   return (
     <div className="flex w-[80%] rounded-lg border-[3px] border-black bg-white">
       {RANK_NAV.map((nav, index) => (
@@ -23,4 +23,4 @@ const TabNavigation = () => {
   )
 }
 
-export default TabNavigation
+export default RankTab

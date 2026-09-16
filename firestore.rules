@@ -3,10 +3,18 @@ rules_version = '2';
 // 이불뚫고 지붕킥 Firestore Security Rules
 //
 // 주의: 현재 앱은 Firebase Auth를 사용하지 않고 localStorage UUID로만 사용자를
-// 식별합니다(SECURITY-PRIVACY.md §2.1). 따라서 request.auth 기반 소유권 검증이
+// 식별합니다. 따라서 request.auth 기반 소유권 검증이
 // 불가능하며, 아래 규칙은 "필드 형태/값 범위 검증"과 "변경 가능한 필드 제한"에
 // 집중합니다. 완전한 소유권 보장이 필요하면 Firebase Anonymous Auth 도입 후
 // userId == request.auth.uid 조건을 추가해야 합니다.
+//
+// 이 규칙으로 막을 수 있는 것: 필드 위조·스키마 오염, 핵심 필드 변조, 클라이언트 삭제,
+//   비현실적인 점수 주입, 형식에 맞지 않는 닉네임.
+// 이 규칙으로 막을 수 없는 것(인증 부재의 구조적 한계):
+//   - 상한 이내 점수의 자작 기록 등록 (직접 API 호출)
+//   - 타인 userId 사칭, 공감 수 부풀리기
+//   - 요청 빈도 제한 (→ App Check / Cloud Functions 집계 필요)
+//   자세한 내용과 대응 계획은 docs/ROADMAP.md Phase 4 참고.
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -14,6 +22,19 @@ service cloud.firestore {
     // 허용된 worryLabel 9종 (PRD §4)
     function isValidWorryLabel(label) {
       return label in ['talk', 'young', 'school', 'work', 'alcohol', 'home', 'idol', 'heart', 'etc'];
+    }
+
+    // 점수 상한: 게임 시간 20초 × SCORE_MULTIPLIER(3) 기준, 초당 50회 연타(= 1000회)에
+    // 해당하는 3000m을 상한으로 둔다. 정상 플레이로는 도달할 수 없는 여유값이며
+    // 999999 같은 명백한 위조 기록이 랭킹에 올라가는 것을 막는 것이 목적이다.
+    // 게임 시간이나 배수를 바꾸면 이 값도 함께 조정할 것 (src/utils/rank.ts, KickEbul.tsx).
+    function isPlausibleScore(score) {
+      return score is int && score >= 0 && score <= 3000;
+    }
+
+    // 닉네임: 클라이언트(RoomNameModal)와 동일하게 한글 1~5자만 허용
+    function isValidNickname(user) {
+      return user is string && user.size() >= 1 && user.size() <= 5 && user.matches('[가-힣]+');
     }
 
     // ---- contents 컬렉션 ----
@@ -26,13 +47,11 @@ service cloud.firestore {
           ['id', 'user', 'userId', 'score', 'worryLabel', 'content', 'createdAt', 'reactions', 'reactionTotal']
         )
         && request.resource.data.id == contentId
-        && request.resource.data.user is string
-        && request.resource.data.user.size() >= 1
-        && request.resource.data.user.size() <= 5
+        && isValidNickname(request.resource.data.user)
         && request.resource.data.userId is string
         && request.resource.data.userId.size() >= 1
-        && request.resource.data.score is int
-        && request.resource.data.score >= 0
+        && request.resource.data.userId.size() <= 64
+        && isPlausibleScore(request.resource.data.score)
         && isValidWorryLabel(request.resource.data.worryLabel)
         && request.resource.data.content is string
         && request.resource.data.content.size() >= 1

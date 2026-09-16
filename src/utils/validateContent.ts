@@ -18,6 +18,10 @@ export const parseGameContent = (data: unknown): TGameContent | null => {
   const reactions = d.reactions as Record<string, unknown> | undefined
   const reactionsValid = !!reactions && REACTION_KEYS.every(k => isNumber(reactions[k]))
 
+  // createdAt은 Firestore Timestamp(또는 { seconds, nanoseconds } 형태)로 저장된다.
+  const createdAt = d.createdAt as Record<string, unknown> | undefined
+  const createdAtValid = !!createdAt && typeof createdAt === 'object' && isNumber(createdAt.seconds)
+
   const valid =
     isString(d.id) &&
     isString(d.user) &&
@@ -26,6 +30,7 @@ export const parseGameContent = (data: unknown): TGameContent | null => {
     isString(d.worryLabel) &&
     WORRY_LABELS.includes(d.worryLabel as TworryLabel) &&
     isString(d.content) &&
+    createdAtValid &&
     reactionsValid &&
     isNumber(d.reactionTotal)
 

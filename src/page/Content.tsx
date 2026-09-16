@@ -39,7 +39,7 @@ const Content = () => {
           {/* 필터 버튼 */}
           <div className="my-5 flex w-[80%] items-end justify-between">
             <p className="text-sm text-gray1">이불 더미 구경하기</p>
-            <select defaultValue={sortType} onChange={handleSortChange} className="rounded border-[2px] border-black px-2 py-1 text-sm" aria-label="정렬 기준 선택">
+            <select value={sortType} onChange={handleSortChange} className="rounded border-[2px] border-black px-2 py-1 text-sm" aria-label="정렬 기준 선택">
               <option value="createdAt">최신순</option>
               <option value="score">멀리 날라간 순</option>
               <option value="reactionTotal">공감 높은 순</option>
@@ -51,7 +51,12 @@ const Content = () => {
           ) : (
             <div className="grid w-[80%] grid-cols-2 gap-4">
               {contents.map(content => (
-                <div key={content.id} onClick={() => handleOpenModal(content)} className="w-full rounded-lg border-[3px] border-black bg-white py-2 pr-2 text-sm">
+                <button
+                  key={content.id}
+                  type="button"
+                  onClick={() => handleOpenModal(content)}
+                  className="w-full rounded-lg border-[3px] border-black bg-white py-2 pr-2 text-left text-sm"
+                >
                   <div className="flex items-center justify-between">
                     <img src={worryImage[content.worryLabel].img} className="w-[90%] max-w-[4rem]" alt={content.worryLabel} />
                     <div className="text-right text-main3">
@@ -61,7 +66,7 @@ const Content = () => {
                   </div>
                   <p className="my-2 line-clamp-3 pl-2">{content?.content}</p>
                   <p className="pl-2 text-gray2"> {content?.user}</p>
-                </div>
+                </button>
               ))}
             </div>
           )}
