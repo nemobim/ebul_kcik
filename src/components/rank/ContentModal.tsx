@@ -1,13 +1,17 @@
 import { useState } from 'react'
-import { useReactToContent } from '../../api/firebaseApi'
+import { useReactToContent, useUserReaction } from '../../api/firebaseApi'
 import close from '../../assets/game/write/close.png'
 import { TGameContent, TworryReaction } from '../../types/game'
 import { getRankImg } from '../../utils/rank'
+import { isOwnerContent } from '../../utils/reaction'
+import { session } from '../../utils/session'
 import { reactionIcon, worryImage } from '../../utils/worry'
 
 const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: TGameContent }) => {
   const [reactionState, setReactionState] = useState(content.reactions)
 
+  const isOwner = isOwnerContent(session.getUniqueId(), content.userId)
+  const { data: userReactions } = useUserReaction(isOwner ? null : content.id)
   const { mutate: onReaction, isPending } = useReactToContent()
 
   const handleReaction = async (reaction: TworryReaction) => {
@@ -46,13 +50,34 @@ const ContentModal = ({ hideModal, content }: { hideModal: () => void; content: 
           <p>{content.content}</p>
         </div>
       </div>
-      <div className="flex items-center justify-center gap-10">
-        {Object.entries(reactionIcon).map(([key, value]) => (
-          <button className="text-center" disabled={isPending} key={key} onClick={() => handleReaction(key as TworryReaction)}>
-            <img src={value} alt={key} className="size-[3rem]" />
-            <p className="font-galmuri9 text-lg">{reactionState[key as TworryReaction]}</p>
-          </button>
-        ))}
+      <div className="flex flex-col items-center gap-2">
+        <div className="flex items-center justify-center gap-10">
+          {Object.entries(reactionIcon).map(([key, value]) => {
+            const reactionKey = key as TworryReaction
+            const alreadyReacted = !!userReactions?.[reactionKey]
+            const disabled = isPending || isOwner || alreadyReacted
+            const buttonClass = alreadyReacted
+              ? 'text-center opacity-100'
+              : disabled
+                ? 'text-center opacity-50 cursor-not-allowed'
+                : 'text-center'
+            const imgClass = alreadyReacted ? 'size-[3rem] drop-shadow-[0_0_4px_rgba(0,0,0,0.4)]' : 'size-[3rem]'
+            return (
+              <button
+                className={buttonClass}
+                disabled={disabled}
+                key={key}
+                onClick={() => handleReaction(reactionKey)}
+                aria-pressed={alreadyReacted}
+                aria-label={alreadyReacted ? `${key} 이미 공감함` : key}
+              >
+                <img src={value} alt={key} className={imgClass} />
+                <p className="font-galmuri9 text-lg">{reactionState[reactionKey]}</p>
+              </button>
+            )
+          })}
+        </div>
+        {isOwner && <p className="font-galmuri9 text-sm text-main3">본인 글에는 공감을 누를 수 없어요</p>}
       </div>
     </div>
   )

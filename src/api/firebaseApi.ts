@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { collection, doc, getCountFromServer, getDoc, getDocs, increment, limit, orderBy, query, runTransaction, serverTimestamp, setDoc, where } from 'firebase/firestore'
 import { db } from '../firebase/firebaseClient'
 import { TGameContent, TGameState, TSortType, TworryReaction } from '../types/game'
+import { deriveUserReactions, UserReactionState } from '../utils/reaction'
 import { session } from '../utils/session'
 import { toast } from '../utils/toast'
 import { parseGameContent } from '../utils/validateContent'
@@ -92,6 +93,26 @@ export const useGetGameContent = (sortBy: TSortType) => {
   })
 }
 
+/** 내가 이 글에 어떤 공감을 눌렀는지 조회 (모달 열 때 사용) */
+export const useUserReaction = (contentId: string | null) => {
+  const myId = session.getUniqueId()
+  return useQuery<UserReactionState>({
+    queryKey: ['USER_REACTION', myId, contentId],
+    queryFn: async () => {
+      if (!myId || !contentId) return deriveUserReactions(null)
+      try {
+        const snap = await getDoc(doc(db, 'userReactions', `${myId}_${contentId}`))
+        return deriveUserReactions(snap.exists() ? snap.data() : null)
+      } catch {
+        // 조회 실패는 조용히 통과 — 게임/모달 진행을 막지 않는다
+        return deriveUserReactions(null)
+      }
+    },
+    enabled: !!contentId,
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
 /**공감 버튼 누르기 */
 export const useReactToContent = () => {
   const queryClient = useQueryClient()
@@ -119,7 +140,11 @@ export const useReactToContent = () => {
         tx.set(reactionRef, { [reaction]: true }, { merge: true })
       })
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['GAME_CONTENT'] }),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['GAME_CONTENT'] })
+      const myId = session.getUniqueId()
+      queryClient.invalidateQueries({ queryKey: ['USER_REACTION', myId, variables.contentId] })
+    },
     onError: (error: Error) => toast(error.message ?? '문제가 발생했습니다.'),
   })
 }
