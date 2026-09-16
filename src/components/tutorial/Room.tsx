@@ -28,9 +28,9 @@ const Room = ({ handleNextStep }: { handleNextStep: () => void }) => {
   return (
     <div className="relative flex h-full flex-col items-center justify-center">
       <div className="relative w-[90%]">
-        <img src={roomImg} alt="방" className="w-full" />
+        <img src={roomImg} width={341} height={341} alt="방" className="h-auto w-full" />
         <button onClick={handleNextStep}>
-          <img src={marker} alt="마커" className="animate-jump absolute right-[20%] top-[40%] w-[20%] max-w-[80px]" />
+          <img src={marker} width={76} height={86} alt="마커" className="animate-jump absolute right-[20%] top-[40%] h-auto w-[20%] max-w-[80px]" />
         </button>
       </div>
       {isPlayedGame && (

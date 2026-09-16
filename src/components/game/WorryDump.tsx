@@ -28,7 +28,8 @@ const WorryDump = ({ handleNextStep, setGameState }: { handleNextStep: () => voi
       </div>
       <div className="relative my-3 w-[90%]">
         <div className="absolute inset-0 top-5 h-[90%] max-h-full w-full overflow-y-auto whitespace-pre-wrap p-3 text-white">{worryContent?.content}</div>
-        <img src={wakeUser} alt="잠자는 사용자" className="w-full" />
+        {/* wakeUser 341x341 — 위 텍스트 오버레이가 inset-0 기준이므로 이미지가 도착하기 전에도 컨테이너 높이가 유지되어야 함 */}
+        <img src={wakeUser} width={341} height={341} alt="잠자는 사용자" className="h-auto w-full" />
       </div>
       <p className="mb-3 text-sm text-white">*이후 글 수정이 어려워요.</p>
       <div className="flex w-[90%] gap-3">

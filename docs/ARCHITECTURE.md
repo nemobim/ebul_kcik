@@ -282,7 +282,7 @@ sequenceDiagram
 ### 6.1 현재 방식
 
 1. **Vite static import** — `import img from '../assets/...'`로 빌드된 URL 또는 data URI를 얻음
-2. **인라인 임계값** — `vite.config.ts`에 별도 설정이 없어 Vite 기본값 `build.assetsInlineLimit = 4096B`가 적용됩니다. **4096B 미만은 base64로 JS에 인라인**되고, 그 이상만 별도 파일로 떨어집니다(2026-09-16 빌드 실측: 이미지 54개 중 39개 인라인 / 15개 파일)
+2. **인라인 임계값** — `vite.config.ts`에서 `build.assetsInlineLimit = 0`으로 지정해 **모든 이미지를 별도 파일로 분리**합니다. 이전에는 Vite 기본값(4096B) 때문에 같은 화면의 이미지 일부만 인라인되어 서로 다른 시점에 나타나는 문제가 있었습니다.
 3. **렌더링** — `<img src={img}>` 또는 `background-image`가 실제로 적용될 때 브라우저가 이미지 요청/디코딩
 4. **Lottie** — splash.json import → `lottie-react` 컴포넌트 (Splash 전용)
 5. **Route lazy** — Rank, Content, SpecialThanks (`React.lazy`)
@@ -304,8 +304,11 @@ sequenceDiagram
 
 ### 6.3 적용된 최적화
 
+- `assetsInlineLimit = 0`으로 이미지 인라인/파일 이원화 제거 (`vite.config.ts`) — 같은 화면 이미지가 서로 다른 시점에 나타나는 문제 해소
+- 튜토리얼 주요 이미지(`Door`·`Room`·`Bed`·`WorryDump`)에 `width`/`height` 지정으로 로드 전 레이아웃 점프 최소화
 - 게임 배경(`game.webp`)을 `new Image()` + `decode()`로 준비한 뒤 "게임 시작" 버튼 활성화 (`KickEbul.tsx:24-36`)
 - 결과 이미지(stage 5장 + blanket) 사전 디코딩으로 stage 전환 깜빡임 방지 (`GameResult.tsx:24-32`)
+- 튜토리얼 다음 화면 이미지(`Door` → dooropen, `Bed` 다음 대사 이미지) 사전 디코딩
 - Loading을 Lottie(loading.json, 약 819KB)에서 CSS 스피너로 교체해 초기 번들에서 제거 (`Loading.tsx`)
 - 라우트 lazy(Rank·Content·SpecialThanks) + 게임 step lazy(KickEbul·GameResult)
 - Galmuri 폰트 CDN `preconnect` / `dns-prefetch` (`index.html`)
@@ -314,11 +317,9 @@ sequenceDiagram
 
 - `<link rel="preload">` 없음 — 이미지 URL이 HTML에 없어 프리로드 스캐너가 선행 요청하지 못함
 - 목록 이미지 `loading="lazy"` 없음
-- `<img>`에 `width`/`height`·`aspect-ratio` 미지정 (로드 전 레이아웃 붕괴)
 - 이미지 빌드 최적화 플러그인 없음
-- `assetsInlineLimit` 미조정 (기본 4096B — §6.1 참고)
 - `manualChunks` 등 메인 chunk 분할 설정 없음 (`vite.config.ts`는 react 플러그인만 사용)
-- 튜토리얼 구간(`Door`의 dooropen, `Bed`의 대사 이미지)에는 사전 디코딩 없음
+- `assets/lottie/splash.json` 내장 PNG(약 353KB)는 경량화 여지 있음
 - `assets/lottie/loading.json`(819KB)은 더 이상 참조되지 않는 잔여 파일
 
 > 번들 크기·인라인 비율은 추정이 아니라 `pnpm build` 산출물과 Network/Performance 측정으로 판단해야 합니다. 현재 실측치는 [DEVELOPMENT.md](./DEVELOPMENT.md) §5와 [ISSUE-IMAGE-LOADING.md](./ISSUE-IMAGE-LOADING.md) §3에 기록되어 있습니다.
@@ -370,7 +371,7 @@ sequenceDiagram
 | 이슈                                   | 영향                                        | 문서                   |
 | -------------------------------------- | ------------------------------------------- | ---------------------- |
 | 메인 chunk 1,032KB (gzip 481KB)        | 초기 로드 비용 — splash.json·lottie-web 포함 | ROADMAP.md 성능 잔여   |
-| 이미지 로딩 타이밍 불균일 (4KB 인라인 이원화) | 모바일 첫 진입 시 이미지 팝인·레이아웃 점프 | ISSUE-IMAGE-LOADING.md |
+| 이미지 로딩 타이밍 불균일 (일부 완화, `<link rel="preload">`·splash.json 경량화 등 후속 항목 남음) | 모바일 첫 진입 시 이미지 팝인·레이아웃 점프 | ISSUE-IMAGE-LOADING.md |
 | 오디오 레이어 없음                     | 게임 몰입감 부족                            | AUDIO.md               |
 | Firebase Auth 미사용                   | Rules에서 소유권 검증 불가                  | ROADMAP.md Phase 4     |
 | UGC 신고/삭제 경로 없음                | 운영 시 콘솔 수동 처리                      | ROADMAP.md Phase 4     |
