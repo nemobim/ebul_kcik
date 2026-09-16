@@ -45,3 +45,14 @@ export type TGameContent = {
 
 /** 정렬 타입 */
 export type TSortType = 'createdAt' | 'score' | 'reactionTotal'
+
+/**랭킹 집계용 최고 기록 (scores 컬렉션 문서, id = uniqueId)
+ * contents는 글 목록 용도로 계속 누적되고, 랭킹은 이 컬렉션에서 사용자당 1건만 집계된다.
+ */
+export type TScoreEntry = {
+  id: string
+  userId: string
+  user: string
+  score: number
+  updatedAt: Timestamp
+}

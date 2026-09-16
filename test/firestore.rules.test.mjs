@@ -83,6 +83,42 @@ await run('shock=true 기록 허용', assertSucceeds(setDoc(doc(db, 'userReactio
 await run('shock=false 거부', assertFails(setDoc(doc(db, 'userReactions', 'u2_doc1'), { shock: false })))
 await run('허용되지 않은 키 거부', assertFails(setDoc(doc(db, 'userReactions', 'u3_doc1'), { angry: true })))
 
+/** 유효한 scores 문서 (updatedAt은 withTs에서 serverTimestamp로 채움) */
+const validScore = (id = 'u1', overrides = {}) => ({
+  userId: id,
+  user: '니니',
+  score: 100,
+  ...overrides,
+})
+const withUpdatedAt = obj => ({ ...obj, updatedAt: serverTimestamp() })
+
+console.log('\n[scores] create')
+await run('유효한 최고기록 생성 허용', assertSucceeds(setDoc(doc(db, 'scores', 'u1'), withUpdatedAt(validScore('u1')))))
+await run('docId != userId 거부', assertFails(setDoc(doc(db, 'scores', 'u2'), withUpdatedAt(validScore('other')))))
+await run('음수 score 거부', assertFails(setDoc(doc(db, 'scores', 'sbad1'), withUpdatedAt(validScore('sbad1', { score: -1 })))))
+await run('상한 초과 score 거부', assertFails(setDoc(doc(db, 'scores', 'sbad2'), withUpdatedAt(validScore('sbad2', { score: 3001 })))))
+await run('상한(3000) 경계값 허용', assertSucceeds(setDoc(doc(db, 'scores', 'sedge1'), withUpdatedAt(validScore('sedge1', { score: 3000 })))))
+await run('한글 외 닉네임 거부', assertFails(setDoc(doc(db, 'scores', 'sbad3'), withUpdatedAt(validScore('sbad3', { user: 'abc' })))))
+await run('빈 닉네임 거부', assertFails(setDoc(doc(db, 'scores', 'sbad4'), withUpdatedAt(validScore('sbad4', { user: '' })))))
+await run('닉네임 6자 이상 거부', assertFails(setDoc(doc(db, 'scores', 'sbad5'), withUpdatedAt(validScore('sbad5', { user: '여섯글자닉네임' })))))
+await run('정의되지 않은 추가 필드 거부', assertFails(setDoc(doc(db, 'scores', 'sbad6'), withUpdatedAt({ ...validScore('sbad6'), hacked: true }))))
+await run('updatedAt 누락 거부', assertFails(setDoc(doc(db, 'scores', 'sbad7'), validScore('sbad7'))))
+
+// scores update 테스트 시드 (규칙 우회 컨텍스트로 기존 기록 100점 생성)
+await testEnv.withSecurityRulesDisabled(async ctx => {
+  await setDoc(doc(ctx.firestore(), 'scores', 'u3'), withUpdatedAt(validScore('u3', { score: 100 })))
+})
+
+console.log('\n[scores] update / delete')
+await run('점수 증가 update 허용', assertSucceeds(updateDoc(doc(db, 'scores', 'u3'), { score: 200, updatedAt: serverTimestamp() })))
+await run('점수 감소 update 거부', assertFails(updateDoc(doc(db, 'scores', 'u3'), { score: 50, updatedAt: serverTimestamp() })))
+await run('점수 동일 update 거부 (증가만 허용)', assertFails(updateDoc(doc(db, 'scores', 'u3'), { score: 200, updatedAt: serverTimestamp() })))
+await run('userId 변경 거부', assertFails(updateDoc(doc(db, 'scores', 'u3'), { userId: 'attacker', score: 500, updatedAt: serverTimestamp() })))
+await run('닉네임 변경 허용 (점수 증가 동반)', assertSucceeds(updateDoc(doc(db, 'scores', 'u3'), { user: '초코', score: 250, updatedAt: serverTimestamp() })))
+await run('닉네임만 변경 거부 (점수 미증가)', assertFails(updateDoc(doc(db, 'scores', 'u3'), { user: '초코', updatedAt: serverTimestamp() })))
+await run('상한 초과 update 거부', assertFails(updateDoc(doc(db, 'scores', 'u3'), { score: 3001, updatedAt: serverTimestamp() })))
+await run('클라이언트 삭제 거부', assertFails(deleteDoc(doc(db, 'scores', 'u3'))))
+
 await testEnv.cleanup()
 
 console.log(`\n결과: ${passed} passed, ${failed} failed\n`)

@@ -1,13 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { collection, doc, getCountFromServer, getDoc, getDocs, increment, limit, orderBy, query, runTransaction, serverTimestamp, setDoc, where } from 'firebase/firestore'
 import { db } from '../firebase/firebaseClient'
-import { TGameContent, TGameState, TSortType, TworryReaction } from '../types/game'
+import { TGameContent, TGameState, TScoreEntry, TSortType, TworryReaction } from '../types/game'
 import { deriveUserReactions, UserReactionState } from '../utils/reaction'
 import { session } from '../utils/session'
 import { toast } from '../utils/toast'
 import { parseGameContent } from '../utils/validateContent'
+import { parseScoreEntry } from '../utils/validateScore'
 
-/**게임 점수 등록 */
+/**게임 점수 등록
+ *
+ * contents(글 목록)는 플레이마다 누적, scores(랭킹 집계)는 사용자당 1건만 유지한다.
+ * 두 컬렉션이 목적이 달라 분리했으며, contents 쓰기 실패 시 scores도 갱신하지 않는다.
+ * scores upsert는 read-then-write이므로 runTransaction으로 감싸 동시 갱신 경쟁을 막는다.
+ */
 export const useSaveScore = () => {
   const queryClient = useQueryClient()
 
@@ -28,6 +34,19 @@ export const useSaveScore = () => {
         },
         reactionTotal: 0,
       })
+
+      const scoreRef = doc(db, 'scores', uniqueId)
+      await runTransaction(db, async tx => {
+        const snap = await tx.get(scoreRef)
+        if (!snap.exists()) {
+          tx.set(scoreRef, { userId: uniqueId, user: nickname, score: gameState.score, updatedAt: serverTimestamp() })
+          return
+        }
+        const currentScore = snap.data().score
+        if (typeof currentScore === 'number' && gameState.score > currentScore) {
+          tx.update(scoreRef, { user: nickname, score: gameState.score, updatedAt: serverTimestamp() })
+        }
+      })
     },
     // 저장 직후 랭킹/내 순위/모아보기 캐시를 무효화해 최신 데이터 반영
     onSuccess: () => {
@@ -40,20 +59,23 @@ export const useSaveScore = () => {
 
 /**게임 랭킹 조회
  * @description 쿼리키 : TOP_RANKS
+ * scores 컬렉션에서 사용자당 1건씩 집계된 상태로 반환된다(클라이언트 dedupe 불필요).
  */
 export const useGetTopRanks = () => {
-  return useQuery<TGameContent[]>({
+  return useQuery<TScoreEntry[]>({
     queryKey: ['TOP_RANKS'],
     queryFn: async () => {
-      const q = query(collection(db, 'contents'), orderBy('score', 'desc'), limit(100))
+      const q = query(collection(db, 'scores'), orderBy('score', 'desc'), limit(100))
       const snapshot = await getDocs(q)
-      return snapshot.docs.map(doc => parseGameContent(doc.data())).filter((c): c is TGameContent => c !== null)
+      return snapshot.docs.map(doc => parseScoreEntry(doc.id, doc.data())).filter((s): s is TScoreEntry => s !== null)
     },
   })
 }
 
 /** 본인 순위 조회
- * @description 쿼리키 : MY_RANK
+ * @description 쿼리키 : MY_RANK_INFO
+ * scores 컬렉션 기준으로 조회한다 — 본인 이전 기록에 의해 등수가 밀리지 않는다.
+ * @param myId 사용자의 uniqueId (scores 문서 id와 동일)
  */
 export const useMyRankInfo = (myId: string | null) => {
   return useQuery({
@@ -61,13 +83,13 @@ export const useMyRankInfo = (myId: string | null) => {
     queryFn: async () => {
       if (!myId) return null
 
-      const docSnap = await getDoc(doc(db, 'contents', myId))
+      const docSnap = await getDoc(doc(db, 'scores', myId))
       if (!docSnap.exists()) return null
 
       const data = docSnap.data()
       const score = data.score
 
-      const q = query(collection(db, 'contents'), where('score', '>', score))
+      const q = query(collection(db, 'scores'), where('score', '>', score))
       const countSnap = await getCountFromServer(q)
       const rank = countSnap.data().count + 1
 

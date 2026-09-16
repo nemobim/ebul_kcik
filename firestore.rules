@@ -85,6 +85,31 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // ---- scores 컬렉션 ----
+    // 문서 ID = uniqueId. 사용자당 1건, 새 기록이 기존 최고점보다 높을 때만 update.
+    // 목적: 반복 플레이가 랭킹을 중복 점유하지 못하도록 랭킹 집계를 이 컬렉션으로 분리한다.
+    // contents 컬렉션은 글 목록(worry board) 용도로 계속 누적된다.
+    match /scores/{scoreId} {
+      allow read: if true;
+
+      allow create: if
+        request.resource.data.keys().hasOnly(['userId', 'user', 'score', 'updatedAt'])
+        && request.resource.data.userId == scoreId
+        && isValidNickname(request.resource.data.user)
+        && isPlausibleScore(request.resource.data.score)
+        && request.resource.data.updatedAt == request.time;
+
+      // 점수 증가 방향만 허용. userId는 변경 불가.
+      allow update: if
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['score', 'user', 'updatedAt'])
+        && isPlausibleScore(request.resource.data.score)
+        && request.resource.data.score > resource.data.score
+        && isValidNickname(request.resource.data.user)
+        && request.resource.data.updatedAt == request.time;
+
+      allow delete: if false;
+    }
+
     // ---- userReactions 컬렉션 ----
     // 문서 ID: {userId}_{contentId}, 필드: { shock?: true, laugh?: true, sad?: true }
     match /userReactions/{reactionId} {
