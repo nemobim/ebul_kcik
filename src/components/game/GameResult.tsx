@@ -68,14 +68,14 @@ const GameResult = ({ gameState, initGame, nickname, uniqueId }: { gameState: TG
       }
     >
       <img
-        key={stage}
+        key={`bg-${stage}`}
         src={resultStage[stage]}
         alt="background"
         className="animate-stage-fade absolute left-0 top-0 h-full w-full object-cover"
         style={{ objectFit: 'contain' }}
       />
       <img
-        key={stage}
+        key={`blanket-${stage}`}
         src={blanket}
         alt="blanket"
         onAnimationEnd={handleAnimationEnd}
