@@ -1,6 +1,8 @@
+import { useRef } from 'react'
 import { useGetTopRanks, useMyRankInfo } from '../api/firebaseApi'
 import { EmptyState, ErrorRetry } from '../components/ErrorRetry'
 import { LottieLoading } from '../components/Loading'
+import FloatBtn from '../components/rank/FloatBtn'
 import RankTab from '../components/rank/RankTab'
 import { rankImg } from '../utils/rank'
 import { session } from '../utils/session'
@@ -15,6 +17,12 @@ const Rank = () => {
   /** 3등 이후 순위 */
   const sortedRanks = ranks.slice(3)
 
+  // FloatBtn의 최상단 스크롤 이동에 연결
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  // 내 등수 바가 표시될 때는 FloatBtn을 위로 올려 겹침을 피한다.
+  const hasMyRankBar = !!(rank && rank.myScore != null && !isRankLoading)
+
   if (isError) return <ErrorRetry onRetry={() => refetch()} message="랭킹을 불러오지 못했어요." />
 
   return (
@@ -23,7 +31,7 @@ const Rank = () => {
         <LottieLoading />
       ) : (
         <>
-          <div className="bg-worry flex h-full flex-col items-center overflow-y-auto pb-4 pt-12">
+          <div ref={scrollRef} className="bg-worry flex h-full flex-col items-center overflow-y-auto pb-4 pt-12">
             <RankTab />
             {ranks.length === 0 ? (
               <EmptyState message="아직 등록된 랭킹이 없어요. 첫 기록의 주인공이 되어보세요!" />
@@ -40,7 +48,8 @@ const Rank = () => {
                 </div>
               ))}
             </div>
-                <div className="mb-16 flex w-full flex-col gap-2">
+                {/* 마지막 순위가 내 등수 바에 가리지 않도록 하단 여백 확보 (바 4rem + 여유 1.5rem) */}
+                <div className="mb-[5.5rem] flex w-full flex-col gap-2">
                   {sortedRanks.map((rank, index) => (
                     <div key={rank.id} className="flex w-full items-center justify-between border-y-[3px] border-black bg-white px-10 py-4">
                       <span className="text-sm text-main3">{index + 4}등</span>
@@ -52,13 +61,15 @@ const Rank = () => {
               </>
             )}
           </div>
+          {/* 재플레이·공유 진입점 (내 등수 바가 있으면 위로 올려 겹치지 않게) */}
+          <FloatBtn scrollRef={scrollRef} raised={hasMyRankBar} />
           {/* 나의 등수 플로팅 */}
-          {rank && rank.myScore != null && !isRankLoading && (
+          {hasMyRankBar && (
             <div className="absolute bottom-0 left-0 w-full px-4">
               <div className="mx-auto flex h-[4rem] w-full max-w-[900px] justify-between rounded-t-lg border-x-[3px] border-t-[3px] border-black bg-main2 px-6 pt-4 text-white">
-                <span className="text-sm">{rank.rank}등</span>
-                <span className="font-galmuri9">{rank.user}</span>
-                <p className="text-sm">{rank.myScore} m</p>
+                <span className="text-sm">{rank!.rank}등</span>
+                <span className="font-galmuri9">{rank!.user}</span>
+                <p className="text-sm">{rank!.myScore} m</p>
               </div>
             </div>
           )}
