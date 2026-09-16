@@ -35,3 +35,7 @@ firebase-key*.json
 
 # Firebase CLI 로컬 캐시
 .firebase/
+
+# Claude Code 로컬 설정과 에이전트 worktree (커밋 대상 아님)
+.claude/settings.local.json
+.claude/worktrees/
