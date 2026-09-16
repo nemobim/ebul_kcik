@@ -1,6 +1,8 @@
 # AUDIO — 배경음악 및 효과음 설계
 
-현재 오디오 구현이 **전무**한 상태입니다. BGM/SFX 추가를 위한 설계 및 구현 방향 문서입니다.
+현재 오디오 구현이 **전무**한 상태입니다. BGM/SFX 추가를 위한 설계 및 구현 방향 문서이며, 아직 코드에 반영된 내용은 없습니다.
+
+> 현황 재확인일: **2026-09-16**
 
 ---
 
@@ -8,12 +10,12 @@
 
 | 항목                           | 상태   |
 | ------------------------------ | ------ |
-| 오디오 파일 (.mp3, .wav, .ogg) | 0건    |
-| Audio API / Howler.js          | 미사용 |
+| 오디오 파일 (.mp3, .wav, .ogg) | 0건 (`src/assets`에 오디오 디렉터리 없음) |
+| Audio API / Howler.js          | 미사용 (`package.json`에 오디오 의존성 없음) |
 | mute 설정                      | 없음   |
 | autoplay 처리                  | 없음   |
 
-게임 몰입감과 타격 피드백의 핵심 요소인 **사운드가 완전히 빠져 있음**.
+게임 몰입감과 타격 피드백의 핵심 요소인 **사운드가 완전히 빠져 있음**. 현재 타격 피드백은 시각 효과(hit SVG·콤보)와 `navigator.vibrate` 햅틱만으로 구성되어 있습니다.
 
 ---
 
@@ -147,9 +149,9 @@ document.addEventListener('click', unlockAudio, { once: true })
 
 ### 5.4 Mute 설정
 
-- `localStorage.isMuted` (boolean)
+- `localStorage.isMuted` (boolean) — 키 접근은 기존 규칙대로 `src/utils/session.ts`에 API를 추가해 한곳에서 관리
 - UI: InfoModal 또는 설정 버튼에 mute toggle
-- 모션 감소 설정과 음소거는 별도 사용자 선호로 취급
+- 모션 감소 설정(`prefers-reduced-motion`, 이미 구현됨)과 음소거는 별도 사용자 선호로 취급
 
 ### 5.5 Preload
 
@@ -220,6 +222,8 @@ src/assets/audio/
 | BGM (loop)        | < 200KB each |
 | 전체 audio bundle | < 1MB        |
 
+> 현재 메인 chunk가 이미 1,032KB로 500KB 경고 상태입니다([DEVELOPMENT.md](./DEVELOPMENT.md) §5). 오디오 파일은 정적 import로 초기 번들에 얹지 말고, 사용 시점에 로드하는 방식(동적 import 또는 `public/` 경로 fetch)을 우선 검토하세요.
+
 ---
 
 ## 7. 컴포넌트별 적용 포인트
@@ -228,7 +232,7 @@ src/assets/audio/
 | ------------- | ----------------------- | -------------------------- |
 | Splash        | intro (optional)        | —                          |
 | Door/Room/Bed | tutorial loop           | ui-click                   |
-| KickEbul      | game loop               | hit, combo, countdown, go  |
+| KickEbul      | game loop               | hit, combo, countdown, go (키보드 입력 경로 `registerHit`도 동일 처리) |
 | GameResult    | result / fade from game | whoosh, stop, stage        |
 | ResultModal   | fade out                | success                    |
 | Rank/Content  | idle loop               | ui-click                   |
@@ -276,6 +280,7 @@ src/assets/audio/
 
 ## 10. 관련 문서
 
+- 현재 게임 피드백 구현(시각·햅틱): [PRD.md](./PRD.md) §3.2
 - 게임 피드백 연동: [ROADMAP.md](./ROADMAP.md) Phase 3 게임플레이
 - 남은 성능 항목: [ROADMAP.md](./ROADMAP.md) 「성능 잔여 항목」
 - 일정: [ROADMAP.md](./ROADMAP.md) Phase 3
