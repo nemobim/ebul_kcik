@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { twMerge } from 'tailwind-merge'
+import { ModalOptions, normalizeModalOptions, shouldCloseOnOverlayClick } from './useModal.helpers'
 
-export const useModal = (isFullScreen?: boolean) => {
+export const useModal = (options?: boolean | ModalOptions) => {
+  const { fullScreen, closeOnOverlayClick } = normalizeModalOptions(options)
   const [modalContent, setModalContent] = useState<React.ReactNode | null>(null)
   const [isClosing, setIsClosing] = useState(false) // 모달 닫힘 상태를 관리
   const dialogRef = useRef<HTMLDivElement>(null)
@@ -64,12 +66,25 @@ export const useModal = (isFullScreen?: boolean) => {
     }
   }, [modalContent, isClosing, hideModal])
 
+  // 모달이 열려 있는 동안 배경 스크롤을 잠근다. 원래 값 복원으로 다중 모달 대비.
+  useEffect(() => {
+    if (!modalContent) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [modalContent])
+
   /** 모달 컴포넌트 */
   const Modal =
     modalContent &&
     ReactDOM.createPortal(
       <div
         className={twMerge(`fixed inset-0 z-50 mx-auto flex max-w-md items-center justify-center bg-black/50`, isClosing ? 'fade_out' : 'fade_in')}
+        onClick={(e) => {
+          if (shouldCloseOnOverlayClick(e.target, e.currentTarget, closeOnOverlayClick)) hideModal()
+        }}
         onAnimationEnd={() => {
           if (isClosing) {
             setModalContent(null) // 애니메이션이 끝난 후 모달 제거
@@ -81,7 +96,7 @@ export const useModal = (isFullScreen?: boolean) => {
           role="dialog"
           aria-modal="true"
           id="alert-box"
-          className={twMerge(`flex w-[90%] items-center justify-center`, isClosing ? 'slide_out' : 'slide_in', isFullScreen && 'h-[90%] max-h-[900px]')}
+          className={twMerge(`flex w-[90%] items-center justify-center`, isClosing ? 'slide_out' : 'slide_in', fullScreen && 'h-[90%] max-h-[900px]')}
         >
           {modalContent}
         </div>

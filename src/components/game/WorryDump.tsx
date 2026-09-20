@@ -5,7 +5,8 @@ import { TGameState, TWorryContent } from '../../types/game'
 import WorryContentModal from './Modal/WorryContentModal'
 
 const WorryDump = ({ handleNextStep, setGameState }: { handleNextStep: () => void; setGameState: Dispatch<SetStateAction<TGameState>> }) => {
-  const { Modal, hideModal, showModal } = useModal(true)
+  // 전체화면 모달 + 오버레이 실수 탭으로 입력 유실을 막기 위해 오버레이 닫기 비활성화
+  const { Modal, hideModal, showModal } = useModal({ fullScreen: true, closeOnOverlayClick: false })
   /**고민적기 */
   const [worryContent, setWorryContent] = useState<TWorryContent>()
 
